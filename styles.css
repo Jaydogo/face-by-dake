@@ -818,3 +818,15 @@ body{transition:opacity .38s var(--ease)}
 .ck-prefs .ck-actions{margin-top:12px}
 @media (max-width:860px){.cookie{left:10px;right:10px;width:auto;bottom:calc(10px + env(safe-area-inset-bottom))}}
 .foot .foot-btn{font-size:inherit}
+
+/* Avant de réserver, mobile : chaque chapitre dans sa carte, lignes alternées */
+@media (max-width:860px){
+  .ed-ch{background:var(--paper);border-radius:20px;padding:20px 16px 12px;margin-bottom:12px}
+  .ed-ch:last-child{margin-bottom:0}
+  .ed-k{margin-bottom:10px}
+  .ed-row,.ed-c,.ed-qi{margin-inline:-8px;padding-inline:8px;border-radius:12px}
+  .ed-ch .ed-row:nth-of-type(even),.ed-ch .ed-c:nth-of-type(even){background:rgba(26,20,18,.035)}
+  .ed-qi.open{background:var(--cream)}
+  .ed-qi + .ed-qi{box-shadow:0 -1px 0 rgba(26,20,18,.07)}
+  .ed-qi.open,.ed-qi.open + .ed-qi{box-shadow:none}
+}
