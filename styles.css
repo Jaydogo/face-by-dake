@@ -825,8 +825,5 @@ body{transition:opacity .38s var(--ease)}
   .ed-ch:last-child{margin-bottom:0}
   .ed-k{margin-bottom:10px}
   .ed-row,.ed-c,.ed-qi{margin-inline:-8px;padding-inline:8px;border-radius:12px}
-  .ed-ch .ed-row:nth-of-type(even),.ed-ch .ed-c:nth-of-type(even){background:rgba(26,20,18,.035)}
   .ed-qi.open{background:var(--cream)}
-  .ed-qi + .ed-qi{box-shadow:0 -1px 0 rgba(26,20,18,.07)}
-  .ed-qi.open,.ed-qi.open + .ed-qi{box-shadow:none}
 }
