@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propositions · bandeau cookies</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body{background:#E6E1D8}
+  .pg{max-width:1280px;margin:0 auto;padding:40px var(--gut) 120px}
+  .pg h1{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3.25rem);letter-spacing:-.03em}
+  .pg > p{color:var(--muted);margin-top:12px;max-width:66ch}
+  .tag{display:inline-flex;align-items:center;gap:10px;margin:56px 0 12px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+  .tag b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--cream);font-weight:500;letter-spacing:0}
+  .tag span{color:var(--muted)}
+  .note{margin-top:10px;font-size:.875rem;color:var(--muted);max-width:70ch}
+  .scene{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#2A2624 url(video/hero-desktop.jpg) center/cover}
+  .scene.m{aspect-ratio:9/16;width:min(300px,80%);border-radius:18px;background-image:url(video/hero-mobile.jpg)}
+  .row{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+  .row .scene:first-child{flex:1 1 560px}
+  .cb-actions{display:flex;flex-wrap:wrap;gap:8px}
+  .cb-actions .btn{min-height:40px;padding:0 18px;font-size:.875rem}
+  .link-s{font-size:.875rem;text-decoration:underline;text-underline-offset:.2em;opacity:.75;background:none;border:0;color:inherit;cursor:pointer;padding:0}
+
+  /* A : pilule verre, en bas au centre */
+  .cbA{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(720px,calc(100% - 24px));display:flex;align-items:center;gap:18px;padding:10px 10px 10px 22px;border-radius:999px;color:var(--cream);background:rgba(26,20,18,.5);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18)}
+  .cbA p{flex:1;font-size:.875rem;line-height:1.4}
+  .cbA .btn--ghost{border-color:rgba(243,237,227,.5)}
+  .m .cbA{border-radius:22px;flex-direction:column;align-items:stretch;padding:16px;bottom:12px;gap:12px}
+  .m .cbA .cb-actions{justify-content:space-between}
+
+  /* B : carte éditoriale crème, en bas à gauche */
+  .cbB{position:absolute;left:20px;bottom:20px;width:min(360px,calc(100% - 40px));padding:22px;border-radius:18px;background:var(--cream);color:var(--ink);box-shadow:0 20px 60px rgba(26,20,18,.3)}
+  .cbB .k{display:flex;gap:12px;align-items:baseline;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .cbB .k i{font-family:var(--serif);font-style:italic;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--bordeaux)}
+  .cbB h3{font-family:var(--serif);font-weight:300;font-size:1.9rem;letter-spacing:-.03em;line-height:1;margin:12px 0 10px}
+  .cbB h3 em{font-style:italic}
+  .cbB p{font-size:.875rem;color:var(--muted);margin-bottom:16px}
+  .m .cbB{left:10px;right:10px;width:auto;bottom:10px}
+
+  /* C : fiche mono, comme la carte de visite */
+  .cbC{position:absolute;right:20px;bottom:20px;width:min(380px,calc(100% - 40px));padding:20px;border-radius:4px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:.75rem;line-height:1.6;text-transform:uppercase;letter-spacing:.02em;box-shadow:0 20px 60px rgba(26,20,18,.3)}
+  .cbC dl{display:grid;grid-template-columns:7em 1fr;gap:10px 14px;margin:0 0 16px}
+  .cbC dt{opacity:.55}.cbC dd{margin:0}
+  .cbC .cb-actions .btn{font-family:var(--sans);text-transform:none;letter-spacing:0;border-radius:4px}
+  .m .cbC{left:10px;right:10px;width:auto;bottom:10px}
+
+  /* Panneau de réglages (commun) */
+  .prefs{margin-top:16px;width:min(440px,100%);padding:24px;border-radius:26px;background:rgba(243,237,227,.9);border:1px solid rgba(255,255,255,.55)}
+  .prefs h3{font-family:var(--serif);font-weight:300;font-size:1.75rem;letter-spacing:-.03em;margin-bottom:14px}
+  .prefs .opt{margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="pg">
+  <h1>Bandeau cookies</h1>
+  <p>Trois propositions dans la DA du site, sur le hero (desktop à gauche, mobile à droite). Le refus est toujours aussi visible que l’acceptation, comme l’exige la CNIL.</p>
+
+  <div class="tag"><b>A</b> Pilule en verre <span>· comme la barre « Réserver »</span></div>
+  <div class="row">
+    <div class="scene"><div class="cbA"><p>On utilise des cookies de mesure d’audience pour améliorer le site. <button class="link-s">Réglages</button></p><div class="cb-actions"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div></div></div>
+    <div class="scene m"><div class="cbA"><p>On utilise des cookies de mesure d’audience pour améliorer le site. <button class="link-s">Réglages</button></p><div class="cb-actions"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div></div></div>
+  </div>
+  <p class="note">Le plus discret : même langage que la barre « Réserver » et la nav. Ne cache presque pas la vidéo.</p>
+
+  <div class="tag"><b>B</b> Carte éditoriale <span>· titre serif, comme les sections</span></div>
+  <div class="row">
+    <div class="scene"><div class="cbB"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>Des cookies de mesure d’audience nous aident à comprendre ce qui t’intéresse. Rien n’est activé sans ton accord.</p><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div><p style="margin:12px 0 0"><button class="link-s">Personnaliser</button></p></div></div>
+    <div class="scene m"><div class="cbB"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>Des cookies de mesure d’audience nous aident à améliorer le site.</p><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div></div></div>
+  </div>
+  <p class="note">Le plus « marque » : reprend les chapitres numérotés et le titre serif de la section Infos.</p>
+
+  <div class="tag"><b>C</b> Fiche mono <span>· comme ta carte de visite</span></div>
+  <div class="row">
+    <div class="scene"><div class="cbC"><dl><dt>Cookies</dt><dd>Mesure d’audience</dd><dt>Usage</dt><dd>Améliorer le site</dd><dt>Durée</dt><dd>13 mois max.</dd></dl><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button><button class="link-s" style="margin-left:6px">Réglages</button></div></div></div>
+    <div class="scene m"><div class="cbC"><dl><dt>Cookies</dt><dd>Mesure d’audience</dd><dt>Usage</dt><dd>Améliorer le site</dd></dl><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div></div></div>
+  </div>
+  <p class="note">Le plus brut / édito : raccord avec la fiche « Jay Dogo ». Transparent par nature (on dit quoi, pourquoi, combien de temps).</p>
+
+  <div class="tag"><b>+</b> Réglages <span>· commun aux trois, s’ouvre au clic sur « Réglages »</span></div>
+  <div class="prefs">
+    <h3>Cookies</h3>
+    <div class="opt"><label class="opt-label">Nécessaires<span class="opt-sub">Brouillon de réservation, préférence de langue. Toujours actifs.</span></label><span class="switch"><input type="checkbox" checked disabled><span></span></span></div>
+    <div class="opt"><label class="opt-label">Mesure d’audience<span class="opt-sub">Pages vues, clics, parcours. Anonymisé.</span></label><span class="switch"><input type="checkbox"><span></span></span></div>
+    <div class="cb-actions" style="margin-top:14px"><button class="btn btn--s">Enregistrer</button></div>
+  </div>
+</div>
+</body>
+</html>

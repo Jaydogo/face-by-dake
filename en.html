@@ -371,7 +371,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
   <p class="spread" aria-hidden="true"><span>F</span><span>A</span><span>C</span><span>E</span><span class="gap"></span><span>B</span><span>Y</span><span class="gap"></span><span>D</span><span>A</span><span>K</span><span>Ē</span></p>
   <div class="foot">
     <span>© 2026 <a href="https://dake.studio" target="_blank" rel="noopener">Daké Creative Studio</a></span>
-    <span class="foot-links"><a href="./" hreflang="fr" lang="fr" data-lang>Français</a><a href="#mentions">Legal notice</a></span>
+    <span class="foot-links"><a href="./" hreflang="fr" lang="fr" data-lang>Français</a><a href="#mentions">Legal notice</a><button class="foot-btn" type="button" data-ck="open">Cookies</button></span>
   </div>
 </footer>
 
@@ -552,6 +552,23 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
         <button class="btn" type="button" id="bk-next">Continue</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ============ COOKIES (s'affiche seulement si Clarity est configuré dans CONFIG.analytics) ============ -->
+<div class="cookie" id="cookie" role="dialog" aria-modal="false" aria-labelledby="ck-title" hidden>
+  <div class="ck-main">
+    <div class="ck-k"><i>00</i>Cookies</div>
+    <h2 class="ck-title" id="ck-title">A quick <em>setting.</em></h2>
+    <p>Analytics cookies help us understand what you’re interested in. Nothing is turned on without your consent.</p>
+    <div class="ck-actions"><button class="btn btn--ink-ghost btn--s" type="button" data-ck="refuse">Decline</button><button class="btn btn--s" type="button" data-ck="accept">Accept</button></div>
+    <button class="ck-link" type="button" data-ck="prefs">Customise</button>
+  </div>
+  <div class="ck-prefs" hidden>
+    <div class="ck-k"><i>00</i>Cookies</div>
+    <div class="opt"><span class="opt-label">Essential<span class="opt-sub">Booking draft, language. Always on.</span></span><span class="switch"><input type="checkbox" checked disabled aria-label="Essential cookies"><span></span></span></div>
+    <div class="opt"><label class="opt-label" for="ck-audience">Analytics<span class="opt-sub">Clicks and journeys on the site (Microsoft Clarity).</span></label><span class="switch"><input type="checkbox" id="ck-audience"><span></span></span></div>
+    <div class="ck-actions"><button class="btn btn--s" type="button" data-ck="save">Save</button></div>
   </div>
 </div>
 

@@ -40,7 +40,13 @@ const CONFIG = {
     { id: 'soir',  label: t('Soirée', 'Evening'), hours: t('18\u00a0h\u00a0–\u00a021\u00a0h', '6\u00a0pm\u00a0–\u00a09\u00a0pm') }
   ],
   profiles: EN ? ['Model', 'Actor', 'Dancer', 'Creative', 'Other'] : ['Mannequin', 'Comédien·ne', 'Danseur·se', 'Créatif·ve', 'Autre'],
-  storageKey: 'dakeface-booking-v2'
+  storageKey: 'dakeface-booking-v2',
+  // Statistiques. Umami : sans cookie, toujours actif. Clarity : seulement après accord (bandeau).
+  analytics: {
+    umamiId: '',                                   // « Website ID » dans Umami
+    umamiSrc: 'https://cloud.umami.is/script.js',  // à changer si Umami est auto-hébergé
+    clarityId: ''                                  // « Project ID » dans Microsoft Clarity
+  }
 };
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -116,6 +122,69 @@ $$('video.loop').forEach(v => {
   v.muted = true;
   if (reduced) { v.removeAttribute('autoplay'); v.pause(); return; }
   if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { if (en.isIntersecting) v.play().catch(() => {}); else v.pause(); }, { threshold: 0.2 }).observe(v);
+});
+
+/* =========================================================
+   Statistiques (Umami) + cookies (Clarity, avec accord)
+   ========================================================= */
+const A = CONFIG.analytics;
+const stat = (name, data) => { try { if (window.umami) window.umami.track(name, data); } catch (_) {} };
+if (A.umamiId) {
+  const sc = document.createElement('script');
+  sc.defer = true; sc.src = A.umamiSrc; sc.dataset.websiteId = A.umamiId;
+  sc.dataset.domains = location.hostname; // ignore les visites en local
+  document.head.appendChild(sc);
+}
+// Événements suivis : boutons de réservation, formules, envoi de la demande, liens sortants
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-book], a[data-lang], a[href*="dake.studio"], a[href*="instagram.com"], a[href^="mailto:"], #send-mail, #send-ig, .offer-head, .ed-qi button');
+  if (!el) return;
+  if (el.matches('[data-book]')) stat('reserver-clic', { formule: el.dataset.book || 'aucune', lang: EN ? 'en' : 'fr' });
+  else if (el.id === 'send-mail') stat('demande-envoyee', { canal: 'email', formule: state.offer, total: total() });
+  else if (el.id === 'send-ig') stat('demande-envoyee', { canal: 'instagram', formule: state.offer, total: total() });
+  else if (el.matches('.offer-head')) stat('formule-ouverte', { formule: el.closest('.offer').dataset.offer });
+  else if (el.matches('.ed-qi button')) stat('faq-ouverte', { question: el.textContent.trim().slice(0, 60) });
+  else if (el.matches('a[data-lang]')) stat('langue', { vers: EN ? 'fr' : 'en' });
+  else if (el.href.includes('dake.studio') && !el.href.startsWith('mailto:')) stat('lien-dake-studio');
+  else if (el.href.includes('instagram.com')) stat('lien-instagram');
+  else if (el.href.startsWith('mailto:')) stat('lien-email', { sujet: el.href.includes('Location') || el.href.includes('hire') ? 'location-studio' : 'contact' });
+}, true);
+
+const CK_KEY = 'face-consent-v1';
+const ck = $('#cookie');
+function loadClarity() {
+  if (!A.clarityId || window.clarity) return;
+  (function (c, l, a, r, i, t, y) { c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); }; t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i; y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y); })(window, document, 'clarity', 'script', A.clarityId);
+}
+function getConsent() { try { return JSON.parse(localStorage.getItem(CK_KEY) || 'null'); } catch (_) { return null; } }
+function setConsent(audience) {
+  try { localStorage.setItem(CK_KEY, JSON.stringify({ audience, date: Date.now() })); } catch (_) {}
+  if (audience) loadClarity();
+  else if (window.clarity) { try { window.clarity('consent', false); } catch (_) {} }
+  hideCookie();
+}
+function showCookie(prefs) {
+  if (!ck) return;
+  ck.hidden = false;
+  $('.ck-main', ck).hidden = !!prefs; $('.ck-prefs', ck).hidden = !prefs;
+  $('#ck-audience').checked = !!(getConsent() || {}).audience;
+  requestAnimationFrame(() => ck.classList.add('is-in'));
+}
+function hideCookie() { if (!ck) return; ck.classList.remove('is-in'); setTimeout(() => { ck.hidden = true; }, 500); }
+if (A.clarityId) {
+  const c = getConsent();
+  const expired = c && Date.now() - c.date > 1000 * 60 * 60 * 24 * 180; // on redemande au bout de 6 mois
+  if (!c || expired) setTimeout(() => showCookie(false), 1800);
+  else if (c.audience) loadClarity();
+} else { $$('[data-ck="open"]').forEach(b => b.hidden = true); }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-ck]'); if (!b) return;
+  const a = b.dataset.ck;
+  if (a === 'accept') setConsent(true);
+  else if (a === 'refuse') setConsent(false);
+  else if (a === 'prefs') showCookie(true);
+  else if (a === 'save') setConsent($('#ck-audience').checked);
+  else if (a === 'open') showCookie(true);
 });
 
 /* Changement de langue en douceur : fondu, puis même position de lecture sur l'autre page */
@@ -738,6 +807,7 @@ function updateTotals() {
 function go(step) {
   const prev = state.step;
   state.step = step;
+  if (step !== prev) stat('tunnel-etape', { etape: step, formule: state.offer || 'aucune' });
   $$('.bk-step', booking).forEach(s => {
     const on = Number(s.dataset.step) === step;
     s.hidden = !on;
