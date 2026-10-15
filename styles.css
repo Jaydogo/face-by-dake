@@ -836,3 +836,6 @@ body{transition:opacity .38s var(--ease)}
   .ed-qi.open{background:var(--cream)}
   @media (hover:hover){.ed-row:hover,.ed-c:hover,.ed-qi:not(.open):hover{background:rgba(26,20,18,.035)}}
 }
+
+/* Conditions : libellés en bordeaux pour mieux les distinguer */
+.ed-c .caps{color:var(--bordeaux)}
