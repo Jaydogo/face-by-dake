@@ -20,7 +20,7 @@ const CONFIG = {
   weeksPerPage: 5,
   maxPages: 3,
   // photo : photo supplémentaire (books) · pola : pola supplémentaire (formule Polas)
-  options: { photo: 20, pola: 15, hour: 40, express: 50, polas: 80, maxPhotos: 30, maxHours: 4 },
+  options: { photo: 20, pola: 15, hour: 80, express: 50, polas: 80, script: 100, maxPhotos: 30, maxHours: 4 },
   offers: [
     { id: 'polas',      name: 'Polas / Digitals', price: 150, duration: '30 min',  outfits: t('1 tenue', '1 outfit'), output: t('10 polas livrés', '10 polas delivered'),   photos: true, extraUnit: 'pola',  express: false,
       images: ['bw-debardeur.jpg', 'bw-assise.jpg', 'bw-denim.jpg'] },
@@ -30,7 +30,7 @@ const CONFIG = {
       images: ['jean-pied.jpg', 'denim-brun.jpg', 'rideau-bleu.jpg', 'hoodie.jpg'] },
     { id: 'signature',  name: t('Book Signature', 'Signature Book'), price: 600, duration: t('3 à 4 h', '3–4 h'), outfits: t('1 à 4 tenues', '1–4 outfits'), output: t('25 photos livrées', '25 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: t('polas inclus', 'polas included'),
       images: ['rouge.jpg', 'bw-lampe.jpg', 'debardeur-chaud.jpg', 'bw-sol.jpg'] },
-    { id: 'demo',       name: t('Bande démo', 'Acting scene'), price: 250, duration: '1 h',     outfits: '',             output: t('vidéo de 45 s à 1 min livrée', '45 s to 1 min video delivered'), photos: false, express: false }
+    { id: 'demo',       name: t('Scène de jeu', 'Acting scene'), price: 250, duration: '1 h',     outfits: '',             output: t('vidéo de 45 s à 1 min livrée', '45 s to 1 min video delivered'), photos: false, express: false, scriptOption: true }
   ],
   imgPath: 'img/',
   stageDelay: 3600,        // durée d'une photo dans le visuel qui défile (ms)
@@ -117,6 +117,22 @@ $$('video.loop').forEach(v => {
   if (reduced) { v.removeAttribute('autoplay'); v.pause(); return; }
   if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { if (en.isIntersecting) v.play().catch(() => {}); else v.pause(); }, { threshold: 0.2 }).observe(v);
 });
+
+/* Changement de langue en douceur : fondu, puis même position de lecture sur l'autre page */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-lang]'); if (!a || e.metaKey || e.ctrlKey) return;
+  e.preventDefault();
+  try { sessionStorage.setItem('face-lang-scroll', String(window.scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight))); } catch (_) {}
+  root.classList.add('is-leaving');
+  setTimeout(() => { location.href = a.href; }, reduced ? 0 : 380);
+});
+(function restoreScroll() {
+  let r = null; try { r = sessionStorage.getItem('face-lang-scroll'); sessionStorage.removeItem('face-lang-scroll'); } catch (_) {}
+  if (r === null) return;
+  const go = () => { const y = parseFloat(r) * (document.documentElement.scrollHeight - innerHeight); lenis ? lenis.scrollTo(y, { immediate: true }) : scrollTo(0, y); };
+  requestAnimationFrame(() => requestAnimationFrame(go));
+})();
+addEventListener('pageshow', e => { if (e.persisted) root.classList.remove('is-leaving'); });
 
 /* Horloge du studio */
 const clock = $('#clock');
@@ -415,7 +431,7 @@ $$('.ed-qi:not(.open) .a').forEach(a => a.setAttribute('inert', ''));
    Tunnel de réservation
    ========================================================= */
 const defaults = () => ({
-  step: 1, offer: null, photos: 0, hours: 0, express: false, polasAdd: false, team: false, elsewhere: false,
+  step: 1, offer: null, photos: 0, hours: 0, express: false, polasAdd: false, scriptAdd: false, team: false, elsewhere: false,
   date: null, slot: null, flexible: false, page: 0,
   firstName: '', lastName: '', email: '', phone: '', instagram: '', profile: '', goal: '', message: ''
 });
@@ -451,6 +467,7 @@ function lines() {
   if (state.hours) L.push({ label: EN ? `${state.hours} extra hour${state.hours > 1 ? 's' : ''}` : `${state.hours} h supplémentaire${state.hours > 1 ? 's' : ''}`, amount: state.hours * CONFIG.options.hour });
   if (o.polasOption && state.polasAdd) L.push({ label: t('Polas pendant la séance', 'Polas during the session'), amount: CONFIG.options.polas });
   if (o.polasIncluded) L.push({ label: 'Polas', amount: 0 });
+  if (o.scriptOption && state.scriptAdd) L.push({ label: t('Texte fourni par le studio', 'Script provided by the studio'), amount: CONFIG.options.script });
   if (o.express && state.express) L.push({ label: t('Retouche express 24 h', 'Express retouching (24 h)'), amount: CONFIG.options.express });
   return L;
 }
@@ -483,7 +500,7 @@ function syncOptions() {
   if (!expressOk) state.express = false;
   const isPola = o && o.extraUnit === 'pola';
   $('#photos-label').textContent = isPola ? t('Polas supplémentaires', 'Extra polas') : t('Photos supplémentaires', 'Extra photos');
-  $('#photos-sub').textContent = photosOk ? `${eur(unitPrice(o))} ${isPola ? t('le pola', 'per pola') : t('la photo retouchée', 'per retouched photo')}` : t('Non disponible pour la bande démo', 'Not available for the acting scene');
+  $('#photos-sub').textContent = photosOk ? `${eur(unitPrice(o))} ${isPola ? t('le pola', 'per pola') : t('la photo retouchée', 'per retouched photo')}` : t('Non disponible pour la scène de jeu', 'Not available for the acting scene');
   photosRow.classList.toggle('is-disabled', !photosOk);
   expressRow.classList.toggle('is-disabled', !expressOk);
   $('#f-express').disabled = !expressOk;
@@ -495,6 +512,11 @@ function syncOptions() {
   $('[data-dec="hours"]').disabled = state.hours <= 0;
   $('[data-inc="hours"]').disabled = state.hours >= CONFIG.options.maxHours;
   $('#f-express').checked = state.express;
+  const scriptOk = !!(o && o.scriptOption);
+  if (!scriptOk) state.scriptAdd = false;
+  $('[data-row="script"]').hidden = !scriptOk;
+  $('#f-script').checked = state.scriptAdd;
+  $('#script-sub').textContent = `+${eur(CONFIG.options.script)}, ${t('si tu n’as pas ton propre texte', 'if you don’t have your own text')}`;
   const polasRow = $('[data-row="polas"]'), polasBox = $('#f-polas');
   const inc = !!(o && o.polasIncluded), opt = !o || !!o.polasOption;
   if (!opt) state.polasAdd = false;
@@ -592,7 +614,7 @@ $$('[data-field]', booking).forEach(el => {
   el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', () => {
     state[k] = el.type === 'checkbox' ? el.checked : el.value;
     if (el.getAttribute('aria-invalid') === 'true') validateField(k);
-    if (k === 'express' || k === 'polasAdd') updateTotals();
+    if (k === 'express' || k === 'polasAdd' || k === 'scriptAdd') updateTotals();
     save();
   });
   if (el.type !== 'checkbox' && el.required) el.addEventListener('blur', () => { if (el.value) validateField(k); });

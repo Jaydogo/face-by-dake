@@ -39,18 +39,18 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
   <a class="logo" href="#top" aria-label="FACE BY DAKĒ, retour en haut">FACE BY DAKĒ<span class="c">©</span></a>
   <nav class="nav caps" aria-label="Sections">
     <a href="#seances">Séances</a>
-    <a href="#demo">Bande démo</a>
+    <a href="#demo">Scène de jeu</a>
     <a href="#studio">Studio</a>
     <a href="#infos">Infos</a>
   </nav>
-  <div class="header-cta"><a class="lang" href="en.html" hreflang="en" lang="en" aria-label="English version">EN</a><span class="header-price">Dès <span data-price="polas">150</span>&nbsp;€</span><button class="btn btn--light btn--s" type="button" data-book>Réserver</button></div>
+  <div class="header-cta"><span class="lang-switch" aria-label="Langue"><span class="is-current" aria-current="true">FR</span><a href="en.html" hreflang="en" lang="en" data-lang aria-label="English version">EN</a></span><button class="btn btn--light btn--s" type="button" data-book>Réserver</button></div>
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
 </header>
 
 <div class="menu" id="menu" inert>
   <nav aria-label="Menu">
     <a style="--i:1" href="#seances">Séances</a>
-    <a style="--i:2" href="#demo">Bande démo</a>
+    <a style="--i:2" href="#demo">Scène de jeu</a>
     <a style="--i:3" href="#studio">Studio</a>
     <a style="--i:4" href="#infos">Infos</a>
   </nav>
@@ -62,7 +62,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
     </div>
   </div>
   <div class="menu-foot">
-    <a class="lang lang--menu" href="en.html" hreflang="en" lang="en">English version</a>
+    <a class="lang lang--menu" href="en.html" hreflang="en" lang="en" data-lang>English version</a>
     <button class="btn btn--light btn--block" type="button" data-book>Réserver une séance</button>
     <span class="caps">Paris Sud · Réponse sous 24 h</span>
   </div>
@@ -254,25 +254,26 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
   <div class="folio caps"><span>dakē face</span><span>Vidéo</span><span>03 / 05</span></div>
   <div class="grid demo-head">
     <h2 class="h2" id="demo-title">Face caméra, <em>simplement.</em></h2>
-    <p>Une courte scène jouée en studio, pour montrer ta présence et ta justesse aux directeurs de casting.</p>
+    <p>Une scène courte tournée en studio pour mettre en valeur ton jeu, ta présence à l’image et ton interprétation. Un extrait vidéo monté, prêt à intégrer à ton profil professionnel ou à ta bande démo.</p>
   </div>
   <div class="grid demo-body">
     <figure class="media video reveal">
-      <!-- Aperçu de bande démo : extrait de 4 s en boucle, sans son (comme un gif) -->
-      <video class="loop" src="video/bandedemo/apercu.mp4" poster="video/bandedemo/apercu.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Aperçu d’une bande démo tournée au studio"></video>
+      <!-- Aperçu de scène de jeu : extrait de 4 s en boucle, sans son (comme un gif) -->
+      <video class="loop" src="video/bandedemo/apercu.mp4" poster="video/bandedemo/apercu.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Aperçu d’une scène de jeu tournée au studio"></video>
       <div class="tc caps" aria-hidden="true"><span>Scène 01 · Prise 01</span><span>00:00:52</span></div>
     </figure>
     <div class="demo-copy">
       <span class="code caps">df.05</span>
-      <div class="demo-title"><h3>Bande démo</h3><span class="price"><span data-price="demo">250</span>&nbsp;€</span></div>
+      <div class="demo-title"><h3>Scène de jeu</h3><span class="price"><span data-price="demo">250</span>&nbsp;€</span></div>
       <ul class="list">
         <li>1 h de tournage, 45 s à 1 min livrées</li>
         <li>Tournage en studio</li>
         <li>Lumière et prise de son incluses</li>
         <li>1 scène simple et naturelle</li>
         <li>1 version montée, 1 série de retours</li>
+        <li>Texte fourni par le studio en option : +<span data-opt-price="script">100</span> €</li>
       </ul>
-      <button class="btn" type="button" data-book="demo">Réserver une bande démo</button>
+      <button class="btn" type="button" data-book="demo">Réserver une scène de jeu</button>
     </div>
   </div>
 </section>
@@ -316,7 +317,8 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
         <div class="ed-row"><span>Photo en plus</span><span class="price"><span data-opt-price="photo">20</span>&nbsp;€</span></div>
         <div class="ed-row"><span>Pola en plus</span><span class="price"><span data-opt-price="pola">15</span>&nbsp;€</span></div>
         <div class="ed-row"><span>Polas pendant un book</span><span class="price"><span data-opt-price="polas">80</span>&nbsp;€</span></div>
-        <div class="ed-row"><span>Heure en plus au studio</span><span class="price"><span data-opt-price="hour">40</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Heure en plus pendant le shooting</span><span class="price"><span data-opt-price="hour">40</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Texte de scène fourni par le studio</span><span class="price"><span data-opt-price="script">100</span>&nbsp;€</span></div>
         <div class="ed-row"><span>Retouche express 24&nbsp;h</span><span class="price"><span data-opt-price="express">50</span>&nbsp;€</span></div>
         <div class="ed-row"><span>Make-up, coiffure, stylisme</span><small>Sur demande</small></div>
         <div class="ed-row"><span>Séance dans un autre lieu</span><small>Sur devis</small></div>
@@ -326,7 +328,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
         <div class="ed-c"><span class="caps">Acompte</span><p><span data-deposit>50</span>&nbsp;€ pour bloquer ton créneau, déduit du total, <em>remboursable jusqu’à 48&nbsp;h avant.</em></p></div>
         <div class="ed-c"><span class="caps">Solde</span><p>Le jour du shooting.</p></div>
         <div class="ed-c"><span class="caps">Sélection</span><p>Tu choisis tes images dans une galerie privée.</p></div>
-        <div class="ed-c"><span class="caps">Livraison</span><p>Polas sous 48&nbsp;h, books et démos sous 7&nbsp;jours ouvrés.</p></div>
+        <div class="ed-c"><span class="caps">Livraison</span><p>Polas sous 48&nbsp;h, books et scènes de jeu sous 7&nbsp;jours ouvrés.</p></div>
         <div class="ed-c"><span class="caps">Fichiers</span><p>Retouchés uniquement, <em>pas de bruts.</em></p></div>
       </div>
       <div class="ed-ch">
@@ -368,7 +370,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
   <p class="spread" aria-hidden="true"><span>F</span><span>A</span><span>C</span><span>E</span><span class="gap"></span><span>B</span><span>Y</span><span class="gap"></span><span>D</span><span>A</span><span>K</span><span>Ē</span></p>
   <div class="foot">
     <span>© 2026 <a href="https://dake.studio" target="_blank" rel="noopener">Daké Creative Studio</a></span>
-    <span class="foot-links"><a href="en.html" hreflang="en" lang="en">English</a><a href="#mentions">Mentions légales</a></span>
+    <span class="foot-links"><a href="en.html" hreflang="en" lang="en" data-lang>English</a><a href="#mentions">Mentions légales</a></span>
   </div>
 </footer>
 
@@ -411,7 +413,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
           </div>
         </div>
         <div class="opt" data-row="hours">
-          <span class="opt-label">Heures supplémentaires<span class="opt-sub"><span data-opt-price="hour">40</span> € l’heure au studio</span></span>
+          <span class="opt-label">Heures supplémentaires<span class="opt-sub"><span data-opt-price="hour">80</span> € l’heure pendant le shooting</span></span>
           <div class="stepper">
             <button type="button" data-dec="hours" aria-label="Retirer une heure">−</button>
             <output id="out-hours" aria-live="polite">0</output>
@@ -425,6 +427,10 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
         <div class="opt" data-row="polas">
           <label class="opt-label" for="f-polas">Polas pendant la séance<span class="opt-sub" id="polas-sub"></span></label>
           <span class="switch"><input type="checkbox" id="f-polas" data-field="polasAdd"><span></span></span>
+        </div>
+        <div class="opt" data-row="script">
+          <label class="opt-label" for="f-script">Texte de la scène fourni par le studio<span class="opt-sub" id="script-sub"></span></label>
+          <span class="switch"><input type="checkbox" id="f-script" data-field="scriptAdd"><span></span></span>
         </div>
         <div class="opt">
           <label class="opt-label" for="f-team">Maquillage, coiffure ou stylisme<span class="opt-sub">Sur demande, chiffré à part</span></label>

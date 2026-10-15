@@ -784,3 +784,15 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,currentColor
 .js.fonts-ready .hero .hero-title{transition-delay:.45s}
 @media (max-width:860px){.js.fonts-ready.at-end .dock,.js.fonts-ready.booking-open .dock,.js.fonts-ready.menu-open .dock{opacity:0;transition-delay:0s}}
 @media (prefers-reduced-motion:reduce){.js .hero-video,.js .header > *,.js .hero .scroll,.js .dock{opacity:1}}
+
+/* Sélecteur FR / EN dans la barre (desktop) */
+.lang-switch{display:inline-flex;align-items:center;gap:2px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+.lang-switch > *{padding:6px 7px;border-radius:999px;transition:opacity .3s var(--ease)}
+.lang-switch .is-current{opacity:1}
+.lang-switch a{opacity:.45}
+.lang-switch a:hover{opacity:1}
+.lang-switch > * + *::before{content:"";display:inline-block}
+.header-cta{gap:18px}
+/* Fondu de sortie au changement de langue */
+body{transition:opacity .38s var(--ease)}
+.is-leaving body{opacity:0}
