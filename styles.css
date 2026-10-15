@@ -751,7 +751,7 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,currentColor
 :root{--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
 .credit{grid-column:4 / -1;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,5fr);gap:var(--gut);align-items:end;margin-top:clamp(56px,8vw,112px)}
 .credit-photo{margin:0;aspect-ratio:3/4;overflow:hidden;background:#2A2624}
-.credit-photo img{width:100%;height:100%;object-fit:cover;object-position:30% 50%;filter:contrast(1.05)}
+.credit-photo img{width:100%;height:100%;object-fit:cover;object-position:30% 50%}
 .credit-card{display:grid;grid-template-columns:10.5em 1fr;gap:22px 16px;margin:0;font-family:var(--mono);font-size:.8125rem;line-height:1.55;letter-spacing:.02em;text-transform:uppercase}
 .credit-card dt{opacity:.6}
 .credit-card dd{margin:0}
