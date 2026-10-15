@@ -767,3 +767,20 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,currentColor
 /* Pas de flash de police : le titre du hero apparaît en fondu une fois Newsreader chargée */
 .js .hero .hero-title{opacity:0;transition:opacity .8s var(--ease)}
 .js.fonts-ready .hero .hero-title{opacity:1}
+
+/* Sélecteur de langue */
+.lang{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;opacity:.75;transition:opacity .3s var(--ease)}
+.lang:hover{opacity:1}
+.lang--menu{justify-self:center;opacity:.6;font-size:.75rem}
+.foot-links{display:inline-flex;gap:20px}
+
+/* ===== Arrivée sur le site : tout apparaît en douceur, dans l'ordre ===== */
+.js .hero-video{opacity:0;transition:opacity 1.6s var(--ease)}
+.js .hero-video.is-playing{opacity:1}
+.js .header > *,.js .hero .scroll,.js .dock{opacity:0;transition:opacity .9s var(--ease)}
+.js.fonts-ready .header > *{opacity:1;transition-delay:.15s}
+.js.fonts-ready .hero .scroll{opacity:1;transition-delay:.9s}
+.js.fonts-ready .dock{opacity:1;transition-delay:1.1s}
+.js.fonts-ready .hero .hero-title{transition-delay:.45s}
+@media (max-width:860px){.js.fonts-ready.at-end .dock,.js.fonts-ready.booking-open .dock,.js.fonts-ready.menu-open .dock{opacity:0;transition-delay:0s}}
+@media (prefers-reduced-motion:reduce){.js .hero-video,.js .header > *,.js .hero .scroll,.js .dock{opacity:1}}

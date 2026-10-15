@@ -1,6 +1,11 @@
 (() => {
 'use strict';
 
+/* Langue de la page (fr / en) : t('texte FR', 'texte EN') */
+const EN = document.documentElement.lang === 'en';
+const t = (fr, en) => EN ? en : fr;
+const LOC = EN ? 'en-GB' : 'fr-FR';
+
 /* =========================================================
    CONFIG : source unique des prix, des règles et des photos
    ========================================================= */
@@ -17,24 +22,24 @@ const CONFIG = {
   // photo : photo supplémentaire (books) · pola : pola supplémentaire (formule Polas)
   options: { photo: 20, pola: 15, hour: 40, express: 50, polas: 80, maxPhotos: 30, maxHours: 4 },
   offers: [
-    { id: 'polas',      name: 'Polas / Digitals', price: 150, duration: '30 min',  outfits: '1 tenue',      output: '10 polas livrés',   photos: true, extraUnit: 'pola',  express: false,
+    { id: 'polas',      name: 'Polas / Digitals', price: 150, duration: '30 min',  outfits: t('1 tenue', '1 outfit'), output: t('10 polas livrés', '10 polas delivered'),   photos: true, extraUnit: 'pola',  express: false,
       images: ['bw-debardeur.jpg', 'bw-assise.jpg', 'bw-denim.jpg'] },
-    { id: 'decouverte', name: 'Book Découverte',  price: 300, duration: '1 h 30',  outfits: '1 à 2 tenues', output: '6 photos livrées',  photos: true, extraUnit: 'photo', express: true, polasOption: true,
+    { id: 'decouverte', name: t('Book Découverte', 'Starter Book'), price: 300, duration: t('1 h 30', '1 h 30 min'), outfits: t('1 à 2 tenues', '1–2 outfits'), output: t('6 photos livrées', '6 photos delivered'),  photos: true, extraUnit: 'photo', express: true, polasOption: true,
       images: ['film-pied.jpg', 'debardeur-chaud.jpg', 'rouge.jpg'] },
-    { id: 'book',       name: 'Book',             price: 400, duration: '2 à 3 h', outfits: '1 à 3 tenues', output: '15 photos livrées', photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
+    { id: 'book',       name: 'Book',             price: 400, duration: t('2 à 3 h', '2–3 h'), outfits: t('1 à 3 tenues', '1–3 outfits'), output: t('15 photos livrées', '15 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
       images: ['jean-pied.jpg', 'denim-brun.jpg', 'rideau-bleu.jpg', 'hoodie.jpg'] },
-    { id: 'signature',  name: 'Book Signature',   price: 600, duration: '3 à 4 h', outfits: '1 à 4 tenues', output: '25 photos livrées', photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: 'polas inclus',
+    { id: 'signature',  name: t('Book Signature', 'Signature Book'), price: 600, duration: t('3 à 4 h', '3–4 h'), outfits: t('1 à 4 tenues', '1–4 outfits'), output: t('25 photos livrées', '25 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: t('polas inclus', 'polas included'),
       images: ['rouge.jpg', 'bw-lampe.jpg', 'debardeur-chaud.jpg', 'bw-sol.jpg'] },
-    { id: 'demo',       name: 'Bande démo',       price: 250, duration: '1 h',     outfits: '',             output: 'vidéo de 45 s à 1 min livrée', photos: false, express: false }
+    { id: 'demo',       name: t('Bande démo', 'Acting scene'), price: 250, duration: '1 h',     outfits: '',             output: t('vidéo de 45 s à 1 min livrée', '45 s to 1 min video delivered'), photos: false, express: false }
   ],
   imgPath: 'img/',
   stageDelay: 3600,        // durée d'une photo dans le visuel qui défile (ms)
   slots: [
-    { id: 'matin', label: 'Matin', hours: '9\u00a0h\u00a0–\u00a012\u00a0h' },
-    { id: 'aprem', label: 'Après-midi', hours: '13\u00a0h\u00a0–\u00a017\u00a0h' },
-    { id: 'soir',  label: 'Soirée', hours: '18\u00a0h\u00a0–\u00a021\u00a0h' }
+    { id: 'matin', label: t('Matin', 'Morning'), hours: t('9\u00a0h\u00a0–\u00a012\u00a0h', '9\u00a0am\u00a0–\u00a012\u00a0pm') },
+    { id: 'aprem', label: t('Après-midi', 'Afternoon'), hours: t('13\u00a0h\u00a0–\u00a017\u00a0h', '1\u00a0pm\u00a0–\u00a05\u00a0pm') },
+    { id: 'soir',  label: t('Soirée', 'Evening'), hours: t('18\u00a0h\u00a0–\u00a021\u00a0h', '6\u00a0pm\u00a0–\u00a09\u00a0pm') }
   ],
-  profiles: ['Mannequin', 'Comédien·ne', 'Danseur·se', 'Créatif·ve', 'Autre'],
+  profiles: EN ? ['Model', 'Actor', 'Dancer', 'Creative', 'Other'] : ['Mannequin', 'Comédien·ne', 'Danseur·se', 'Créatif·ve', 'Autre'],
   storageKey: 'dakeface-booking-v2'
 };
 
@@ -96,6 +101,10 @@ document.addEventListener('click', e => {
     if (reduced) { v.removeAttribute('autoplay'); v.pause(); return; }
     const p = v.play(); if (p && p.catch) p.catch(() => {});
   };
+  // Arrivée en douceur : la vidéo apparaît en fondu dès qu'elle joue (ou au bout de 3 s, avec son image d'attente)
+  const show = () => v.classList.add('is-playing');
+  v.addEventListener('playing', show, { once: true });
+  setTimeout(show, 3000);
   pick();
   mq.addEventListener ? mq.addEventListener('change', pick) : mq.addListener(pick);
   // Pause quand le hero n'est plus visible (économie batterie)
@@ -183,7 +192,7 @@ function lockScroll(lock) {
 function setMenu(open, restoreFocus = true) {
   root.classList.toggle('menu-open', open);
   menuBtn.setAttribute('aria-expanded', String(open));
-  menuBtn.textContent = open ? 'Fermer' : 'Menu';
+  menuBtn.textContent = open ? t('Fermer', 'Close') : 'Menu';
   syncHeaderTone();
   if (open) { menu.removeAttribute('inert'); lockScroll(true); setTimeout(() => { const a = $('nav a', menu); if (a) a.focus({ preventScroll: true }); }, 60); }
   else { menu.setAttribute('inert', ''); lockScroll(false); if (restoreFocus) menuBtn.focus({ preventScroll: true }); }
@@ -198,10 +207,10 @@ mqMobile.addEventListener ? mqMobile.addEventListener('change', onMq) : mqMobile
    Grille photo : les images s'alternent en fondu
    ========================================================= */
 const MOSAIC_POOL = [
-  { f: 'bw-debardeur.jpg', pos: '50% 20%', cap: ['Pola agence', 'df.01'] },
-  { f: 'rideau-bleu.jpg', cap: ['Portrait comédien', 'df.03'] },
+  { f: 'bw-debardeur.jpg', pos: '50% 20%', cap: [t('Pola agence', 'Agency pola'), 'df.01'] },
+  { f: 'rideau-bleu.jpg', cap: [t('Portrait comédien', 'Actor portrait'), 'df.03'] },
   { f: 'bw-assise.jpg' }, { f: 'rouge.jpg', pos: '50% 0' }, { f: 'film-pied.jpg' }, { f: 'debardeur-chaud.jpg' },
-  { f: 'denim-brun.jpg', cap: ['Éditorial', 'df.04'] }, { f: 'hoodie.jpg', pos: '50% 10%' },
+  { f: 'denim-brun.jpg', cap: [t('Éditorial', 'Editorial'), 'df.04'] }, { f: 'hoodie.jpg', pos: '50% 10%' },
   { f: 'jean-pied.jpg' }, { f: 'bw-denim.jpg' }, { f: 'bw-lampe.jpg' }, { f: 'sol-bleu.jpg', pos: '60% 40%' },
   { f: 'bw-sol.jpg' }, { f: 'pola-tresses.jpg', pos: '50% 25%' }
 ];
@@ -265,7 +274,7 @@ function renderStage(id) {
   const o = offerById(id); if (!o || !o.images) return;
   stageOffer = o; stageIndex = 0;
   // + une copie de la 1re photo à la fin : permet de boucler à l'infini sans rembobiner
-  const html = o.images.map((f, i) => img(f, `Exemple ${o.name}, photo ${i + 1}`)).join('') + img(o.images[0], '').replace('<img ', '<img aria-hidden="true" ');
+  const html = o.images.map((f, i) => img(f, `${t('Exemple', 'Example')} ${o.name}, photo ${i + 1}`)).join('') + img(o.images[0], '').replace('<img ', '<img aria-hidden="true" ');
   if (!track.children.length || reduced) { track.innerHTML = html; }
   else {
     // Changement de formule : la nouvelle série monte comme un volet depuis le bas
@@ -278,7 +287,7 @@ function renderStage(id) {
     setTimeout(() => { prev.remove(); next.classList.remove('wipe', 'in'); }, 1000);
   }
   bars.innerHTML = o.images.map(() => '<span><i></i></span>').join('');
-  $('#stage-name').textContent = `Exemples · ${o.name}`;
+  $('#stage-name').textContent = `${t('Exemples', 'Examples')} · ${o.name}`;
   showSlide(0);
 }
 const setX = (pos, animate = true) => {
@@ -321,7 +330,7 @@ $$('.offer-car').forEach(car => {
   const o = offerById(car.dataset.car); if (!o) return;
   const n = o.images.length;
   // + une 2e série en copie : il y a toujours une photo qui dépasse à droite, et on boucle sans rembobiner
-  car.innerHTML = o.images.map((f, i) => img(f, `Exemple ${o.name}, photo ${i + 1}`)).join('') + o.images.map(f => img(f, '').replace('<img ', '<img aria-hidden="true" ')).join('');
+  car.innerHTML = o.images.map((f, i) => img(f, `${t('Exemple', 'Example')} ${o.name}, photo ${i + 1}`)).join('') + o.images.map(f => img(f, '').replace('<img ', '<img aria-hidden="true" ')).join('');
   const dots = $('.dots', car.nextElementSibling);
   dots.innerHTML = o.images.map(() => '<span><i></i></span>').join('');
   dots.style.setProperty('--dur', CONFIG.stageDelay + 'ms');
@@ -419,7 +428,7 @@ const save = () => { try { localStorage.setItem(CONFIG.storageKey, JSON.stringif
 
 const booking = $('#booking');
 const panel = $('.booking-panel', booking);
-const STEP_NAMES = ['Formule', 'Options', 'Date', 'Coordonnées', 'Récapitulatif'];
+const STEP_NAMES = EN ? ['Session', 'Options', 'Date', 'Your details', 'Summary'] : ['Formule', 'Options', 'Date', 'Coordonnées', 'Récapitulatif'];
 let lastFocus = null;
 
 /* Dates */
@@ -429,7 +438,7 @@ const fromIso = s => { const [y, m, d] = s.split('-').map(Number); return new Da
 const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 const minDate = () => addDays(today(), CONFIG.minNoticeDays);
-const longDate = d => d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const longDate = d => d.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 if (state.date && fromIso(state.date) < minDate()) state.date = null;
 
 /* Calculs */
@@ -438,11 +447,11 @@ const unitWord = (o, n) => ((o && o.extraUnit === 'pola') ? 'pola' : 'photo') + 
 function lines() {
   const o = offerById(state.offer); if (!o) return [];
   const L = [{ label: o.name, amount: o.price }];
-  if (o.photos && state.photos) L.push({ label: `${state.photos} ${unitWord(o, state.photos)} supplémentaire${state.photos > 1 ? 's' : ''}`, amount: state.photos * unitPrice(o) });
-  if (state.hours) L.push({ label: `${state.hours} h supplémentaire${state.hours > 1 ? 's' : ''}`, amount: state.hours * CONFIG.options.hour });
-  if (o.polasOption && state.polasAdd) L.push({ label: 'Polas pendant la séance', amount: CONFIG.options.polas });
+  if (o.photos && state.photos) L.push({ label: EN ? `${state.photos} extra ${unitWord(o, state.photos)}` : `${state.photos} ${unitWord(o, state.photos)} supplémentaire${state.photos > 1 ? 's' : ''}`, amount: state.photos * unitPrice(o) });
+  if (state.hours) L.push({ label: EN ? `${state.hours} extra hour${state.hours > 1 ? 's' : ''}` : `${state.hours} h supplémentaire${state.hours > 1 ? 's' : ''}`, amount: state.hours * CONFIG.options.hour });
+  if (o.polasOption && state.polasAdd) L.push({ label: t('Polas pendant la séance', 'Polas during the session'), amount: CONFIG.options.polas });
   if (o.polasIncluded) L.push({ label: 'Polas', amount: 0 });
-  if (o.express && state.express) L.push({ label: 'Retouche express 24 h', amount: CONFIG.options.express });
+  if (o.express && state.express) L.push({ label: t('Retouche express 24 h', 'Express retouching (24 h)'), amount: CONFIG.options.express });
   return L;
 }
 const total = () => lines().reduce((s, l) => s + l.amount, 0);
@@ -454,7 +463,7 @@ function renderOffers() {
     <label class="choice">
       <input type="radio" name="bk-offer" value="${o.id}" ${state.offer === o.id ? 'checked' : ''}>
       <span class="choice-card">
-        <span class="choice-name">${o.name}${o.reco ? ' <span class="choice-reco">Recommandé</span>' : ''}</span>
+        <span class="choice-name">${o.name}${o.reco ? ` <span class="choice-reco">${t('Recommandé', 'Recommended')}</span>` : ''}</span>
         <span class="choice-price">${eur(o.price)}</span>
         <span class="choice-meta">${[o.duration, o.outfits, o.output, o.extra].filter(Boolean).join(', ')}</span>
       </span>
@@ -473,12 +482,12 @@ function syncOptions() {
   if (!photosOk) state.photos = 0;
   if (!expressOk) state.express = false;
   const isPola = o && o.extraUnit === 'pola';
-  $('#photos-label').textContent = isPola ? 'Polas supplémentaires' : 'Photos supplémentaires';
-  $('#photos-sub').textContent = photosOk ? `${eur(unitPrice(o))} ${isPola ? 'le pola' : 'la photo retouchée'}` : 'Non disponible pour la bande démo';
+  $('#photos-label').textContent = isPola ? t('Polas supplémentaires', 'Extra polas') : t('Photos supplémentaires', 'Extra photos');
+  $('#photos-sub').textContent = photosOk ? `${eur(unitPrice(o))} ${isPola ? t('le pola', 'per pola') : t('la photo retouchée', 'per retouched photo')}` : t('Non disponible pour la bande démo', 'Not available for the acting scene');
   photosRow.classList.toggle('is-disabled', !photosOk);
   expressRow.classList.toggle('is-disabled', !expressOk);
   $('#f-express').disabled = !expressOk;
-  $('#express-sub').textContent = expressOk ? eur(CONFIG.options.express) : (isPola ? 'Polas déjà livrés sous 48 h' : 'Non disponible');
+  $('#express-sub').textContent = expressOk ? eur(CONFIG.options.express) : (isPola ? t('Polas déjà livrés sous 48 h', 'Polas already delivered within 48 h') : t('Non disponible', 'Not available'));
   $('#out-photos').textContent = state.photos;
   $('#out-hours').textContent = state.hours;
   $('[data-dec="photos"]').disabled = !photosOk || state.photos <= 0;
@@ -492,7 +501,7 @@ function syncOptions() {
   polasRow.classList.toggle('is-disabled', !opt && !inc);
   polasBox.disabled = !opt;
   polasBox.checked = inc || state.polasAdd;
-  $('#polas-sub').textContent = inc ? `Inclus dans le ${o.name}` : opt ? eur(CONFIG.options.polas) : 'Réservé aux books';
+  $('#polas-sub').textContent = inc ? t(`Inclus dans le ${o.name}`, `Included in the ${o.name}`) : opt ? eur(CONFIG.options.polas) : t('Réservé aux books', 'Books only');
 }
 booking.addEventListener('click', e => {
   const inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]');
@@ -530,22 +539,22 @@ async function loadAvailability() {
 }
 const dayOpen = id => !avail.days || !!avail.days[id];
 const slotOpen = id => !avail.days || !state.date || (avail.days[state.date] || []).includes(id);
-const DOW = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+const DOW = EN ? ['M', 'T', 'W', 'T', 'F', 'S', 'S'] : ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 function gridStart() { const t = today(); const dow = (t.getDay() + 6) % 7; return addDays(t, -dow); }
 function renderCal() {
   const start = addDays(gridStart(), state.page * CONFIG.weeksPerPage * 7);
   const days = CONFIG.weeksPerPage * 7;
   const end = addDays(start, days - 1);
   const min = minDate();
-  const fmtM = d => d.toLocaleDateString('fr-FR', { month: 'long' });
+  const fmtM = d => d.toLocaleDateString(LOC, { month: 'long' });
   const label = start.getMonth() === end.getMonth() ? `${fmtM(start)} ${end.getFullYear()}` : `${fmtM(start)} – ${fmtM(end)} ${end.getFullYear()}`;
   $('#cal-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
   let html = DOW.map(d => `<span class="dow" aria-hidden="true">${d}</span>`).join('');
   for (let i = 0; i < days; i++) {
     const d = addDays(start, i), id = iso(d), dis = d < min || CONFIG.closedDays.includes(d.getDay()) || !dayOpen(id);
-    const first = d.getDate() === 1 ? `<small>${d.toLocaleDateString('fr-FR', { month: 'short' })}</small>` : '';
+    const first = d.getDate() === 1 ? `<small>${d.toLocaleDateString(LOC, { month: 'short' })}</small>` : '';
     const part = !dis && avail.partial.has(id);
-    html += `<button type="button" class="day${part ? ' is-partial' : ''}" data-date="${id}" ${dis ? 'disabled' : ''} aria-pressed="${state.date === id}" aria-label="${longDate(d)}${dis ? ', indisponible' : part ? ', quelques créneaux restants' : ''}">${d.getDate()}${first}</button>`;
+    html += `<button type="button" class="day${part ? ' is-partial' : ''}" data-date="${id}" ${dis ? 'disabled' : ''} aria-pressed="${state.date === id}" aria-label="${longDate(d)}${dis ? t(', indisponible', ', unavailable') : part ? t(', quelques créneaux restants', ', a few slots left') : ''}">${d.getDate()}${first}</button>`;
   }
   $('#cal').innerHTML = html;
   $('#cal-prev').disabled = state.page <= 0;
@@ -565,7 +574,7 @@ function renderSlots() {
   $('#slots').innerHTML = CONFIG.slots.map(s => { const ok = slotOpen(s.id); return `
     <label class="choice slot${ok ? '' : ' is-full'}">
       <input type="radio" name="bk-slot" value="${s.id}" ${state.slot === s.id ? 'checked' : ''} ${ok ? '' : 'disabled'}>
-      <span class="choice-card"><span class="choice-name">${s.label}</span><span class="choice-meta">${ok ? s.hours : 'Complet'}</span></span>
+      <span class="choice-card"><span class="choice-name">${s.label}</span><span class="choice-meta">${ok ? s.hours : t('Complet', 'Fully booked')}</span></span>
     </label>`; }).join('');
 }
 $('#slots').addEventListener('change', e => { state.slot = e.target.value; showErr('err-slot', false); save(); });
@@ -625,25 +634,25 @@ function focusFirst(sel) { const el = $(sel, booking); if (el) el.focus(); }
 function slotLabel() { const s = CONFIG.slots.find(x => x.id === state.slot); return s ? `${s.label.toLowerCase()} (${s.hours})` : ''; }
 function extrasList() {
   const x = [];
-  if (state.team) x.push('maquillage / coiffure / stylisme (sur demande)');
-  if (state.elsewhere) x.push('autre lieu (sur devis)');
+  if (state.team) x.push(t('maquillage / coiffure / stylisme (sur demande)', 'make-up / hair / styling (on request)'));
+  if (state.elsewhere) x.push(t('autre lieu (sur devis)', 'other location (quote on request)'));
   return x;
 }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 function renderRecap() {
   const o = offerById(state.offer);
   const rows = [
-    ['Formule', o ? o.name : '', 1],
-    ['Date', state.date ? `${longDate(fromIso(state.date))}, ${slotLabel()}${state.flexible ? '. Flexible' : ''}` : '', 3],
+    [t('Formule', 'Session'), o ? o.name : '', 1],
+    ['Date', state.date ? `${longDate(fromIso(state.date))}, ${slotLabel()}${state.flexible ? t('. Flexible', '. Flexible') : ''}` : '', 3],
     ['Contact', [`${state.firstName} ${state.lastName}`.trim(), state.email, state.phone, state.instagram].filter(Boolean), 4],
-    ['Profil', [state.profile, state.goal].filter(Boolean).join(', ') || '—', 4]
+    [t('Profil', 'Profile'), [state.profile, state.goal].filter(Boolean).join(', ') || '—', 4]
   ];
   const extras = extrasList();
-  if (extras.length) rows.splice(1, 0, ['Demandes', extras.join(', '), 2]);
+  if (extras.length) rows.splice(1, 0, [t('Demandes', 'Requests'), extras.join(', '), 2]);
   $('#recap').innerHTML = rows.map(([k, v, s]) => `<div><dt>${k}</dt><dd>${Array.isArray(v) ? v.map(esc).join('<br>') : esc(v)}<button type="button" class="edit" data-goto="${s}">Modifier</button></dd></div>`).join('');
   $('#bill').innerHTML = lines().map(l => `<li><span>${esc(l.label)}</span><span class="num">${l.amount ? eur(l.amount) : 'Inclus'}</span></li>`).join('')
-    + `<li class="total"><span>Total estimé</span><span class="num">${eur(total())}</span></li>`
-    + `<li class="muted"><span>Acompte à la confirmation</span><span class="num">${eur(deposit())}</span></li>`;
+    + `<li class="total"><span>${t('Total estimé', 'Estimated total')}</span><span class="num">${eur(total())}</span></li>`
+    + `<li class="muted"><span>${t('Acompte à la confirmation', 'Deposit on confirmation')}</span><span class="num">${eur(deposit())}</span></li>`;
   syncSend();
 }
 $('#recap').addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b) go(Number(b.dataset.goto)); });
@@ -651,27 +660,27 @@ $('#recap').addEventListener('click', e => { const b = e.target.closest('[data-g
 function recapText() {
   const o = offerById(state.offer);
   const L = [
-    'Salut Jay, j’espère que tu vas bien !', '',
-    'Voici ma demande de réservation pour une séance FACE BY DAKĒ :', '',
-    `Formule : ${o ? `${o.name} (${eur(o.price)})` : ''}`,
-    ...lines().slice(1).map(l => `Option : ${l.label} (${l.amount ? eur(l.amount) : 'inclus'})`),
-    ...extrasList().map(x => `Demande : ${x}`),
-    `Date souhaitée : ${state.date ? longDate(fromIso(state.date)) : ''}, ${slotLabel()}${state.flexible ? ' (flexible)' : ''}`,
-    `Total estimé : ${eur(total())}, dont acompte à la confirmation : ${eur(deposit())}`, '',
-    `Nom : ${`${state.firstName} ${state.lastName}`.trim()}`,
+    t('Salut Jay, j’espère que tu vas bien !', 'Hi Jay, hope you’re well!'), '',
+    t('Voici ma demande de réservation pour une séance FACE BY DAKĒ :', 'Here is my booking request for a FACE BY DAKĒ session:'), '',
+    `${t('Formule', 'Session')} : ${o ? `${o.name} (${eur(o.price)})` : ''}`,
+    ...lines().slice(1).map(l => `Option : ${l.label} (${l.amount ? eur(l.amount) : t('inclus', 'included')})`),
+    ...extrasList().map(x => `${t('Demande', 'Request')} : ${x}`),
+    `${t('Date souhaitée', 'Preferred date')} : ${state.date ? longDate(fromIso(state.date)) : ''}, ${slotLabel()}${state.flexible ? ' (flexible)' : ''}`,
+    `${t('Total estimé', 'Estimated total')} : ${eur(total())}, ${t('dont acompte à la confirmation', 'including deposit on confirmation')} : ${eur(deposit())}`, '',
+    `${t('Nom', 'Name')} : ${`${state.firstName} ${state.lastName}`.trim()}`,
     `Email : ${state.email}`,
-    `Téléphone : ${state.phone}`,
+    `${t('Téléphone', 'Phone')} : ${state.phone}`,
     state.instagram ? `Instagram : ${state.instagram}` : null,
-    state.profile ? `Profil : ${state.profile}` : null,
-    state.goal ? `Objectif : ${state.goal}` : null,
+    state.profile ? `${t('Profil', 'Profile')} : ${state.profile}` : null,
+    state.goal ? `${t('Objectif', 'Goal')} : ${state.goal}` : null,
     state.message ? `\nMessage :\n${state.message}` : null,
-    '', 'Merci, à très vite !', state.firstName || null
+    '', t('Merci, à très vite !', 'Thanks, speak soon!'), state.firstName || null
   ];
   return L.filter(l => typeof l === 'string').join('\n');
 }
 function mailHref() {
   const o = offerById(state.offer);
-  const subject = `Réservation ${o ? o.name : ''} – ${state.date ? fromIso(state.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : ''} – ${state.firstName}`;
+  const subject = `${t('Réservation', 'Booking')} ${o ? o.name : ''} – ${state.date ? fromIso(state.date).toLocaleDateString(LOC, { day: 'numeric', month: 'short' }) : ''} – ${state.firstName}`;
   return `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(recapText())}`;
 }
 function syncSend() {
@@ -679,12 +688,12 @@ function syncSend() {
 }
 async function copyRecap() {
   const txt = recapText();
-  try { await navigator.clipboard.writeText(txt); toast('Récapitulatif copié'); return true; }
+  try { await navigator.clipboard.writeText(txt); toast(t('Récapitulatif copié', 'Summary copied')); return true; }
   catch (e) {
     const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select();
     let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
-    ta.remove(); toast(ok ? 'Récapitulatif copié' : 'Copie impossible, sélectionne le texte manuellement'); return ok;
+    ta.remove(); toast(ok ? t('Récapitulatif copié', 'Summary copied') : t('Copie impossible, sélectionne le texte manuellement', 'Couldn’t copy, please select the text manually')); return ok;
   }
 }
 $('#send-mail').addEventListener('click', e => {
@@ -715,11 +724,11 @@ function go(step) {
   });
   const shown = Math.min(step, 5);
   $$('.bk-progress span', booking).forEach((s, i) => s.classList.toggle('done', i < shown));
-  $('#bk-steptext').textContent = step > 5 ? 'Terminé' : `Étape ${step} sur 5`;
+  $('#bk-steptext').textContent = step > 5 ? t('Terminé', 'Done') : t(`Étape ${step} sur 5`, `Step ${step} of 5`);
   $('#bk-stepname').textContent = step > 5 ? '' : STEP_NAMES[step - 1];
   $('#bk-foot').hidden = step >= 5;
   $('#bk-back').style.visibility = step > 1 ? 'visible' : 'hidden';
-  $('#bk-next').textContent = step === 4 ? 'Voir le récapitulatif' : 'Continuer';
+  $('#bk-next').textContent = step === 4 ? t('Voir le récapitulatif', 'See summary') : t('Continuer', 'Continue');
   if (step === 2) syncOptions();
   if (step === 3) { renderCal(); renderSlots(); loadAvailability(); }
   if (step === 5) renderRecap();
