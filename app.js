@@ -70,10 +70,19 @@ if (window.Lenis && !reduced) {
   try { lenis = new window.Lenis({ lerp: 0.08, wheelMultiplier: 0.9, autoRaf: true }); root.classList.add('has-lenis'); window.lenis = lenis; } catch (e) { lenis = null; }
 }
 const headerH = () => $('.header').offsetHeight;
+/* Défilement précis vers une section : on vise son mini-titre (folio), calé juste sous la barre du haut.
+   La cible est recalculée à l'arrivée et corrigée si la page a bougé pendant le trajet (images, polices). */
+const landingGap = () => (mqDesktop.matches ? 14 + 58 : headerH()) + (mqDesktop.matches ? 28 : 20);
+const mqDesktop = matchMedia('(min-width: 861px)');
+function targetY(el) {
+  const anchor = el.querySelector(':scope > .folio') || el;
+  return Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY - landingGap()));
+}
 function scrollToEl(el) {
   if (!el) return;
-  if (lenis) lenis.scrollTo(el, { offset: -headerH() - 8, duration: 1.4 });
-  else el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  const fix = () => { const y = targetY(el); if (Math.abs(window.scrollY - y) > 2) lenis ? lenis.scrollTo(y, { immediate: true }) : scrollTo(0, y); };
+  if (lenis) lenis.scrollTo(targetY(el), { duration: 1.2, easing: t => 1 - Math.pow(1 - t, 4), lock: true, onComplete: () => requestAnimationFrame(fix) });
+  else { scrollTo({ top: targetY(el), behavior: reduced ? 'auto' : 'smooth' }); setTimeout(fix, 900); }
 }
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href^="#"]');
@@ -875,6 +884,18 @@ document.addEventListener('keydown', e => {
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
   else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
 });
+
+/* Arrivée depuis une autre page avec une ancre (#seances, #studio…) : atterrissage précis */
+(function hashLanding() {
+  const h = location.hash;
+  if (!h || h.startsWith('#reserver') || h === '#top') return;
+  const el = $(h); if (!el) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  const go = () => { const y = targetY(el); lenis ? lenis.scrollTo(y, { immediate: true }) : scrollTo(0, y); };
+  requestAnimationFrame(() => requestAnimationFrame(go));
+  if (document.fonts) document.fonts.ready.then(go);
+  addEventListener('load', go, { once: true });
+})();
 
 /* Lien direct : #reserver, #reserver-book, ?formule=book */
 (function deepLink() {

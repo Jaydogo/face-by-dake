@@ -30,6 +30,9 @@
   .legal dd{margin:0}
   .todo{background:#FCE7C8;color:#7A4A0A;padding:1px 6px;border-radius:6px;font-family:var(--mono);font-size:.8125rem}
   .legal .foot-note{margin-top:32px;font-size:.875rem;color:var(--muted)}
+  .legal-top{transition:background-color .45s var(--ease),color .45s var(--ease),box-shadow .45s var(--ease)}
+  .legal-top.on-dark{background:transparent;box-shadow:none;color:var(--cream);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .legal-top.on-dark .logo{color:var(--cream)}
   @media (max-width:860px){.legal dl{grid-template-columns:1fr;gap:2px 0}.legal dt{margin-top:10px}}
 </style>
 </head>
@@ -39,7 +42,7 @@
   <nav><span class="lang-switch" aria-label="Language"><a href="mentions.html" hreflang="fr" lang="fr" aria-label="Version française">FR</a><span class="is-current" aria-current="true">EN</span></span><a class="back" href="en.html">Back to the site</a></nav>
 </header>
 
-<main class="legal">
+<main class="legal" id="top">
   <div class="ed-grid">
     <div class="ed-side">
       <h1 class="h2">Legal <em>notice.</em></h1>
@@ -95,6 +98,33 @@
       <p class="foot-note">Last updated: October 2026.</p>
     </div>
   </div>
+<div class="reveal-end" id="reveal-end" aria-hidden="true"></div>
 </main>
+
+<footer class="final" data-tone="dark" id="contact" aria-labelledby="final-title">
+  <div class="grid final-top">
+    <h2 class="h2" id="final-title">Ready to <em>build</em> your image?</h2>
+  </div>
+  <div class="actions">
+    <a class="btn btn--light" href="en.html#reserver">Book my session</a>
+  </div>
+  <div class="coords">
+    <div><span class="caps">Studio</span><span>South Paris</span><span>RER B · Metro line 4</span></div>
+    <div><span class="caps">Contact</span><a href="mailto:face@dake.studio">face@dake.studio</a><a href="https://instagram.com/dake.face" target="_blank" rel="noopener">@dake.face</a><a class="foot-ext" href="https://dake.studio" target="_blank" rel="noopener">Daké Studio <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a></div>
+    <div><span class="caps">Reply</span><span>Within 24 h</span></div>
+    <div><span class="caps">Studio time</span><span class="num" id="clock">--:--</span></div>
+  </div>
+  <p class="spread" aria-hidden="true"><span>F</span><span>A</span><span>C</span><span>E</span><span class="gap"></span><span>B</span><span>Y</span><span class="gap"></span><span>D</span><span>A</span><span>K</span><span>Ē</span></p>
+  <div class="foot">
+    <span>© 2026 <a href="https://dake.studio" target="_blank" rel="noopener">Daké Creative Studio</a></span>
+    <span class="foot-links"><a href="./" hreflang="fr" lang="fr" >Français</a><a href="legal.html">Legal notice</a></span>
+  </div>
+</footer>
+<script>
+// Footer : heure du studio, et transition vers la page d'accueil
+(function(){var c=document.getElementById('clock');function t(){if(c)c.textContent=new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'}).format(new Date())}t();setInterval(t,20000);
+document.documentElement.classList.add('fonts-ready');
+var top=document.querySelector('.legal-top'),end=document.getElementById('reveal-end');function f(){top.classList.toggle('on-dark',end.getBoundingClientRect().top<=60)}addEventListener('scroll',f,{passive:true});f();})();
+</script>
 </body>
 </html>
