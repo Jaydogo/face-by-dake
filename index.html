@@ -48,12 +48,15 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 </header>
 
 <div class="menu" id="menu" inert>
+  <div class="menu-top">
+    <span class="lang-switch lang-switch--menu" aria-label="Langue"><span class="is-current" aria-current="true">FR</span><a href="en.html" hreflang="en" lang="en" data-lang aria-label="English version">EN</a></span>
   <nav aria-label="Menu">
     <a style="--i:1" href="#seances">Séances</a>
     <a style="--i:2" href="#demo">Scène de jeu</a>
     <a style="--i:3" href="#studio">Studio</a>
     <a style="--i:4" href="#infos">Infos</a>
   </nav>
+  </div>
   <div class="menu-mid">
     <nav aria-label="Studio créatif"><a style="--i:5" class="menu-ext" href="https://dake.studio" target="_blank" rel="noopener">Daké Studio <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a></nav>
     <div class="menu-clocks" aria-label="Heure locale">
@@ -62,9 +65,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
     </div>
   </div>
   <div class="menu-foot">
-    <a class="lang lang--menu" href="en.html" hreflang="en" lang="en" data-lang>English version</a>
     <button class="btn btn--light btn--block" type="button" data-book>Réserver une séance</button>
-    <span class="caps">Paris Sud · Réponse sous 24 h</span>
   </div>
 </div>
 

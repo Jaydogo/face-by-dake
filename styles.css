@@ -796,3 +796,8 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,currentColor
 /* Fondu de sortie au changement de langue */
 body{transition:opacity .38s var(--ease)}
 .is-leaving body{opacity:0}
+
+/* Menu mobile : FR / EN en haut, liste décalée vers le bas */
+.menu-top{display:grid;gap:clamp(28px,6vh,56px)}
+.lang-switch--menu{justify-self:start;font-size:.8125rem;margin-left:-7px;opacity:0;transform:translateY(16px);transition:opacity .3s var(--ease),transform .4s var(--ease)}
+.menu-open .lang-switch--menu{opacity:1;transform:none;transition:opacity .6s var(--ease) .3s,transform .9s var(--ease) .3s}
