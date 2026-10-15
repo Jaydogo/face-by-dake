@@ -827,3 +827,12 @@ body{transition:opacity .38s var(--ease)}
   .ed-row,.ed-c,.ed-qi{margin-inline:-8px;padding-inline:8px;border-radius:12px}
   .ed-qi.open{background:var(--cream)}
 }
+
+/* Avant de réserver, desktop aussi : chaque chapitre dans sa carte blanche */
+@media (min-width:861px){
+  .ed-ch{background:var(--paper);border-radius:24px;padding:28px 32px 20px;margin-bottom:16px}
+  .ed-ch:last-child{margin-bottom:0}
+  .ed-row,.ed-c,.ed-qi{margin-inline:-14px;padding-inline:14px}
+  .ed-qi.open{background:var(--cream)}
+  @media (hover:hover){.ed-row:hover,.ed-c:hover,.ed-qi:not(.open):hover{background:rgba(26,20,18,.035)}}
+}
