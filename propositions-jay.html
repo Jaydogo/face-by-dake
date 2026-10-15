@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propositions · le photographe</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body{background:#E6E1D8}
+  .pg{max-width:1280px;margin:0 auto;padding:40px var(--gut) 120px}
+  .pg-head h1{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3.25rem);letter-spacing:-.03em;line-height:1}
+  .pg-head p{margin-top:12px;color:var(--muted);max-width:64ch}
+  .tag{display:inline-flex;align-items:center;gap:10px;margin:56px 0 12px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+  .tag b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--cream);font-weight:500;letter-spacing:0}
+  .tag span{color:var(--muted)}
+  .note{margin-top:10px;font-size:.875rem;color:var(--muted);max-width:70ch}
+  .frame{border-radius:6px;overflow:hidden}
+
+  /* ---- A : signature dans le manifeste ---- */
+  .sig{display:flex;align-items:center;gap:16px;margin-top:40px}
+  .sig .av{width:56px;height:56px;border-radius:50%;overflow:hidden;flex:none;background:#2A2624}
+  .sig .av img{width:100%;height:100%;object-fit:cover;object-position:30% 24%;transform:scale(3.2);transform-origin:30% 24%}
+  .sig .who{display:grid;gap:2px}
+  .sig .who b{font-weight:500}
+  .sig .who span{font-size:.875rem;opacity:.7}
+  .refs{margin-top:28px;display:flex;flex-wrap:wrap;gap:6px 22px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+
+  /* ---- B : derrière l'objectif ---- */
+  .bo{background:var(--paper);padding:var(--sec) var(--gut)}
+  .bo-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:center}
+  .bo figure{margin:0;aspect-ratio:3/4;overflow:hidden;border-radius:4px}
+  .bo figure img{width:100%;height:100%;object-fit:cover;object-position:30% 40%}
+  .bo .k{display:flex;gap:14px;align-items:baseline;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+  .bo .k i{font-family:var(--serif);font-style:italic;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--bordeaux)}
+  .bo h2{font-family:var(--serif);font-weight:300;font-size:var(--fs-h2);line-height:.95;letter-spacing:-.04em}
+  .bo h2 em{font-style:italic}
+  .bo p.l{font-family:var(--serif);font-weight:300;font-size:clamp(1.25rem,1.9vw,1.6rem);line-height:1.3;letter-spacing:-.015em;margin-top:28px;max-width:30em}
+  .bo p.l em{font-style:italic}
+  .bo .meta{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:32px;font-size:.9375rem}
+  .bo .meta a{text-decoration:underline;text-underline-offset:.2em}
+  .bo .refs{color:var(--ink);opacity:.55;margin-top:24px}
+
+  /* ---- C : hero, crédit discret ---- */
+  .hc{position:relative;aspect-ratio:16/9;overflow:hidden;color:var(--cream);background:#2A2624 url(video/hero-desktop.jpg) center/cover}
+  .hc::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,20,18,.45),rgba(26,20,18,0) 25%,rgba(26,20,18,0) 70%,rgba(26,20,18,.5))}
+  .hc > *{position:absolute;z-index:1}
+  .hc .t{left:3%;top:50%;transform:translateY(-50%);font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(1.8rem,5vw,4.6rem);line-height:1}
+  .hc .bar{left:3%;right:3%;top:4%;display:flex;justify-content:space-between;font-size:clamp(.55rem,1vw,.85rem)}
+  .hc .cr{right:3%;bottom:5%;display:flex;align-items:center;gap:12px;font-size:clamp(.6rem,1vw,.85rem)}
+  .hc .cr .av{width:clamp(26px,3vw,38px);height:clamp(26px,3vw,38px);border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px rgba(243,237,227,.5)}
+  .hc .cr .av img{width:100%;height:100%;object-fit:cover;object-position:30% 24%;transform:scale(3.2);transform-origin:30% 24%}
+  .hc .sc{left:3%;bottom:5%;font-size:clamp(.5rem,.85vw,.75rem);letter-spacing:.14em;text-transform:uppercase}
+
+  /* ---- D : tunnel ---- */
+  .tun{display:grid;place-items:center;padding:48px 16px;background:#2A2624 url(img/studio-plateau.jpg) center/cover}
+  .tun .p{width:min(440px,100%);border-radius:26px;padding:24px;background:rgba(243,237,227,.7);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.55);color:var(--ink)}
+  .tun h3{font-family:var(--serif);font-weight:300;font-size:2rem;letter-spacing:-.035em}
+  .tun .hint{color:var(--muted);margin:6px 0 18px}
+  .tun .jay{display:flex;gap:14px;align-items:center;padding:14px;border-radius:16px;background:rgba(255,255,255,.55)}
+  .tun .jay .av{width:44px;height:44px;border-radius:50%;overflow:hidden;flex:none}
+  .tun .jay .av img{width:100%;height:100%;object-fit:cover;object-position:30% 24%;transform:scale(3.2);transform-origin:30% 24%}
+  .tun .jay p{font-size:.9375rem;line-height:1.4}
+  @media (max-width:860px){.bo-grid{grid-template-columns:1fr}.bo figure{aspect-ratio:4/5}}
+  /* recadrage du visage dans les pastilles rondes */
+  .av{position:relative}
+  .av img{position:absolute!important;height:600%!important;width:auto!important;max-width:none;left:-82%!important;top:-98%!important;transform:none!important;object-fit:initial}
+</style>
+</head>
+<body>
+<div class="pg">
+  <div class="pg-head">
+    <h1>Le photographe</h1>
+    <p>Quatre façons de montrer que c’est toi derrière l’objectif. Elles se combinent : je te conseille A + B, et D en bonus.</p>
+  </div>
+
+  <div class="tag"><b>A</b> Signature <span>· sous la phrase d’intro, juste après la vidéo</span></div>
+  <section class="manifest section grid frame" style="padding:clamp(48px,7vw,96px) var(--gut)">
+    <span class="caps">/ Le studio</span>
+    <div class="copy">
+      <p>Photo, vidéo et direction artistique pour talents, mannequins, comédiens et créatifs. Des images fortes, <em>pensées avec intention.</em></p>
+      <div class="sig">
+        <div class="av"><img src="img/jay-nb.jpg" alt=""></div>
+        <div class="who"><b>Jay Dogo</b><span>Photographe &amp; directeur artistique · @ledockernoir</span></div>
+      </div>
+      <div class="refs"><span>Longines</span><span>Marie Claire</span><span>Samsung</span><span>IKEA</span></div>
+    </div>
+  </section>
+  <p class="note">Le plus efficace : on sait tout de suite qui shoote, avec ses références, sans ajouter de section.</p>
+
+  <div class="tag"><b>B</b> Derrière l’objectif <span>· une courte section avant le studio</span></div>
+  <section class="bo frame">
+    <div class="bo-grid">
+      <figure><img src="img/jay-nb.jpg" alt="Jay Dogo dans le studio"></figure>
+      <div>
+        <div class="k"><i>00</i>Derrière l’objectif</div>
+        <h2>Jay <em>Dogo.</em></h2>
+        <p class="l">Photographe et directeur artistique, je viens de la mode et du luxe. En séance, je prends le temps : on cherche ensemble, on essaie, on ajuste, <em>jusqu’à l’image qui te ressemble vraiment.</em></p>
+        <div class="meta"><span>Photographe &amp; DA</span><a href="https://instagram.com/ledockernoir" target="_blank" rel="noopener">@ledockernoir</a></div>
+        <div class="refs"><span>Longines</span><span>Marie Claire</span><span>Samsung</span><span>IKEA</span></div>
+      </div>
+    </div>
+  </section>
+  <p class="note">Le plus humain : on te voit au travail, sans poser. Rassure ceux qui n’ont jamais shooté. Ci-dessous la même section avec la version couleur, pour comparer.</p>
+  <section class="bo frame" style="margin-top:16px">
+    <div class="bo-grid">
+      <figure><img src="img/jay.jpg" alt="Jay Dogo dans le studio, devant un fond bleu"></figure>
+      <div>
+        <div class="k"><i>00</i>Derrière l’objectif</div>
+        <h2>Jay <em>Dogo.</em></h2>
+        <p class="l">Photographe et directeur artistique, je viens de la mode et du luxe. En séance, je prends le temps : on cherche ensemble, on essaie, on ajuste, <em>jusqu’à l’image qui te ressemble vraiment.</em></p>
+        <div class="meta"><span>Photographe &amp; DA</span><a href="https://instagram.com/ledockernoir" target="_blank" rel="noopener">@ledockernoir</a></div>
+      </div>
+    </div>
+  </section>
+  <p class="note">Version couleur : le bleu ressort beaucoup à côté des tons crème et bordeaux du site. Le noir et blanc s’intègre mieux.</p>
+
+  <div class="tag"><b>C</b> Crédit dans le hero <span>· tout petit, en bas à droite de la vidéo</span></div>
+  <div class="hc frame">
+    <div class="bar"><span>FACE BY DAKĒ©</span><span>Dès 150 € · Réserver</span></div>
+    <div class="t">[Shape your image]</div>
+    <div class="sc">Scroll</div>
+    <div class="cr"><span class="av"><img src="img/jay-nb.jpg" alt=""></span><span>Shot by Jay Dogo</span></div>
+  </div>
+  <p class="note">Le plus discret : une signature de réalisateur sur la vidéo. Bien en complément, pas suffisant seul.</p>
+
+  <div class="tag"><b>D</b> Dans le tunnel <span>· dernière étape avant l’envoi</span></div>
+  <div class="tun frame">
+    <div class="p">
+      <h3>Vérifie ta demande</h3>
+      <p class="hint">Rien n’est débité maintenant.</p>
+      <div class="jay"><div class="av"><img src="img/jay-nb.jpg" alt=""></div><p>Je lis chaque demande moi-même et je te réponds sous 24&nbsp;h. <b>Jay</b></p></div>
+    </div>
+  </div>
+  <p class="note">Le détail qui rend la demande humaine, raccord avec le « Salut Jay » du message envoyé.</p>
+</div>
+</body>
+</html>

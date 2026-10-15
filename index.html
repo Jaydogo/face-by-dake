@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FACE BY DAKĒ © — Polas, books et bandes démo à Paris Sud</title>
+<meta name="description" content="Photo, vidéo et direction artistique pour talents, mannequins, comédiens et créatifs. Polas, books et bandes démo à Paris Sud, dès 150 €. Réponse sous 24 h.">
+<meta name="theme-color" content="#1A1412">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow"> <!-- préversion : à retirer à la mise en ligne définitive -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('js')</script>
+<!--
+  PHOTOS
+  Toutes les images sont dans /img. Pour remplacer une photo, garde le même nom de fichier
+  ou change le src ici. Les photos d'exemple des formules (carrousels) sont listées dans
+  CONFIG.offers[].images, dans app.js.
+
+  PRIX
+  Tout est centralisé dans CONFIG (app.js). Les prix affichés sont réécrits au chargement
+  depuis CONFIG : ne jamais écrire un prix en dur sans data-price / data-opt-price.
+-->
+</head>
+<body>
+<a class="skip" href="#seances">Aller aux séances</a>
+
+<!-- ============ HEADER ============ -->
+<header class="header">
+  <a class="logo" href="#top" aria-label="FACE BY DAKĒ, retour en haut">FACE BY DAKĒ<span class="c">©</span></a>
+  <nav class="nav caps" aria-label="Sections">
+    <a href="#seances">Séances</a>
+    <a href="#demo">Bande démo</a>
+    <a href="#studio">Studio</a>
+    <a href="#infos">Infos</a>
+  </nav>
+  <div class="header-cta"><span class="header-price">Dès <span data-price="polas">150</span>&nbsp;€</span><button class="btn btn--light btn--s" type="button" data-book>Réserver</button></div>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+</header>
+
+<div class="menu" id="menu" inert>
+  <nav aria-label="Menu">
+    <a style="--i:1" href="#seances">Séances</a>
+    <a style="--i:2" href="#demo">Bande démo</a>
+    <a style="--i:3" href="#studio">Studio</a>
+    <a style="--i:4" href="#infos">Infos</a>
+  </nav>
+  <div class="menu-mid">
+    <nav aria-label="Studio créatif"><a style="--i:5" class="menu-ext" href="https://dake.studio" target="_blank" rel="noopener">Daké Studio <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a></nav>
+    <div class="menu-clocks" aria-label="Heure locale">
+      <div><span class="caps">Paris</span><span class="num" data-tz="Europe/Paris">00:00:00</span></div>
+      <div><span class="caps">Abidjan</span><span class="num" data-tz="Africa/Abidjan">00:00:00</span></div>
+    </div>
+  </div>
+  <div class="menu-foot">
+    <button class="btn btn--light btn--block" type="button" data-book>Réserver une séance</button>
+    <span class="caps">Paris Sud · Réponse sous 24 h</span>
+  </div>
+</div>
+
+<main id="top">
+<!-- ============ HERO ============ -->
+<section class="hero" data-tone="dark" aria-label="Accueil">
+  <figure class="media hero-media">
+    <!-- Montage sans son. La version (horizontale / verticale) est choisie selon l'écran dans app.js -->
+    <video class="hero-video" id="hero-video" muted loop playsinline autoplay preload="auto" poster="video/hero-desktop.jpg" aria-label="Montage de séances photo au studio FACE BY DAKĒ"
+      data-desktop="video/hero-desktop.mp4" data-mobile="video/hero-mobile.mp4" data-poster-desktop="video/hero-desktop.jpg" data-poster-mobile="video/hero-mobile.jpg"></video>
+  </figure>
+  <h1 class="hero-title"><span class="br" aria-hidden="true">[</span><em>Shape your image</em><span class="br" aria-hidden="true">]</span><span class="sr-only"> — FACE BY DAKĒ, studio photo et vidéo pour talents à Paris Sud</span></h1>
+  <span class="scroll caps" aria-hidden="true">Scroll</span>
+</section>
+
+<!-- ============ MANIFESTE ============ -->
+<section class="manifest section grid" data-tone="dark" aria-label="Le studio">
+  <span class="caps">/ Le studio</span>
+  <div class="copy reveal">
+    <p>Photo, vidéo et direction artistique pour talents, mannequins, comédiens et créatifs. Des images fortes, <em>pensées avec intention.</em></p>
+    <a href="#seances">Voir les séances ↓</a>
+  </div>
+  <!-- Le photographe : photo éditoriale + fiche en mono -->
+  <div class="credit reveal">
+    <figure class="credit-photo"><img src="img/jay-nb.jpg" alt="Jay Dogo dans le studio, de dos, devant le fond de prise de vue" loading="lazy"></figure>
+    <dl class="credit-card">
+      <dt>Daké©</dt><dd>Jay Dogo<br>Directeur créatif<br>+ photographe</dd>
+      <dt>Creative studio</dt><dd>Fondateur de <a href="https://dake.studio" target="_blank" rel="noopener">Daké© ↗</a><br><span class="credit-sub">Campagnes et projets de marque</span></dd>
+      <dt>A.</dt><dd>Paris, France</dd>
+      <dt>I:</dt><dd><a href="https://instagram.com/ledockernoir" target="_blank" rel="noopener">@ledockernoir</a></dd>
+      <dt>Clients</dt><dd>Longines<br>Tissot<br>Marie Claire<br>Stylist Magazine<br>Samsung<br>IKEA<br>Fondation de la Mode</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 01 RÉSULTATS ============ -->
+<section class="section results" id="resultats" aria-label="Sélection de photos">
+  <div class="folio caps"><span>face BY dakē</span><span>Selected photos</span><span>01 / 05</span></div>
+  <div class="mosaic">
+    <figure class="media reveal"><img src="img/bw-debardeur.jpg" alt="" loading="lazy" style="object-position:50% 20%"><figcaption class="caps"><span>Pola agence</span><span>df.01</span></figcaption></figure>
+    <figure class="media reveal"><img src="img/rideau-bleu.jpg" alt="" loading="lazy"><figcaption class="caps"><span>Portrait comédien</span><span>df.03</span></figcaption></figure>
+    <figure class="media reveal"><img src="img/bw-assise.jpg" alt="" loading="lazy"></figure>
+    <figure class="media reveal"><img src="img/rouge.jpg" alt="" loading="lazy" style="object-position:50% 0"></figure>
+    <figure class="media reveal"><img src="img/film-pied.jpg" alt="" loading="lazy"></figure>
+    <figure class="media reveal"><img src="img/debardeur-chaud.jpg" alt="" loading="lazy"></figure>
+    <figure class="media reveal"><img src="img/denim-brun.jpg" alt="" loading="lazy"><figcaption class="caps"><span>Éditorial</span><span>df.04</span></figcaption></figure>
+    <figure class="media reveal"><img src="img/hoodie.jpg" alt="" loading="lazy" style="object-position:50% 10%"></figure>
+  </div>
+</section>
+
+<!-- ============ 02 SÉANCES ============ -->
+<section class="section is-dark offers" data-tone="dark" id="seances" aria-labelledby="offers-title">
+  <div class="folio caps"><span>dakē face</span><span>Séances photo</span><span>02 / 05</span></div>
+  <div class="grid offers-head">
+    <h2 class="h2" id="offers-title">Choisis ton <em>format.</em></h2>
+    <p>Des polas pour une candidature rapide, un book pour construire ton portfolio.</p>
+  </div>
+
+  <div class="grid offers-body">
+    <div class="offer-list">
+      <article class="offer" data-offer="polas">
+        <button class="offer-head" type="button" aria-expanded="false" aria-controls="o-polas">
+          <span class="code caps">df.01</span>
+          <span class="name">Polas / Digitals</span>
+          <span class="price"><span data-price="polas">150</span>&nbsp;€</span>
+          <span class="tog-wrap"><span class="tog" aria-hidden="true"></span></span>
+          <span class="facts">30 min · 1 tenue · 10 polas</span>
+        </button>
+        <div class="offer-body" id="o-polas"><div class="offer-inner">
+          <div class="offer-car" data-car="polas" aria-label="Exemples de polas"></div>
+          <div class="car-ind" aria-hidden="true"><span class="dots"></span></div>
+          <div class="offer-content">
+            <p>Pour une candidature en agence ou une mise à jour rapide de tes digitals.</p>
+            <div>
+              <ul class="list">
+                <li>Face, profil, plan américain et pied, fond neutre</li>
+                <li>10 polas nettoyés</li>
+                <li>Visage et silhouette non modifiés, comme l’exigent les agences</li>
+                <li>Guide PDF des agences inclus, livraison sous 48 h</li>
+              </ul>
+              <button class="btn btn--light" type="button" data-book="polas">Réserver des polas</button>
+            </div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="offer" data-offer="decouverte">
+        <button class="offer-head" type="button" aria-expanded="false" aria-controls="o-decouverte">
+          <span class="code caps">df.02</span>
+          <span class="name">Book Découverte</span>
+          <span class="price"><span data-price="decouverte">300</span>&nbsp;€</span>
+          <span class="tog-wrap"><span class="tog" aria-hidden="true"></span></span>
+          <span class="facts">1 h 30 · 1 à 2 tenues · 6 photos</span>
+        </button>
+        <div class="offer-body" id="o-decouverte"><div class="offer-inner">
+          <div class="offer-car" data-car="decouverte" aria-label="Exemples de Book Découverte"></div>
+          <div class="car-ind" aria-hidden="true"><span class="dots"></span></div>
+          <div class="offer-content">
+            <p>Pour poser une première base de portfolio et trouver la direction qui te ressemble.</p>
+            <div>
+              <ul class="list">
+                <li>Échange en amont sur tes références et ton objectif</li>
+                <li>Direction artistique légère et personnalisée</li>
+                <li>6 photos retouchées</li>
+                <li>Galerie de sélection en ligne, polas en option</li>
+              </ul>
+              <button class="btn btn--light" type="button" data-book="decouverte">Réserver un Book Découverte</button>
+            </div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="offer is-open" data-offer="book">
+        <button class="offer-head" type="button" aria-expanded="true" aria-controls="o-book">
+          <span class="code caps">df.03</span>
+          <span class="name">Book <span class="pill">Recommandé</span></span>
+          <span class="price"><span data-price="book">400</span>&nbsp;€</span>
+          <span class="tog-wrap"><span class="tog" aria-hidden="true"></span></span>
+          <span class="facts">2 à 3 h · 1 à 3 tenues · 15 photos</span>
+        </button>
+        <div class="offer-body" id="o-book"><div class="offer-inner">
+          <div class="offer-car" data-car="book" aria-label="Exemples de Book"></div>
+          <div class="car-ind" aria-hidden="true"><span class="dots"></span></div>
+          <div class="offer-content">
+            <p>Pour constituer ou renouveler un portfolio complet, avec des images polyvalentes et éditoriales.</p>
+            <div>
+              <ul class="list">
+                <li>Échange créatif en amont</li>
+                <li>Direction artistique personnalisée</li>
+                <li>15 photos retouchées, galerie HD de sélection</li>
+                <li>Polas pendant la séance en option : +<span data-opt-price="polas">80</span> €</li>
+              </ul>
+              <button class="btn btn--light" type="button" data-book="book">Réserver un Book</button>
+            </div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="offer" data-offer="signature">
+        <button class="offer-head" type="button" aria-expanded="false" aria-controls="o-signature">
+          <span class="code caps">df.04</span>
+          <span class="name">Book Signature</span>
+          <span class="price"><span data-price="signature">600</span>&nbsp;€</span>
+          <span class="tog-wrap"><span class="tog" aria-hidden="true"></span></span>
+          <span class="facts">3 à 4 h · 1 à 4 tenues · 25 photos + polas</span>
+        </button>
+        <div class="offer-body" id="o-signature"><div class="offer-inner">
+          <div class="offer-car" data-car="signature" aria-label="Exemples de Book Signature"></div>
+          <div class="car-ind" aria-hidden="true"><span class="dots"></span></div>
+          <div class="offer-content">
+            <p>Pour explorer plusieurs directions et construire une identité visuelle forte.</p>
+            <div>
+              <ul class="list">
+                <li>Préparation créative approfondie</li>
+                <li>Direction artistique développée, plusieurs univers</li>
+                <li>25 photos retouchées et polas inclus</li>
+                <li>Accompagnement sur le rythme, les poses et les intentions</li>
+              </ul>
+              <button class="btn btn--light" type="button" data-book="signature">Réserver un Book Signature</button>
+            </div>
+          </div>
+        </div></div>
+      </article>
+    </div>
+
+    <aside class="b2b-note" aria-label="Marques et agences">
+      <div>
+        <span class="caps">Marques &amp; agences</span>
+        <p>Ces tarifs sont réservés aux talents. Pour un projet commercial ou une campagne de marque, c’est du côté de Daké Studio.</p>
+      </div>
+      <a class="btn btn--ghost btn--s" href="https://dake.studio" target="_blank" rel="noopener">Daké Studio <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+    </aside>
+
+    <aside class="stage" aria-label="Exemples de la formule">
+      <div class="stage-frame">
+        <div class="stage-track" id="stage-track"></div>
+        <div class="bars" id="stage-bars" aria-hidden="true"></div>
+        <div class="stage-nav"><button type="button" id="stage-prev" aria-label="Photo précédente"></button><button type="button" id="stage-next" aria-label="Photo suivante"></button></div>
+      </div>
+      <div class="stage-cap"><span id="stage-name">Exemples · Book</span><span class="num" id="stage-count">1 / 4</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 03 BANDE DÉMO ============ -->
+<section class="section demo" id="demo" aria-labelledby="demo-title">
+  <div class="folio caps"><span>dakē face</span><span>Vidéo</span><span>03 / 05</span></div>
+  <div class="grid demo-head">
+    <h2 class="h2" id="demo-title">Face caméra, <em>simplement.</em></h2>
+    <p>Une courte scène jouée en studio, pour montrer ta présence et ta justesse aux directeurs de casting.</p>
+  </div>
+  <div class="grid demo-body">
+    <figure class="media video reveal">
+      <!-- Aperçu de bande démo : extrait de 4 s en boucle, sans son (comme un gif) -->
+      <video class="loop" src="video/bandedemo/apercu.mp4" poster="video/bandedemo/apercu.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Aperçu d’une bande démo tournée au studio"></video>
+      <div class="tc caps" aria-hidden="true"><span>Scène 01 · Prise 01</span><span>00:00:52</span></div>
+    </figure>
+    <div class="demo-copy">
+      <span class="code caps">df.05</span>
+      <div class="demo-title"><h3>Bande démo</h3><span class="price"><span data-price="demo">250</span>&nbsp;€</span></div>
+      <ul class="list">
+        <li>1 h de tournage, 45 s à 1 min livrées</li>
+        <li>Tournage en studio</li>
+        <li>Lumière et prise de son incluses</li>
+        <li>1 scène simple et naturelle</li>
+        <li>1 version montée, 1 série de retours</li>
+      </ul>
+      <button class="btn" type="button" data-book="demo">Réserver une bande démo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 STUDIO ============ -->
+<section class="section studio" id="studio" aria-labelledby="studio-title">
+  <div class="folio caps"><span>dakē face</span><span>Le lieu</span><span>04 / 05</span></div>
+  <h2 class="h2" id="studio-title">le <em>studio.</em></h2>
+  <div class="grid studio-grid">
+    <figure class="media studio-wide reveal"><img src="img/studio-salon.jpg" alt="Le coin salon du studio : canapé, tulipes et magazines de mode" loading="lazy" style="object-position:55% 55%"></figure>
+    <figure class="media studio-detail reveal"><img src="img/studio-plateau.jpg" alt="Le plateau du studio : fond blanc, tabouret et grande parabole de lumière" loading="lazy" style="object-position:40% 50%"></figure>
+  </div>
+  <div class="grid studio-text">
+    <div class="left">
+      <blockquote>«&nbsp;Un espace intimiste pour prendre le temps de se placer, d’essayer et d’ajuster.&nbsp;»</blockquote>
+      <div class="rent">
+        <a class="btn btn--ink-ghost" href="mailto:face@dake.studio?subject=Location%20du%20studio">Louer le studio · Me contacter</a>
+        <p>Location à l’heure ou à la journée, sur demande.</p>
+      </div>
+    </div>
+    <div class="access">
+      <div><span class="caps">Adresse</span><span>Paris Sud · Adresse envoyée avec la confirmation</span></div>
+      <div><span class="caps">Accès</span><span>RER B · Métro 4</span></div>
+      <div><span class="caps">Sur place</span><span>Lumière naturelle et flash, vestiaire, miroir, fonds noir, blanc et colorés.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 INFOS ============ -->
+<section class="section infos" id="infos" aria-labelledby="infos-title">
+  <div class="folio caps"><span>dakē face</span><span>Infos pratiques</span><span>05 / 05</span></div>
+  <div class="ed-grid">
+    <div class="ed-side">
+      <h2 class="h2" id="infos-title">Avant de <em>réserver.</em></h2>
+      <p>Tout ce qu’il faut savoir avant ta séance. Une autre question ? Réponse sous 24&nbsp;h.</p>
+      <button class="btn" type="button" data-book>Réserver une séance</button>
+    </div>
+    <div class="ed-main">
+      <div class="ed-ch">
+        <h3 class="ed-k"><i>01</i>Options</h3>
+        <div class="ed-row"><span>Photo en plus</span><span class="price"><span data-opt-price="photo">20</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Pola en plus</span><span class="price"><span data-opt-price="pola">15</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Polas pendant un book</span><span class="price"><span data-opt-price="polas">80</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Heure en plus au studio</span><span class="price"><span data-opt-price="hour">40</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Retouche express 24&nbsp;h</span><span class="price"><span data-opt-price="express">50</span>&nbsp;€</span></div>
+        <div class="ed-row"><span>Make-up, coiffure, stylisme</span><small>Sur demande</small></div>
+        <div class="ed-row"><span>Séance dans un autre lieu</span><small>Sur devis</small></div>
+      </div>
+      <div class="ed-ch">
+        <h3 class="ed-k"><i>02</i>Conditions</h3>
+        <div class="ed-c"><span class="caps">Acompte</span><p><span data-deposit>50</span>&nbsp;€ pour bloquer ton créneau, déduit du total, <em>remboursable jusqu’à 48&nbsp;h avant.</em></p></div>
+        <div class="ed-c"><span class="caps">Solde</span><p>Le jour du shooting.</p></div>
+        <div class="ed-c"><span class="caps">Sélection</span><p>Tu choisis tes images dans une galerie privée.</p></div>
+        <div class="ed-c"><span class="caps">Livraison</span><p>Polas sous 48&nbsp;h, books et démos sous 7&nbsp;jours ouvrés.</p></div>
+        <div class="ed-c"><span class="caps">Fichiers</span><p>Retouchés uniquement, <em>pas de bruts.</em></p></div>
+      </div>
+      <div class="ed-ch">
+        <h3 class="ed-k"><i>03</i>Questions</h3>
+        <div class="ed-qi open"><button type="button" aria-expanded="true" aria-controls="faq-0">Que dois-je apporter pour les polas ?<span class="tog" aria-hidden="true"></span></button><div class="a" id="faq-0"><div><p>Une tenue simple et ajustée : un haut blanc, noir ou neutre, sans logo ni imprimé, et un bas près du corps. L’idée, c’est qu’on voie ta silhouette.</p></div></div></div>
+        <div class="ed-qi"><button type="button" aria-expanded="false" aria-controls="faq-1">Les vêtements sont-ils fournis ?<span class="tog" aria-hidden="true"></span></button><div class="a" id="faq-1"><div><p>Non. Maquillage, coiffure et stylisme peuvent être organisés sur demande, avec un tarif à part.</p></div></div></div>
+        <div class="ed-qi"><button type="button" aria-expanded="false" aria-controls="faq-2">Puis-je choisir les images livrées ?<span class="tog" aria-hidden="true"></span></button><div class="a" id="faq-2"><div><p>Oui. Tu reçois une galerie privée en ligne et tu sélectionnes tes photos avant la retouche. Chaque photo en plus de ta formule est à <span data-opt-price="photo">20</span>&nbsp;€, et chaque pola en plus à <span data-opt-price="pola">15</span>&nbsp;€.</p></div></div></div>
+        <div class="ed-qi"><button type="button" aria-expanded="false" aria-controls="faq-3">Puis-je venir accompagné·e ?<span class="tog" aria-hidden="true"></span></button><div class="a" id="faq-3"><div><p>Oui, une personne peut t’accompagner pendant la séance.</p></div></div></div>
+        <div class="ed-qi"><button type="button" aria-expanded="false" aria-controls="faq-4">Et si je dois annuler ou décaler ?<span class="tog" aria-hidden="true"></span></button><div class="a" id="faq-4"><div><p>L’acompte de <span data-deposit>50</span>&nbsp;€ est remboursé si tu annules au moins 48&nbsp;h avant la séance. Pour un report, écris dès que possible sur Instagram ou par email.</p></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ B2B ============ -->
+<section class="b2b grid" data-tone="dark" aria-label="Marques et agences">
+  <span class="caps">Marques &amp; agences</span>
+  <p>Ce site est dédié aux talents.<br>Pour un projet <em>commercial</em> ou une <em>campagne de marque</em>, découvrez notre studio créatif.</p>
+  <a class="btn btn--light" href="https://dake.studio" target="_blank" rel="noopener">Daké Studio <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a>
+</section>
+
+<div class="reveal-end" id="reveal-end" aria-hidden="true"></div>
+</main>
+
+<!-- ============ 06 RÉSERVATION ============ -->
+<footer class="final" data-tone="dark" id="contact" aria-labelledby="final-title">
+  <div class="grid final-top">
+    <h2 class="h2" id="final-title">Prêt·e à <em>construire</em> ton image ?</h2>
+  </div>
+  <div class="actions">
+    <button class="btn btn--light" type="button" data-book>Réserver ma séance</button>
+  </div>
+  <div class="coords">
+    <div><span class="caps">Studio</span><span>Paris Sud</span><span>RER B · Métro 4</span></div>
+    <div><span class="caps">Contact</span><a href="mailto:face@dake.studio">face@dake.studio</a><a href="https://instagram.com/dake.face" target="_blank" rel="noopener">@dake.face</a><a class="foot-ext" href="https://dake.studio" target="_blank" rel="noopener">Daké Studio <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a></div>
+    <div><span class="caps">Réponse</span><span>Sous 24 h</span></div>
+    <div><span class="caps">Heure au studio</span><span class="num" id="clock">--:--</span></div>
+  </div>
+  <p class="spread" aria-hidden="true"><span>F</span><span>A</span><span>C</span><span>E</span><span class="gap"></span><span>B</span><span>Y</span><span class="gap"></span><span>D</span><span>A</span><span>K</span><span>Ē</span></p>
+  <div class="foot">
+    <span>© 2026 <a href="https://dake.studio" target="_blank" rel="noopener">Daké Creative Studio</a></span>
+    <a href="#mentions">Mentions légales</a>
+  </div>
+</footer>
+
+<!-- Barre « Réserver » (mobile) -->
+<div class="dock" id="dock">
+  <span>Dès <strong class="num"><span data-price="polas">150</span> €</strong></span>
+  <button class="btn btn--light" type="button" data-book>Réserver</button>
+</div>
+
+<!-- ============ TUNNEL DE RÉSERVATION ============ -->
+<div class="booking" id="booking" role="dialog" aria-modal="true" aria-labelledby="bk-title" aria-hidden="true">
+  <div class="booking-scrim" data-close></div>
+  <div class="booking-panel" tabindex="-1">
+    <div class="bk-head">
+      <div class="bk-top">
+        <h2 class="bk-title" id="bk-title">Réserver une séance</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Fermer"><span class="icon-x"></span></button>
+      </div>
+      <div class="bk-progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+      <p class="bk-steplabel"><span id="bk-steptext">Étape 1 sur 5</span><span id="bk-stepname">Formule</span></p>
+    </div>
+
+    <div class="bk-body" data-lenis-prevent>
+      <section class="bk-step" data-step="1" aria-labelledby="s1t">
+        <h3 id="s1t">Quelle séance ?</h3>
+        <p class="hint">Tu pourras ajuster avec le studio après ta demande.</p>
+        <div id="bk-offers" role="radiogroup" aria-labelledby="s1t"></div>
+        <p class="err" id="err-offer">Choisis une formule pour continuer.</p>
+      </section>
+
+      <section class="bk-step" data-step="2" aria-labelledby="s2t" hidden>
+        <h3 id="s2t">Des options ?</h3>
+        <p class="hint">Facultatif. Tout est modifiable jusqu’au jour J.</p>
+        <div class="opt" data-row="photos">
+          <span class="opt-label"><span id="photos-label">Photos supplémentaires</span><span class="opt-sub" id="photos-sub"></span></span>
+          <div class="stepper">
+            <button type="button" data-dec="photos" aria-label="Retirer une photo">−</button>
+            <output id="out-photos" aria-live="polite">0</output>
+            <button type="button" data-inc="photos" aria-label="Ajouter une photo">+</button>
+          </div>
+        </div>
+        <div class="opt" data-row="hours">
+          <span class="opt-label">Heures supplémentaires<span class="opt-sub"><span data-opt-price="hour">40</span> € l’heure au studio</span></span>
+          <div class="stepper">
+            <button type="button" data-dec="hours" aria-label="Retirer une heure">−</button>
+            <output id="out-hours" aria-live="polite">0</output>
+            <button type="button" data-inc="hours" aria-label="Ajouter une heure">+</button>
+          </div>
+        </div>
+        <div class="opt" data-row="express">
+          <label class="opt-label" for="f-express">Retouche express sous 24 h<span class="opt-sub" id="express-sub"></span></label>
+          <span class="switch"><input type="checkbox" id="f-express" data-field="express"><span></span></span>
+        </div>
+        <div class="opt" data-row="polas">
+          <label class="opt-label" for="f-polas">Polas pendant la séance<span class="opt-sub" id="polas-sub"></span></label>
+          <span class="switch"><input type="checkbox" id="f-polas" data-field="polasAdd"><span></span></span>
+        </div>
+        <div class="opt">
+          <label class="opt-label" for="f-team">Maquillage, coiffure ou stylisme<span class="opt-sub">Sur demande, chiffré à part</span></label>
+          <span class="switch"><input type="checkbox" id="f-team" data-field="team"><span></span></span>
+        </div>
+        <div class="opt">
+          <label class="opt-label" for="f-elsewhere">Séance dans un autre lieu<span class="opt-sub">Sur devis</span></label>
+          <span class="switch"><input type="checkbox" id="f-elsewhere" data-field="elsewhere"><span></span></span>
+        </div>
+      </section>
+
+      <section class="bk-step" data-step="3" aria-labelledby="s3t" hidden>
+        <h3 id="s3t">Quand ?</h3>
+        <p class="hint">Propose une date. Le créneau exact est confirmé sous 24 h.</p>
+        <div class="cal-head">
+          <strong id="cal-label" aria-live="polite"></strong>
+          <div class="cal-nav">
+            <button type="button" id="cal-prev" aria-label="Semaines précédentes">‹</button>
+            <button type="button" id="cal-next" aria-label="Semaines suivantes">›</button>
+          </div>
+        </div>
+        <div class="cal" id="cal" role="group" aria-label="Choisir une date"></div>
+        <div class="cal-legend" aria-hidden="true">
+          <span><i class="lg lg-free"></i>Disponible</span>
+          <span><i class="lg lg-part"></i>Quelques créneaux</span>
+          <span><i class="lg lg-full"></i>Complet</span>
+        </div>
+        <p class="err" id="err-date">Choisis une date.</p>
+        <div class="slots" id="slots" role="radiogroup" aria-label="Moment de la journée"></div>
+        <p class="err" id="err-slot">Choisis un moment de la journée.</p>
+        <label class="check"><input type="checkbox" data-field="flexible"><span>Mes disponibilités sont flexibles, d’autres dates me conviennent.</span></label>
+      </section>
+
+      <section class="bk-step" data-step="4" aria-labelledby="s4t" hidden>
+        <h3 id="s4t">Toi</h3>
+        <p class="hint">Pour te recontacter et préparer la séance.</p>
+        <div class="two">
+          <div class="field">
+            <label for="f-first">Prénom</label>
+            <input class="input" id="f-first" data-field="firstName" autocomplete="given-name" required aria-describedby="err-first">
+            <p class="err" id="err-first">Indique ton prénom.</p>
+          </div>
+          <div class="field">
+            <label for="f-last">Nom <span class="opt-tag">facultatif</span></label>
+            <input class="input" id="f-last" data-field="lastName" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input class="input" id="f-email" type="email" inputmode="email" data-field="email" autocomplete="email" required aria-describedby="err-email">
+          <p class="err" id="err-email">Indique un email valide, par exemple prenom@mail.com.</p>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="f-phone">Téléphone</label>
+            <input class="input" id="f-phone" type="tel" inputmode="tel" data-field="phone" autocomplete="tel" required aria-describedby="err-phone">
+            <p class="err" id="err-phone">Indique un numéro d’au moins 10 chiffres.</p>
+          </div>
+          <div class="field">
+            <label for="f-ig">Instagram <span class="opt-tag">facultatif</span></label>
+            <input class="input" id="f-ig" data-field="instagram" placeholder="@" autocapitalize="off" autocorrect="off">
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="lbl-profile">Tu es</span>
+          <div class="chips" id="chips-profile" role="radiogroup" aria-labelledby="lbl-profile"></div>
+        </div>
+        <div class="field">
+          <label for="f-goal">Objectif <span class="opt-tag">facultatif</span></label>
+          <select class="input" id="f-goal" data-field="goal">
+            <option value="">Choisir</option>
+            <option>Candidature en agence</option>
+            <option>Premier book</option>
+            <option>Renouveler mon book</option>
+            <option>Casting en cours</option>
+            <option>Réseaux ou site personnel</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-msg">Message <span class="opt-tag">facultatif</span></label>
+          <textarea class="input" id="f-msg" data-field="message" placeholder="Références, agence visée, envies particulières…"></textarea>
+        </div>
+      </section>
+
+      <section class="bk-step" data-step="5" aria-labelledby="s5t" hidden>
+        <h3 id="s5t">Vérifie ta demande</h3>
+        <p class="hint">Rien n’est débité maintenant. L’acompte se règle après confirmation du créneau.</p>
+        <dl class="recap" id="recap"></dl>
+        <ul class="bill" id="bill"></ul>
+        <div class="send">
+          <a class="btn btn--block" id="send-mail" href="#">Envoyer ma demande par email</a>
+          <a class="btn btn--ink-ghost btn--block" id="send-ig" href="https://ig.me/m/dake.face" target="_blank" rel="noopener">Envoyer sur Instagram</a>
+        </div>
+        <p class="note">Sur Instagram, le récapitulatif est copié : colle-le dans la conversation.</p>
+        <button class="btn btn--ink-ghost" type="button" style="margin-top:18px" data-goto-back>Retour</button>
+      </section>
+
+      <section class="bk-step done" data-step="6" aria-labelledby="s6t" hidden>
+        <div class="mark" aria-hidden="true"></div>
+        <h3 id="s6t">Demande prête à partir</h3>
+        <p class="hint">Envoie le message qui vient de s’ouvrir. Tu reçois sous 24 h la confirmation du créneau et le lien de paiement de l’acompte.</p>
+        <div class="send">
+          <button class="btn btn--ink-ghost btn--block" type="button" id="copy-recap">Copier le récapitulatif</button>
+          <button class="btn btn--block" type="button" data-close>Fermer</button>
+        </div>
+        <p class="note">Le message ne s’est pas ouvert ? Copie le récapitulatif et envoie-le à <a href="mailto:face@dake.studio">face@dake.studio</a>.</p>
+      </section>
+    </div>
+
+    <div class="bk-foot" id="bk-foot">
+      <div class="bk-total">
+        <span><small>Total estimé</small><strong class="num" id="bk-total">0 €</strong></span>
+        <span style="text-align:right;font-size:.875rem;color:var(--muted)">Acompte <span class="num" id="bk-deposit">0 €</span><br>Solde le jour J</span>
+      </div>
+      <div class="bk-actions">
+        <button class="btn btn--ink-ghost" type="button" id="bk-back">Retour</button>
+        <button class="btn" type="button" id="bk-next">Continuer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

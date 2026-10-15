@@ -1,0 +1,7 @@
+# Rushs et vidéos d'origine : trop lourds, jamais en ligne (seuls hero-* et bandedemo/apercu.* sont publiés)
+video/*.MOV
+video/*.mov
+video/bandedemo/*.MP4
+video/bandedemo/*.mp4
+!video/bandedemo/apercu.mp4
+.DS_Store

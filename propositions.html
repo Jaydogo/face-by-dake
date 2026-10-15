@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Propositions · titre et Avant de réserver</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body{background:#E6E1D8}
+  .pg{max-width:1280px;margin:0 auto;padding:40px var(--gut) 120px}
+  .pg-head{margin-bottom:40px}
+  .pg-head h1{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3.25rem);letter-spacing:-.03em;line-height:1}
+  .pg-head p{margin-top:12px;color:var(--muted);max-width:60ch}
+  .grp{margin-top:72px}
+  .grp > h2{font-family:var(--serif);font-weight:300;font-size:clamp(1.6rem,3vw,2.4rem);letter-spacing:-.025em;margin-bottom:8px}
+  .grp > p{color:var(--muted);margin-bottom:28px;max-width:62ch}
+  .tag{display:inline-flex;align-items:center;gap:10px;margin:36px 0 12px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+  .tag b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--cream);font-weight:500;letter-spacing:0}
+  .tag span{color:var(--muted)}
+  .note{margin-top:10px;font-size:.875rem;color:var(--muted);max-width:70ch}
+
+  /* ---------- Héros ---------- */
+  .hx{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:6px;color:var(--on-dark);background:#2A2624 center/cover no-repeat}
+  .hx::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,20,18,.5),rgba(26,20,18,.05) 25%,rgba(26,20,18,.05) 65%,rgba(26,20,18,.55))}
+  .hx > *{position:absolute;z-index:1}
+  .hx .bar{left:3%;right:3%;top:4%;display:flex;justify-content:space-between;align-items:center;font-size:clamp(.5rem,.95vw,.8rem)}
+  .hx .bar .nav{display:flex;gap:2.2em;letter-spacing:.14em;text-transform:uppercase;font-size:.85em;opacity:.9}
+  .hx .bar .cta{background:var(--cream);color:var(--ink);border-radius:999px;padding:.55em 1.1em;font-weight:500}
+  .hx .scroll{left:3%;bottom:5%;font-size:clamp(.45rem,.8vw,.7rem);letter-spacing:.14em;text-transform:uppercase}
+  .serif{font-family:var(--serif);font-weight:300;letter-spacing:-.02em;line-height:.95}
+  .caps-s{font-size:clamp(.45rem,.85vw,.75rem);letter-spacing:.16em;text-transform:uppercase}
+  /* A actuel */
+  .hA .t{left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(1.6rem,5vw,4.4rem);font-style:italic;white-space:nowrap}
+  /* B : éclaté sur la diagonale */
+  .hB .t1{left:3%;top:20%;font-size:clamp(2.4rem,10vw,9rem)}
+  .hB .t2{right:3%;bottom:12%;font-size:clamp(2.4rem,10vw,9rem);font-style:italic;text-align:right}
+  .hB .s{left:3%;bottom:7%}
+  .hB .s2{right:3%;top:22%;text-align:right;max-width:24ch;font-size:clamp(.5rem,1vw,.85rem);line-height:1.4;opacity:.85}
+  /* C : manifeste centré + sous-titre */
+  .hC .k{left:50%;top:34%;transform:translateX(-50%);opacity:.75}
+  .hC .t{left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(1.8rem,6vw,5.4rem);text-align:center;white-space:nowrap}
+  .hC .t em{font-style:italic}
+  .hC .s{left:50%;top:64%;transform:translateX(-50%);display:flex;gap:1.6em;opacity:.85}
+  /* D : géant en bas, info à droite */
+  .hD .t{left:2.6%;bottom:3%;font-size:clamp(3.4rem,17vw,15rem);line-height:.82;letter-spacing:-.045em}
+  .hD .t em{font-style:italic}
+  .hD .s{right:3%;bottom:6%;text-align:right;font-size:clamp(.55rem,1.05vw,.9rem);line-height:1.45;max-width:26ch}
+  .hD .scroll{display:none}
+  .mob{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+  .mob .hx{aspect-ratio:9/16;width:min(220px,46%);border-radius:14px}
+  .mob .hx .bar .nav,.mob .hx .bar .cta{display:none}
+  .mob .hx .bar::after{content:"Menu";font-size:.7rem}
+  .mob .hA .t{font-size:1.45rem}
+  .mob .hB .t1,.mob .hB .t2{font-size:3.1rem}.mob .hB .t1{top:16%}.mob .hB .t2{bottom:14%}.mob .hB .s2{display:none}
+  .mob .hC .t{font-size:1.75rem;white-space:normal;width:86%}.mob .hC .k{top:36%}.mob .hC .s{top:62%;font-size:.45rem;gap:.8em}
+  .mob .hD .t{font-size:4.6rem;bottom:15%}.mob .hD .s{left:6%;right:auto;text-align:left;bottom:6%;font-size:.55rem}
+  .mob .caps-s{font-size:.45rem}
+
+  /* ---------- Avant de réserver ---------- */
+  .ix{border-radius:6px;overflow:hidden;padding:clamp(28px,5vw,72px) clamp(18px,4vw,56px);background:var(--cream)}
+  .ix .h2{margin-bottom:clamp(24px,4vw,48px)}
+  /* 1 : onglets */
+  .tabs{display:inline-flex;gap:4px;padding:4px;border-radius:999px;background:rgba(26,20,18,.06);margin-bottom:28px}
+  .tabs button{all:unset;cursor:pointer;padding:10px 18px;border-radius:999px;font-size:.9375rem;transition:background-color .35s var(--ease),color .35s var(--ease)}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:var(--cream)}
+  .panel[hidden]{display:none}
+  .chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+  .chip{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-radius:14px;background:var(--paper)}
+  .chip b{font-weight:400;font-variant-numeric:tabular-nums}
+  .chip small{color:var(--muted)}
+  .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+  .kv div{padding:16px 18px;border-radius:14px;background:var(--paper)}
+  .kv span{display:block;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .qa details{background:var(--paper);border-radius:14px;margin-bottom:6px}
+  .qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;padding:16px 18px;font-weight:500}
+  .qa summary::-webkit-details-marker{display:none}
+  .qa p{padding:0 18px 16px;color:var(--muted)}
+  /* 2 : déroulé en étapes */
+  .steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:s;margin-bottom:clamp(40px,6vw,72px);border-top:1px solid rgba(26,20,18,.15)}
+  .step{padding:22px 18px 0 0;position:relative}
+  .step::before{content:"";position:absolute;top:-5px;left:0;width:9px;height:9px;border-radius:50%;background:var(--ink)}
+  .step .n{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.8rem,3vw,2.6rem);line-height:1;color:var(--bordeaux)}
+  .step h4{margin:10px 0 6px;font-weight:500;font-size:1rem}
+  .step p{font-size:.875rem;color:var(--muted)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px)}
+  .two h3,.bento h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,2vw,1.8rem);letter-spacing:-.02em;margin-bottom:16px}
+  .price-line{display:flex;align-items:baseline;gap:10px;padding:12px 0}
+  .price-line span:first-child{flex:none}
+  .price-line i{flex:1;border-bottom:1px dotted rgba(26,20,18,.3);transform:translateY(-4px)}
+  .price-line b{font-weight:400}
+  /* 3 : bento chiffres clés */
+  .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .tile{border-radius:16px;padding:20px;background:var(--paper);display:flex;flex-direction:column;justify-content:space-between;min-height:170px}
+  .tile .big{font-family:var(--serif);font-weight:300;font-size:clamp(2.6rem,5vw,4.2rem);line-height:.9;letter-spacing:-.04em}
+  .tile .big em{font-style:italic}
+  .tile p{font-size:.875rem;color:var(--muted);margin-top:10px}
+  .tile.dark{background:var(--ink);color:var(--cream)}.tile.dark p{color:rgba(243,237,227,.6)}
+  .tile.red{background:var(--bordeaux);color:var(--cream)}.tile.red p{color:rgba(243,237,227,.7)}
+  .tile.wide{grid-column:span 2}
+  .tile.tall{grid-row:span 2}
+  .bento .opts{grid-column:span 2;grid-row:span 2;justify-content:flex-start}
+  @media (max-width:860px){
+    .steps{grid-template-columns:1fr;border-top:0;border-left:1px solid rgba(26,20,18,.15);padding-left:20px}
+    .step{padding:0 0 22px}.step::before{left:-25px;top:6px}
+    .two{grid-template-columns:1fr}
+    .bento{grid-template-columns:1fr 1fr}.tile.wide,.bento .opts{grid-column:1 / -1}.bento .opts{grid-row:auto}
+  }
+
+  /* 4 : verre dépoli sur photo */
+  .gx{position:relative;border-radius:6px;overflow:hidden;padding:clamp(28px,5vw,72px) clamp(14px,4vw,56px);background:#2A2624 url(img/bw-sol.jpg) center/cover no-repeat;color:var(--ink)}
+  .gx::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,20,18,.15),rgba(26,20,18,.35))}
+  .gx > *{position:relative}
+  .gx .h2{color:var(--cream);margin-bottom:clamp(24px,4vw,40px)}
+  .glass{background:rgba(243,237,227,.62);-webkit-backdrop-filter:blur(28px) saturate(1.5);backdrop-filter:blur(28px) saturate(1.5);border:1px solid rgba(255,255,255,.55);box-shadow:0 24px 70px rgba(26,20,18,.25),inset 0 1px 0 rgba(255,255,255,.6);border-radius:26px}
+  .glass-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:12px;align-items:start}
+  .glass-col{display:grid;gap:12px;align-content:start}
+  .gcard{padding:22px}
+  .gcard h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,2vw,1.8rem);letter-spacing:-.02em;margin-bottom:14px}
+  .gopt{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:6px;border-radius:14px;background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+  .gopt b{font-weight:400;font-variant-numeric:tabular-nums;white-space:nowrap}.gopt small{color:var(--muted);white-space:nowrap}
+  .gkv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .gkv div{padding:14px;border-radius:14px;background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);font-size:.9375rem}
+  .gkv span{display:block;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .gkv .full{grid-column:1 / -1}
+  .gq details{border-radius:14px;margin-bottom:6px;background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+  .gq details[open]{background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1.5px var(--ink)}
+  .gq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:12px;padding:14px;font-weight:500}
+  .gq summary::-webkit-details-marker{display:none}
+  .gq p{padding:0 14px 14px;color:var(--muted);font-size:.9375rem}
+  .gfoot{margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 12px 12px 22px;border-radius:999px}
+  .gfoot span{font-size:.9375rem}
+  @media (max-width:860px){.glass-grid{grid-template-columns:1fr}.gkv{grid-template-columns:1fr}.gcard{padding:18px}.gfoot{border-radius:22px;flex-direction:column;align-items:stretch;text-align:center;padding:16px}}
+
+  /* 5 : éditorial */
+  .ed{border-radius:6px;padding:clamp(40px,7vw,112px) clamp(16px,4vw,56px);background:var(--cream)}
+  .ed-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:start}
+  .ed-side{position:sticky;top:24px}
+  .ed-side .h2{margin-bottom:24px}
+  .ed-side p{color:var(--muted);max-width:30ch;margin-bottom:28px}
+  .ed-ch{margin-bottom:clamp(48px,6vw,80px)}
+  .ed-ch:last-child{margin-bottom:0}
+  .ed-k{display:flex;gap:14px;align-items:baseline;margin-bottom:22px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .ed-k i{font-family:var(--serif);font-style:italic;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--bordeaux)}
+  /* lignes : même alignement au repos, au survol et ouvertes (le fond déborde, pas le texte) */
+  .ed-row,.ed-c,.ed-qi{margin-inline:-18px;padding-inline:18px;border-radius:16px;transition:background-color .35s var(--ease)}
+  .ed-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-block:10px}
+  .ed-row span{font-family:var(--serif);font-weight:300;font-size:clamp(1.3rem,2vw,1.75rem);letter-spacing:-.02em;line-height:1.15}
+  .ed-row .price{font-size:1rem;flex:none}
+  .ed-row small{flex:none;color:var(--muted);font-size:.9375rem}
+  @media (hover:hover){.ed-row:hover,.ed-c:hover,.ed-qi:not(.open):hover{background:rgba(26,20,18,.04)}}
+  .ed-c{display:grid;grid-template-columns:130px 1fr;gap:20px;align-items:baseline;padding-block:12px}
+  .ed-c .caps{color:var(--muted)}
+  .ed-c p{font-family:var(--serif);font-weight:300;font-size:clamp(1.2rem,1.8vw,1.5rem);letter-spacing:-.015em;line-height:1.25}
+  .ed-c p em{font-style:italic}
+  .ed-qi.open{background:var(--paper)}
+  .ed-qi button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding-block:14px;font-family:var(--serif);font-weight:300;font-size:clamp(1.3rem,2vw,1.75rem);letter-spacing:-.02em;line-height:1.15}
+  .ed-qi button:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:8px}
+  .ed-qi .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+  .ed-qi.open .a{grid-template-rows:1fr}
+  .ed-qi .a > div{overflow:hidden}
+  .ed-qi .a p{padding-bottom:18px;color:var(--muted);max-width:52ch;opacity:0;transform:translateY(-6px);transition:opacity .35s var(--ease),transform .45s var(--ease)}
+  .ed-qi.open .a p{opacity:1;transform:none;transition-delay:.12s}
+  .ed-qi .tog::after{transition:transform .45s var(--ease)}
+  .ed-qi.open .tog::after{transform:rotate(0deg)}
+  @media (max-width:860px){.ed-grid{grid-template-columns:1fr}.ed-side{position:static}.ed-c{grid-template-columns:1fr;gap:4px}.ed-row,.ed-c,.ed-qi{margin-inline:-12px;padding-inline:12px}}
+</style>
+</head>
+<body>
+<div class="pg">
+  <div class="pg-head">
+    <h1>Propositions</h1>
+    <p>Maquettes à valider avant intégration. Les fonds sont des images fixes du montage, la vidéo tournera derrière une fois en place. Desktop en grand, mobile en dessous.</p>
+  </div>
+
+  <!-- ================= TITRE DU HERO ================= -->
+  <section class="grp">
+    <h2>Titre du hero</h2>
+    <p>Même univers (Newsreader, crème sur la vidéo), quatre façons de le poser.</p>
+
+    <div class="tag"><b>A</b> Actuel <span>· centré, italique</span></div>
+    <div class="hx hA" style="background-image:url(video/hero-desktop.jpg)">
+      <div class="bar"><span>FACE BY DAKĒ©</span><span class="nav"><span>Séances</span><span>Bande démo</span><span>Studio</span><span>Infos</span></span><span class="cta">Réserver</span></div>
+      <div class="t serif">Shape your image</div><div class="scroll">Scroll</div>
+    </div>
+
+    <div class="tag"><b>B</b> Éclaté <span>· « Shape » en haut à gauche, « your image » en bas à droite</span></div>
+    <div class="hx hB" style="background-image:url(video/hero-desktop.jpg)">
+      <div class="bar"><span>FACE BY DAKĒ©</span><span class="nav"><span>Séances</span><span>Bande démo</span><span>Studio</span><span>Infos</span></span><span class="cta">Réserver</span></div>
+      <div class="t1 serif">Shape</div>
+      <div class="s2">Polas, books et bandes démo pour talents. Paris Sud.</div>
+      <div class="t2 serif">your image</div>
+      <div class="s caps-s">Scroll</div>
+    </div>
+    <div class="mob">
+      <div class="hx hB" style="background-image:url(video/hero-mobile.jpg)"><div class="bar"><span>FACE BY DAKĒ©</span></div><div class="t1 serif">Shape</div><div class="t2 serif">your<br>image</div><div class="s caps-s">Scroll</div></div>
+    </div>
+    <p class="note">Le plus « affiche ». Les deux blocs encadrent la vidéo sans la cacher au centre, où se trouvent les visages.</p>
+
+    <div class="tag"><b>C</b> Manifeste <span>· accroche + formats en dessous</span></div>
+    <div class="hx hC" style="background-image:url(video/hero-desktop.jpg)">
+      <div class="bar"><span>FACE BY DAKĒ©</span><span class="nav"><span>Séances</span><span>Bande démo</span><span>Studio</span><span>Infos</span></span><span class="cta">Réserver</span></div>
+      <div class="k caps-s">Studio photo &amp; vidéo · Paris Sud</div>
+      <div class="t serif">Your face, <em>your frame.</em></div>
+      <div class="s caps-s"><span>Polas</span><span>Books</span><span>Bandes démo</span></div>
+      <div class="scroll">Scroll</div>
+    </div>
+    <div class="mob">
+      <div class="hx hC" style="background-image:url(video/hero-mobile.jpg)"><div class="bar"><span>FACE BY DAKĒ©</span></div><div class="k caps-s">Studio · Paris Sud</div><div class="t serif">Your face, <em>your frame.</em></div><div class="s caps-s"><span>Polas</span><span>Books</span><span>Démos</span></div></div>
+    </div>
+    <p class="note">Le plus clair : on comprend tout de suite ce que tu fais. Autres accroches possibles dans ce format : « Made to be <em>cast.</em> », « Shape your <em>image.</em> ».</p>
+
+    <div class="tag"><b>D</b> Géant <span>· très grand en bas, infos à droite</span></div>
+    <div class="hx hD" style="background-image:url(video/hero-desktop.jpg)">
+      <div class="bar"><span>FACE BY DAKĒ©</span><span class="nav"><span>Séances</span><span>Bande démo</span><span>Studio</span><span>Infos</span></span><span class="cta">Réserver</span></div>
+      <div class="t serif">Be <em>seen.</em></div>
+      <div class="s">Polas, books et bandes démo<br>pour talents, mannequins et comédiens.<br>Paris Sud · Dès 150 €</div>
+    </div>
+    <div class="mob">
+      <div class="hx hD" style="background-image:url(video/hero-mobile.jpg)"><div class="bar"><span>FACE BY DAKĒ©</span></div><div class="t serif">Be<br><em>seen.</em></div><div class="s">Polas, books, bandes démo<br>Paris Sud · Dès 150 €</div></div>
+    </div>
+    <p class="note">Le plus impactant, dans l'esprit du grand logotype du footer. Fonctionne aussi avec « Shape <em>your image</em> » sur deux lignes.</p>
+  </section>
+
+  <!-- ================= AVANT DE RÉSERVER ================= -->
+  <section class="grp">
+    <h2>Avant de réserver</h2>
+    <p>Trois façons de sortir du tableau classique options / conditions / FAQ.</p>
+
+    <div class="tag"><b>1</b> Onglets <span>· tout tient en un seul écran</span></div>
+    <div class="ix">
+      <h2 class="h2">Avant de <em>réserver.</em></h2>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-t="p-opt">Options</button>
+        <button role="tab" aria-selected="false" data-t="p-cond">Conditions</button>
+        <button role="tab" aria-selected="false" data-t="p-faq">Questions</button>
+      </div>
+      <div class="panel" id="p-opt">
+        <div class="chips">
+          <div class="chip"><span>Photo en plus</span><b>20 €</b></div>
+          <div class="chip"><span>Pola en plus</span><b>15 €</b></div>
+          <div class="chip"><span>Polas pendant un book</span><b>80 €</b></div>
+          <div class="chip"><span>Heure en plus</span><b>40 €</b></div>
+          <div class="chip"><span>Retouche express 24 h</span><b>50 €</b></div>
+          <div class="chip"><span>Make-up, coiffure, stylisme</span><small>Sur demande</small></div>
+        </div>
+      </div>
+      <div class="panel" id="p-cond" hidden>
+        <div class="kv">
+          <div><span>Acompte</span>50 € à la confirmation, remboursable jusqu’à 48 h avant</div>
+          <div><span>Solde</span>Le jour du shooting</div>
+          <div><span>Sélection</span>Galerie privée en ligne</div>
+          <div><span>Livraison</span>Polas sous 48 h, books sous 7 jours ouvrés</div>
+          <div><span>Fichiers</span>Retouchés uniquement, pas de bruts</div>
+        </div>
+      </div>
+      <div class="panel qa" id="p-faq" hidden>
+        <details open><summary>Que dois-je apporter pour les polas ?<span>–</span></summary><p>Une tenue simple et ajustée : un haut blanc, noir ou neutre, sans logo ni imprimé. L’idée, c’est qu’on voie ta silhouette.</p></details>
+        <details><summary>Puis-je choisir les images livrées ?<span>+</span></summary></details>
+        <details><summary>Et si je dois annuler ou décaler ?<span>+</span></summary></details>
+      </div>
+    </div>
+    <p class="note">Le plus compact : la section fait la moitié de sa hauteur actuelle. Moins « page de conditions », plus « appli ».</p>
+
+    <div class="tag"><b>2</b> Déroulé <span>· « comment ça se passe » en 5 étapes</span></div>
+    <div class="ix">
+      <h2 class="h2">Comment ça <em>se passe.</em></h2>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h4>Tu réserves</h4><p>Formule, date, en 2 minutes. Réponse sous 24 h.</p></div>
+        <div class="step"><div class="n">02</div><h4>Acompte</h4><p>50 € pour bloquer le créneau, remboursable jusqu’à 48 h avant.</p></div>
+        <div class="step"><div class="n">03</div><h4>La séance</h4><p>Au studio, Paris Sud. Le solde se règle sur place.</p></div>
+        <div class="step"><div class="n">04</div><h4>Ta sélection</h4><p>Tu choisis tes images dans une galerie privée.</p></div>
+        <div class="step"><div class="n">05</div><h4>Livraison</h4><p>Polas sous 48 h, books sous 7 jours. Retouchées, pas de bruts.</p></div>
+      </div>
+      <div class="two">
+        <div>
+          <h3>Options</h3>
+          <div class="price-line"><span>Photo en plus</span><i></i><b>20 €</b></div>
+          <div class="price-line"><span>Pola en plus</span><i></i><b>15 €</b></div>
+          <div class="price-line"><span>Polas pendant un book</span><i></i><b>80 €</b></div>
+          <div class="price-line"><span>Heure en plus</span><i></i><b>40 €</b></div>
+          <div class="price-line"><span>Retouche express 24 h</span><i></i><b>50 €</b></div>
+        </div>
+        <div class="qa"><h3>Questions</h3>
+          <details><summary>Que dois-je apporter pour les polas ?<span>+</span></summary></details>
+          <details><summary>Puis-je choisir les images livrées ?<span>+</span></summary></details>
+          <details><summary>Et si je dois annuler ou décaler ?<span>+</span></summary></details>
+        </div>
+      </div>
+    </div>
+    <p class="note">Le plus rassurant : les conditions deviennent un parcours qu’on lit naturellement. Les options passent en « carte de restaurant » avec pointillés.</p>
+
+    <div class="tag"><b>3</b> Bento <span>· les chiffres clés en grand</span></div>
+    <div class="ix">
+      <h2 class="h2">Avant de <em>réserver.</em></h2>
+      <div class="bento">
+        <div class="tile red"><div class="big">50&nbsp;€</div><p>d’acompte, déduit du total, remboursable jusqu’à 48 h avant</p></div>
+        <div class="tile dark"><div class="big"><em>24</em> h</div><p>pour te répondre et confirmer ton créneau</p></div>
+        <div class="tile opts"><h3>Options</h3>
+          <div class="price-line"><span>Photo en plus</span><i></i><b>20 €</b></div>
+          <div class="price-line"><span>Pola en plus</span><i></i><b>15 €</b></div>
+          <div class="price-line"><span>Polas pendant un book</span><i></i><b>80 €</b></div>
+          <div class="price-line"><span>Heure en plus</span><i></i><b>40 €</b></div>
+          <div class="price-line"><span>Retouche express 24 h</span><i></i><b>50 €</b></div>
+        </div>
+        <div class="tile"><div class="big"><em>48</em> h</div><p>pour recevoir tes polas</p></div>
+        <div class="tile"><div class="big">7 <em>j</em></div><p>pour ton book ou ta bande démo</p></div>
+        <div class="tile wide qa" style="min-height:auto"><h3>Questions</h3>
+          <details><summary>Que dois-je apporter pour les polas ?<span>+</span></summary></details>
+          <details><summary>Et si je dois annuler ou décaler ?<span>+</span></summary></details>
+        </div>
+        <div class="tile wide dark" style="min-height:auto"><div class="big" style="font-size:clamp(1.8rem,3vw,2.4rem)">Pas de <em>bruts.</em></div><p>Tu choisis tes images, elles sont retouchées puis livrées en HD.</p></div>
+      </div>
+    </div>
+    <p class="note">Le plus graphique : les infos importantes se lisent en un coup d’œil, comme une affiche. Reprend le noir et le bordeaux du site.</p>
+
+    <div class="tag"><b>4</b> Verre dépoli <span>· même langage que le tunnel de réservation</span></div>
+    <div class="gx">
+      <h2 class="h2">Avant de <em>réserver.</em></h2>
+      <div class="glass-grid">
+        <div class="glass gcard">
+          <h3>Options</h3>
+          <div class="gopt"><span>Photo en plus</span><b>20 €</b></div>
+          <div class="gopt"><span>Pola en plus</span><b>15 €</b></div>
+          <div class="gopt"><span>Polas pendant un book</span><b>80 €</b></div>
+          <div class="gopt"><span>Heure en plus</span><b>40 €</b></div>
+          <div class="gopt"><span>Retouche express 24 h</span><b>50 €</b></div>
+          <div class="gopt"><span>Make-up, coiffure, stylisme</span><small>Sur demande</small></div>
+          <div class="gopt"><span>Séance dans un autre lieu</span><small>Sur devis</small></div>
+        </div>
+        <div class="glass-col">
+          <div class="glass gcard">
+            <h3>Conditions</h3>
+            <div class="gkv">
+              <div><span>Acompte</span>50 €, remboursable jusqu’à 48 h avant</div>
+              <div><span>Solde</span>Le jour du shooting</div>
+              <div><span>Livraison</span>Polas 48 h · books 7 jours</div>
+              <div><span>Fichiers</span>Retouchés, pas de bruts</div>
+              <div class="full"><span>Sélection</span>Galerie privée en ligne</div>
+            </div>
+          </div>
+          <div class="glass gcard gq">
+            <h3>Questions</h3>
+            <details open><summary>Que dois-je apporter pour les polas ?<span>–</span></summary><p>Une tenue simple et ajustée : un haut blanc, noir ou neutre, sans logo ni imprimé. L’idée, c’est qu’on voie ta silhouette.</p></details>
+            <details><summary>Puis-je choisir les images livrées ?<span>+</span></summary><p>Oui, dans une galerie privée en ligne, avant la retouche.</p></details>
+            <details><summary>Et si je dois annuler ou décaler ?<span>+</span></summary><p>L’acompte est remboursé si tu annules au moins 48 h avant.</p></details>
+          </div>
+        </div>
+      </div>
+      <div class="glass gfoot"><span>Une autre question ? Réponse sous 24 h.</span><a class="btn" href="index.html#reserver">Réserver une séance</a></div>
+    </div>
+    <p class="note">Les cartes en verre flottent sur une photo du studio, avec les mêmes arrondis, blancs translucides et sélection noire que le tunnel. La section et le tunnel parlent ainsi le même langage. La photo de fond peut changer (ou être floutée encore plus).</p>
+
+    <div class="tag"><b>5</b> Éditorial <span>· beaucoup d’air, tout en serif, aucune carte</span></div>
+    <div class="ed">
+      <div class="ed-grid">
+        <div class="ed-side">
+          <h2 class="h2">Avant de <em>réserver.</em></h2>
+          <p>Tout ce qu’il faut savoir avant ta séance. Une autre question ? Réponse sous 24 h.</p>
+          <a class="btn" href="index.html#reserver">Réserver une séance</a>
+        </div>
+        <div>
+          <div class="ed-ch">
+            <div class="ed-k"><i>01</i>Options</div>
+            <div class="ed-row"><span>Photo en plus</span><span class="price">20&nbsp;€</span></div>
+            <div class="ed-row"><span>Pola en plus</span><span class="price">15&nbsp;€</span></div>
+            <div class="ed-row"><span>Polas pendant un book</span><span class="price">80&nbsp;€</span></div>
+            <div class="ed-row"><span>Heure en plus</span><span class="price">40&nbsp;€</span></div>
+            <div class="ed-row"><span>Retouche express 24 h</span><span class="price">50&nbsp;€</span></div>
+            <div class="ed-row"><span>Make-up, coiffure, stylisme</span><small>Sur demande</small></div>
+            <div class="ed-row"><span>Séance dans un autre lieu</span><small>Sur devis</small></div>
+          </div>
+          <div class="ed-ch">
+            <div class="ed-k"><i>02</i>Conditions</div>
+            <div class="ed-c"><span class="caps">Acompte</span><p>50&nbsp;€ pour bloquer ton créneau, <em>remboursable jusqu’à 48&nbsp;h avant.</em></p></div>
+            <div class="ed-c"><span class="caps">Solde</span><p>Le jour du shooting.</p></div>
+            <div class="ed-c"><span class="caps">Sélection</span><p>Tu choisis tes images dans une galerie privée.</p></div>
+            <div class="ed-c"><span class="caps">Livraison</span><p>Polas sous 48&nbsp;h, books et démos sous 7&nbsp;jours.</p></div>
+            <div class="ed-c"><span class="caps">Fichiers</span><p>Retouchés uniquement, <em>pas de bruts.</em></p></div>
+          </div>
+          <div class="ed-ch ed-q">
+            <div class="ed-k"><i>03</i>Questions</div>
+            <div class="ed-qi open"><button type="button" aria-expanded="true">Que dois-je apporter pour les polas ?<span class="tog" aria-hidden="true"></span></button><div class="a"><div><p>Une tenue simple et ajustée : un haut blanc, noir ou neutre, sans logo ni imprimé. L’idée, c’est qu’on voie ta silhouette.</p></div></div></div>
+            <div class="ed-qi"><button type="button" aria-expanded="false">Puis-je choisir les images livrées ?<span class="tog" aria-hidden="true"></span></button><div class="a"><div><p>Oui, dans une galerie privée en ligne, avant la retouche. Chaque photo en plus est à 20&nbsp;€, chaque pola à 15&nbsp;€.</p></div></div></div>
+            <div class="ed-qi"><button type="button" aria-expanded="false">Les vêtements sont-ils fournis ?<span class="tog" aria-hidden="true"></span></button><div class="a"><div><p>Non. Maquillage, coiffure et stylisme peuvent être organisés sur demande.</p></div></div></div>
+            <div class="ed-qi"><button type="button" aria-expanded="false">Et si je dois annuler ou décaler ?<span class="tog" aria-hidden="true"></span></button><div class="a"><div><p>L’acompte est remboursé si tu annules au moins 48&nbsp;h avant la séance.</p></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Même grammaire que le reste de la page : grands titres serif, prix dans la pilule à contour des formules, chiffres en italique bordeaux, beaucoup d’air et aucun filet. Au survol, la ligne prend un fond arrondi très léger pour suivre l’option jusqu’au prix. Les conditions sont rangées ligne par ligne. Les questions s’ouvrent et se ferment en douceur, et le texte ne bouge plus quand elles sont ouvertes.</p>
+  </section>
+</div>
+<script>
+  document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    document.querySelectorAll('.ix .panel').forEach(p => p.hidden = p.id !== b.dataset.t);
+  }));
+  document.querySelectorAll('.ed-qi button').forEach(b => b.addEventListener('click', () => {
+    const item = b.parentElement, open = !item.classList.contains('open');
+    document.querySelectorAll('.ed-qi').forEach(x => { x.classList.remove('open'); x.querySelector('button').setAttribute('aria-expanded', 'false'); });
+    if (open) { item.classList.add('open'); b.setAttribute('aria-expanded', 'true'); }
+  }));
+</script>
+</body>
+</html>
