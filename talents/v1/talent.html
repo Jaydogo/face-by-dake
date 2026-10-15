@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr" class="theme-white">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TALENTS BY DAKĒ © — Talent</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../talents.css">
+<script>
+document.documentElement.classList.add('js');
+// Rien ne s'affiche avant les polices : pas de saut de typo (même principe que FACE)
+(function(){var d=document.documentElement,done=function(){d.classList.add('fonts-ready')};
+if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.fonts.load('italic 300 80px Newsreader'),document.fonts.load('300 80px Newsreader'),document.fonts.load('500 16px "Instrument Sans"')]),new Promise(function(r){setTimeout(r,1800)})]).then(done,done)}else done();})();
+</script>
+</head>
+<body>
+<main id="app"></main>
+<footer id="contact"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="../data.js"></script>
+<script src="../ui.js"></script>
+<script src="../premium.js"></script>
+<script src="../booking.js"></script>
+<script>
+const P = '../';
+const t = TU.get(new URLSearchParams(location.search).get('t'));
+// En mode sélection, on reste dans les profils choisis pour le prospect
+const sel = TU.selection();
+const pool = sel && sel.talents.includes(t) ? sel.talents : TALENTS;
+const i = pool.indexOf(t), next = pool[(i + 1) % pool.length];
+const keep = sel ? '&' + sel.qs : '';
+const f = t.fiche, s = t.social;
+const full = `${t.first} ${t.last}`;
+document.title = `${full} — TALENTS BY DAKĒ ©`;
+const mail = TU.mailFor(sel, [t]);
+const pad = n => String(n).padStart(2, '0');
+
+const blocks = [['polas', 'Polas'], ['book', 'Book']];
+if (t.video) blocks.push(['video', 'Vidéo']);
+if (s) blocks.push(['stats', 'Stats & engagement']);
+const folio = (k, label) => `<div class="folio caps"><span>${esc(full)}</span><span>${label}</span><span>${pad(blocks.findIndex(b => b[0] === k) + 1)} / ${pad(blocks.length)}</span></div>`;
+
+document.getElementById('app').innerHTML = `
+  <section class="v1-profile">
+    <h1 class="v1-name"><span class="rise"><span>${esc(t.first)}</span></span><span class="rise"><span><em>${esc(t.last)}</em></span></span></h1>
+    <div class="grid v1-profile-body">
+      <figure class="media v1-cover reveal"><img src="${P + t.cover}" alt="Portrait de ${esc(full)}" fetchpriority="high"></figure>
+      <div class="v1-info reveal">
+        <div class="tags caps">${t.cats.map(c => `<span>${CAT_LABEL[c]}</span>`).concat((t.specs || []).map(x => `<span>${esc(x)}</span>`)).join('')}</div>
+        <dl class="fiche">
+          <dt>Taille</dt><dd class="num">${f.taille} cm</dd>
+          <dt>Poitrine</dt><dd class="num">${f.poitrine} cm</dd>
+          <dt>Tour de taille</dt><dd class="num">${f.tailleT} cm</dd>
+          <dt>Hanches</dt><dd class="num">${f.hanches} cm</dd>
+          <dt>Pointure</dt><dd class="num">${f.pointure} EU</dd>
+          <dt>Yeux</dt><dd>${esc(f.yeux)}</dd>
+          <dt>Cheveux</dt><dd>${esc(f.cheveux)}</dd>
+          ${t.specs ? `<dt>Spécialités</dt><dd>${t.specs.map(esc).join(', ')}</dd>` : ''}
+          <dt>Basé·e à</dt><dd>${esc(t.city)}</dd>
+        </dl>
+        ${s ? `<div class="v1-social mono"><a href="#stats">IG ${TU.k(s.ig.followers)}</a><a href="#stats">TT ${TU.k(s.tt.followers)}</a><span class="dim">ER ${TU.pct(TU.erAvg(s))}</span></div>` : ''}
+        <div class="actions"><a class="btn" href="${mail}" data-book="${t.slug}" data-kind="option">Demander une option</a><button class="btn btn--ghost" type="button" id="composite-btn">Carte composite (PDF)</button></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="subnav caps" aria-label="Sur cette fiche">${blocks.map((b, n) => `<a href="#${b[0]}"><sup>${pad(n + 1)}</sup>${b[0] === 'stats' ? 'Stats' : b[1]}</a>`).join('')}</nav>
+
+  <section class="section is-soft" id="polas">
+    ${folio('polas', 'Polas / Digitals')}
+    <div class="v1-block-head"><h2 class="h2">Sans <em>retouche.</em></h2><p class="caps dim">Pris au studio · Sept. 2026</p></div>
+    <div class="v1-polas reveal" id="polas-track" tabindex="0" aria-label="Polas, faire défiler">${[0, 1, 2].map(c => t.polas.map((p, n) => `<figure class="pola" data-n="${n}"${c !== 1 ? ' aria-hidden="true"' : ''}><div class="media"><img src="${P + p[0]}" alt="${c === 1 ? 'Pola ' + p[1] : ''}" draggable="false"></div><figcaption class="mono"><span>${p[1]}</span><span class="dim">${pad(n + 1)} / ${pad(t.polas.length)}</span></figcaption></figure>`).join('')).join('')}</div>
+    <div class="pola-ctrl"><span class="mono dim" id="polas-n">01 / ${pad(t.polas.length)}</span><span class="prog"><i id="polas-bar"></i></span><button type="button" data-d="-1" aria-label="Pola précédent">←</button><button type="button" data-d="1" aria-label="Pola suivant">→</button></div>
+  </section>
+
+  <section class="section" id="book">
+    ${folio('book', 'Book')}
+    <div class="v1-book">${t.book.map((b, n) => `<figure class="media reveal" data-n="${n}" role="button" tabindex="0" aria-label="Agrandir la photo ${n + 1}"><img src="${P + b}" alt="" loading="lazy"></figure>`).join('')}</div>
+  </section>
+
+  ${t.video ? `<section class="section ${s ? 'is-paper' : 'is-dark'}" id="video"${s ? '' : ' data-tone="dark"'}>
+    ${folio('video', 'Vidéo')}
+    <div class="player reveal">
+      <video src="${P + t.video.src}" poster="${P + t.video.poster}" playsinline preload="none"></video>
+      <button class="play caps" type="button"><span>▶ Lire · ${t.video.len}</span></button>
+    </div>
+    <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">Réalisée par Daké</span></div>
+  </section>` : ''}
+
+  ${s ? `<section class="section is-dark" id="stats" data-tone="dark">
+    ${folio('stats', 'Stats & engagement')}
+    <div class="v1-block-head"><h2 class="h2">L'audience, <em>en chiffres.</em></h2><p class="caps dim">Instagram · TikTok</p></div>
+    ${renderStats(s)}
+  </section>` : ''}
+
+  <a class="v1-next" href="talent.html?t=${next.slug}${keep}" data-img="${P + next.cover}">
+    <span class="caps dim">${sel ? 'Profil suivant de la sélection' : 'Talent suivant · ' + next.code}</span>
+    <p class="serif">${esc(next.first)} <em>${esc(next.last)}</em> →</p>
+  </a>`;
+
+// Carte composite : une page A4 paysage, à enregistrer en PDF depuis la fenêtre d'impression
+const comp = document.createElement('section');
+comp.className = 'composite'; comp.setAttribute('aria-hidden', 'true');
+comp.innerHTML = `
+  <div class="c-head"><p class="c-name">${esc(t.first)} <em>${esc(t.last)}</em></p><p class="caps">${TU.cats(t)} · ${esc(t.city)}</p></div>
+  <div class="c-cover"><img src="${P + t.cover}" alt=""></div>
+  ${t.polas.slice(0, 4).map(p => `<div class="c-pola"><img src="${P + p[0]}" alt=""></div>`).join('')}
+  <div class="c-foot"><span><b>${f.taille}</b> cm · ${f.poitrine}-${f.tailleT}-${f.hanches} · ${f.pointure} EU · ${esc(f.yeux)} · ${esc(f.cheveux)}</span><span>TALENTS BY DAKĒ© · ${ECO.mail}</span></div>`;
+document.body.appendChild(comp);
+document.getElementById('composite-btn').addEventListener('click', () => {
+  const imgs = [...comp.querySelectorAll('img')];
+  Promise.all(imgs.map(im => im.complete ? 1 : new Promise(r => { im.onload = im.onerror = r; }))).then(() => {
+    const old = document.title; document.title = `${full} — Carte composite Daké`;
+    print(); setTimeout(() => { document.title = old; }, 500);
+  });
+});
+
+renderFooter(document.getElementById('contact'), {
+  root: '../../',
+  folio: sel ? 'Sélection ' + esc(sel.client || 'privée') : 'Booking',
+  actions: [{ label: 'Booker ' + esc(t.first), href: mail, book: t.slug }, { label: sel ? 'Revoir la sélection' : 'Tous les talents', href: sel ? './?' + sel.qs : './', ghost: true }]
+});
+initPlayer(document);
+initReveal();
+renderShell({
+  root: '../../', home: sel ? './?' + sel.qs : './',
+  // Même nav que la home : les ancres du profil sont dans la barre sous la photo
+  sections: sel ? [['./?' + sel.qs, 'Sélection'], ['#contact', 'Booking']] : [['./', 'Talents'], ['#contact', 'Booking']],
+  book: { label: 'Booker ' + t.first, href: mail, ids: t.slug },
+  dock: `${esc(t.first)} <strong>${esc(t.last)}</strong>`
+});
+
+initSpy(document.querySelectorAll('.subnav a'));
+
+// Visionneuse : clic sur une photo du book
+const bookItems = t.book.map((b, n) => [P + b, pad(n + 1)]);
+document.querySelector('.v1-book').addEventListener('click', e => { const m = e.target.closest('.media'); if (m) openViewer(bookItems, +m.dataset.n, full + ' · Book'); });
+document.querySelector('.v1-book').addEventListener('keydown', e => { const m = e.target.closest('.media'); if (m && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openViewer(bookItems, +m.dataset.n, full + ' · Book'); } });
+
+// Polas en boucle infinie : la série est posée 3 fois, on reste toujours sur la copie du milieu.
+// Swipe tactile natif, glisser à la souris, flèches, clavier ; un clic sans glisser ouvre la visionneuse.
+(function () {
+  const tr = document.getElementById('polas-track'), items = tr.querySelectorAll('.pola');
+  const n = t.polas.length;
+  const bar = document.getElementById('polas-bar'), num = document.getElementById('polas-n');
+  const [prev, nextB] = document.querySelectorAll('.pola-ctrl button');
+  prev.disabled = nextB.disabled = false;
+  const step = () => items[1].offsetLeft - items[0].offsetLeft;
+  const setW = () => items[n].offsetLeft - items[0].offsetLeft;
+  // Saut invisible d'une série entière (snap coupé le temps du saut)
+  function jump(dx) {
+    tr.style.scrollSnapType = 'none';
+    tr.scrollLeft += dx;
+    void tr.offsetWidth;
+    tr.style.scrollSnapType = '';
+  }
+  function recenter() {
+    const W = setW();
+    if (tr.scrollLeft < W - step() / 2) jump(W);
+    else if (tr.scrollLeft >= 2 * W - step() / 2) jump(-W);
+  }
+  function sync() {
+    let pos = tr.scrollLeft / step();
+    if (Math.abs(pos - Math.round(pos)) < 0.03) pos = Math.round(pos); // arrondi du snap : 7,99 = 8
+    const k = ((Math.round(pos) % n) + n) % n;
+    num.textContent = pad(k + 1) + ' / ' + pad(n);
+    const frac = (((pos % n) + n) % n) / n;
+    const left = frac * 100, last = parseFloat(bar.style.left) || 0;
+    // Passage 08 → 01 (ou l'inverse) : la barre revient d'un coup au lieu de traverser
+    bar.style.transition = Math.abs(left - last) > 50 ? 'none' : '';
+    bar.style.width = (100 / n) + '%';
+    bar.style.left = left + '%';
+  }
+  // Recentrage dès que le défilement s'arrête
+  let idle = 0;
+  const settle = () => { if (!down) { recenter(); sync(); } };
+  if ('onscrollend' in window) tr.addEventListener('scrollend', settle);
+  tr.addEventListener('scroll', () => { requestAnimationFrame(sync); clearTimeout(idle); idle = setTimeout(settle, 140); }, { passive: true });
+
+  const go = d => { recenter(); tr.scrollBy({ left: d * step(), behavior: 'smooth' }); };
+  [prev, nextB].forEach(b => b.addEventListener('click', () => go(+b.dataset.d)));
+  tr.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(e.key === 'ArrowRight' ? 1 : -1); } });
+
+  let down = false, moved = 0, sx = 0, sl = 0;
+  tr.addEventListener('pointerdown', e => { moved = 0; if (e.pointerType !== 'mouse') return; down = true; sx = e.clientX; sl = tr.scrollLeft; tr.classList.add('is-drag'); });
+  tr.addEventListener('pointermove', e => {
+    if (!down) return;
+    moved = Math.max(moved, Math.abs(e.clientX - sx));
+    tr.scrollLeft = sl - (e.clientX - sx);
+    // Bord atteint pendant le glisser : on saute d'une série et on continue
+    const W = setW();
+    if (tr.scrollLeft < W / 2) { jump(W); sl += W; } else if (tr.scrollLeft > 2.5 * W - tr.clientWidth) { jump(-W); sl -= W; }
+  });
+  addEventListener('pointerup', () => {
+    if (!down) return; down = false;
+    tr.classList.remove('is-drag');
+    tr.scrollTo({ left: Math.round(tr.scrollLeft / step()) * step(), behavior: 'smooth' });
+  });
+
+  const polaItems = t.polas.map(p => [P + p[0], p[1]]);
+  tr.addEventListener('click', e => { const p = e.target.closest('.pola'); if (p && moved < 6) openViewer(polaItems, +p.dataset.n, full + ' · Polas'); });
+
+  // Départ sur la copie du milieu, premier pola
+  const start = () => { tr.style.scrollSnapType = 'none'; tr.scrollLeft = setW(); void tr.offsetWidth; tr.style.scrollSnapType = ''; sync(); };
+  start();
+  addEventListener('resize', () => { const k = Math.round(tr.scrollLeft / step()) % n; tr.style.scrollSnapType = 'none'; tr.scrollLeft = setW() + k * step(); tr.style.scrollSnapType = ''; sync(); });
+  if (document.fonts) document.fonts.ready.then(start);
+})();
+</script>
+</body>
+</html>

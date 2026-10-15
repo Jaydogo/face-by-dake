@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr" class="theme-white">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TALENTS BY DAKĒ ©</title>
+<meta name="description" content="Les visages que Daké a mis dans le cadre. Mannequins, comédiens et créateurs, prêts pour vos campagnes, castings et contenus.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../talents.css">
+<script>
+document.documentElement.classList.add('js');
+// Rien ne s'affiche avant les polices : pas de saut de typo (même principe que FACE)
+(function(){var d=document.documentElement,done=function(){d.classList.add('fonts-ready')};
+if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.fonts.load('italic 300 80px Newsreader'),document.fonts.load('300 80px Newsreader'),document.fonts.load('500 16px "Instrument Sans"')]),new Promise(function(r){setTimeout(r,1800)})]).then(done,done)}else done();})();
+</script>
+</head>
+<body>
+<main>
+  <section class="v1-hero">
+    <p class="caps dim v1-kicker fade-in" id="kicker" hidden></p>
+    <h1><span class="rise"><span><span class="br">[</span><em id="title">Talents</em><span class="br">]</span><sup id="count">08</sup></span></span></h1>
+    <div class="v1-hero-foot fade-in">
+      <p id="intro">Les visages que Daké a mis dans le cadre. Mannequins, comédiens et créateurs, prêts pour vos campagnes, castings et contenus.</p>
+      <div class="filters" role="group" aria-label="Filtrer les talents" id="filters"></div>
+    </div>
+  </section>
+
+  <ol class="v1-list" id="list"></ol>
+  <div class="v1-cursor" id="cursor" aria-hidden="true"><img alt=""></div>
+
+</main>
+<footer id="contact"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="../data.js"></script>
+<script src="../ui.js"></script>
+<script src="../premium.js"></script>
+<script src="../booking.js"></script>
+<script>
+const P = '../';
+const sel = TU.selection();
+const shown = sel ? sel.talents : TALENTS;
+const list = document.getElementById('list');
+const pad = n => String(n).padStart(2, '0');
+const arrow = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>';
+
+list.innerHTML = shown.map((t, n) => `
+  <li class="v1-row" data-cats="${t.cats.join(' ')}" style="--d:${n}">
+    <a href="talent.html?t=${t.slug}${sel ? '&' + sel.qs : ''}" data-img="${P + t.cover}">
+      <span class="code mono dim">${t.code}</span>
+      <span class="thumb media"><img src="${P + t.cover}" alt="" loading="lazy"></span>
+      <span class="name">${esc(t.first)} <em>${esc(t.last)}</em></span>
+      <span class="cat caps">${TU.cats(t)}</span>
+      <span class="city caps dim">${esc(t.city)}</span>
+      <span class="h mono dim">${t.fiche.taille} cm</span>
+      ${arrow}
+    </a>
+  </li>`).join('');
+
+// Mode sélection : titre au nom du prospect, pas de filtres, CTA option groupée
+if (sel) {
+  const n = pad(shown.length);
+  document.title = `Sélection ${sel.client || 'Daké'} — TALENTS BY DAKĒ ©`;
+  const k = document.getElementById('kicker'); k.hidden = false; k.textContent = 'Une sélection Daké pour';
+  document.getElementById('title').textContent = sel.client || 'Vous';
+  document.getElementById('count').textContent = n;
+  document.getElementById('intro').textContent = sel.note || `Les profils que nous vous proposons${sel.project ? ' pour ' + sel.project : ''}. Polas, book, vidéo et audience sur chaque fiche.`;
+  document.getElementById('filters').outerHTML = `<a class="btn" href="${TU.mailFor(sel, shown)}" data-book="${sel.ids.join(',')}" data-kind="option">Poser une option sur la sélection</a>`;
+}
+
+// Nav FACE BY DAKĒ
+renderShell({
+  root: '../../', home: sel ? './?' + sel.qs : './',
+  sections: sel ? [['#list', 'Sélection'], ['#contact', 'Booking']] : [['#list', 'Talents'], ['#contact', 'Booking']],
+  book: sel ? { label: 'Poser une option', href: TU.mailFor(sel, shown), ids: sel.ids.join(','), kind: 'option' } : { label: 'Booker un talent', href: 'mailto:' + ECO.mail, ids: '' },
+  dock: sel ? `Sélection <strong>${esc(sel.client || 'privée')}</strong>` : `<strong>${shown.length}</strong> talents`
+});
+
+// Footer
+renderFooter(document.getElementById('contact'), sel
+  ? { root: '../../', folio: 'Sélection ' + esc(sel.client || 'privée'), title: 'Ces profils <em>vous parlent ?</em>', actions: [{ label: 'Poser une option', href: TU.mailFor(sel, shown), book: sel.ids.join(','), kind: 'option' }] }
+  : { root: '../../' });
+initReveal();
+
+// Filtres : les lignes sortent et rentrent en douceur
+const cats = [['all', 'Tous'], ['mannequin', 'Mannequins'], ['comedien', 'Comédiens'], ['influence', 'Influence']];
+const fBox = document.getElementById('filters');
+if (fBox) fBox.innerHTML = cats.map(([k, l], i) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${i === 0}">${l}<sup>${k === 'all' ? TALENTS.length : TALENTS.filter(t => t.cats.includes(k)).length}</sup></button>`).join('');
+fBox?.addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b || b.getAttribute('aria-pressed') === 'true') return;
+  fBox.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === b));
+  list.classList.add('is-filtering');
+  setTimeout(() => {
+    let n = 0;
+    list.querySelectorAll('.v1-row').forEach(r => {
+      const show = b.dataset.f === 'all' || r.dataset.cats.includes(b.dataset.f);
+      r.classList.toggle('is-hidden', !show); if (show) r.style.setProperty('--d', n++);
+    });
+    document.getElementById('count').textContent = pad(n);
+    const ds = document.querySelector('.dock span'); if (ds) ds.innerHTML = `<strong>${n}</strong> ${n > 1 ? 'talents' : 'talent'}`;
+    requestAnimationFrame(() => list.classList.remove('is-filtering'));
+  }, 260);
+});
+
+// Photo qui suit le curseur (desktop) : GPU, et la boucle ne tourne que pendant le survol
+const cur = document.getElementById('cursor'), cimg = cur.querySelector('img');
+let x = 0, y = 0, cx = 0, cy = 0, running = false;
+function loop() {
+  cx += (x - cx) * .16; cy += (y - cy) * .16;
+  cur.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
+  if (running) requestAnimationFrame(loop);
+}
+addEventListener('mousemove', e => { x = e.clientX; y = e.clientY; }, { passive: true });
+list.addEventListener('mouseenter', e => { cx = x = e.clientX; cy = y = e.clientY; if (!running) { running = true; requestAnimationFrame(loop); } });
+list.addEventListener('mouseover', e => { const a = e.target.closest('a'); if (!a) return; if (cimg.getAttribute('src') !== a.dataset.img) cimg.src = a.dataset.img; cur.classList.add('on'); });
+list.addEventListener('mouseleave', () => { cur.classList.remove('on'); setTimeout(() => { if (!cur.classList.contains('on')) running = false; }, 400); });
+// Couvertures préchargées : le survol est instantané
+(window.requestIdleCallback || setTimeout)(() => shown.forEach(t => { const i = new Image(); i.src = P + t.cover; }));
+</script>
+</body>
+</html>
