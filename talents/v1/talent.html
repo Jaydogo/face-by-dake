@@ -88,7 +88,7 @@ document.getElementById('app').innerHTML = `
     ${folio('video', 'Vidéo')}
     <div class="player reveal">
       <video src="${P + t.video.src}" poster="${P + t.video.poster}" playsinline preload="none"></video>
-      <button class="play caps" type="button"><span>▶ Lire · ${t.video.len}</span></button>
+      <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>Lire · ${t.video.len}</span></button>
     </div>
     <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">Réalisée par Daké</span></div>
   </section>` : ''}
@@ -101,17 +101,48 @@ document.getElementById('app').innerHTML = `
 
   <a class="v1-next" href="talent.html?t=${next.slug}${keep}" data-img="${P + next.cover}">
     <span class="caps dim">${sel ? 'Profil suivant de la sélection' : 'Talent suivant · ' + next.code}</span>
-    <p class="serif">${esc(next.first)} <em>${esc(next.last)}</em> →</p>
+    <p class="serif">${esc(next.first)} <em>${esc(next.last)}</em> ${ARROW}</p>
   </a>`;
 
-// Carte composite : une page A4 paysage, à enregistrer en PDF depuis la fenêtre d'impression
+// Carte composite : une page A4 paysage, à enregistrer en PDF depuis la fenêtre d'impression.
+// Des cadrages variés comme une carte d'agence : pied, profil, 3/4, assise, puis une image du book. Jamais la couverture en double.
+function compositeImgs(t) {
+  if (t.composite) return t.composite.slice(0, 4);
+  const pool = t.polas.filter(p => p[0] !== t.cover), pick = [];
+  ['pied', 'profil', '3/4', 'assise', 'pose'].forEach(k => {
+    const p = pool.find(x => x[1].toLowerCase().includes(k) && !pick.includes(x[0]));
+    if (p && pick.length < 3) pick.push(p[0]);
+  });
+  const b = t.book.find(x => x !== t.cover && !pick.includes(x)); if (b) pick.push(b);
+  pool.forEach(p => { if (pick.length < 4 && !pick.includes(p[0])) pick.push(p[0]); });
+  return pick.slice(0, 4);
+}
 const comp = document.createElement('section');
 comp.className = 'composite'; comp.setAttribute('aria-hidden', 'true');
 comp.innerHTML = `
-  <div class="c-head"><p class="c-name">${esc(t.first)} <em>${esc(t.last)}</em></p><p class="caps">${TU.cats(t)} · ${esc(t.city)}</p></div>
-  <div class="c-cover"><img src="${P + t.cover}" alt=""></div>
-  ${t.polas.slice(0, 4).map(p => `<div class="c-pola"><img src="${P + p[0]}" alt=""></div>`).join('')}
-  <div class="c-foot"><span><b>${f.taille}</b> cm · ${f.poitrine}-${f.tailleT}-${f.hanches} · ${f.pointure} EU · ${esc(f.yeux)} · ${esc(f.cheveux)}</span><span>TALENTS BY DAKĒ© · ${ECO.mail}</span></div>`;
+  <header class="cc-head">
+    <h1 class="cc-name">${esc(t.first)} <em>${esc(t.last)}</em></h1>
+    <p class="cc-cats">${TU.cats(t)}<span>${esc(t.city)}</span></p>
+  </header>
+  <div class="cc-body">
+    <div class="cc-main"><img src="${P + t.cover}" alt=""></div>
+    <div class="cc-grid">${compositeImgs(t).map(src => `<div><img src="${P + src}" alt=""></div>`).join('')}</div>
+    <aside class="cc-side">
+      <dl class="cc-fiche">
+        <dt>Taille</dt><dd>${f.taille} cm</dd>
+        <dt>Poitrine</dt><dd>${f.poitrine} cm</dd>
+        <dt>Tour de taille</dt><dd>${f.tailleT} cm</dd>
+        <dt>Hanches</dt><dd>${f.hanches} cm</dd>
+        <dt>Pointure</dt><dd>${f.pointure} EU</dd>
+        <dt>Yeux</dt><dd>${esc(f.yeux)}</dd>
+        <dt>Cheveux</dt><dd>${esc(f.cheveux)}</dd>
+        ${t.specs ? `<dt>Spécialités</dt><dd>${t.specs.map(esc).join(', ')}</dd>` : ''}
+        ${s ? `<dt>Instagram</dt><dd>${esc(s.ig.handle)} · ${TU.k(s.ig.followers)}</dd><dt>TikTok</dt><dd>${esc(s.tt.handle)} · ${TU.k(s.tt.followers)}</dd>` : ''}
+      </dl>
+      <p class="cc-brand">TALENTS BY DAKĒ<span>©</span></p>
+    </aside>
+  </div>
+  <footer class="cc-foot"><span>${ECO.mail}</span><span>Carte composite</span><span>${t.code}</span></footer>`;
 document.body.appendChild(comp);
 document.getElementById('composite-btn').addEventListener('click', () => {
   const imgs = [...comp.querySelectorAll('img')];

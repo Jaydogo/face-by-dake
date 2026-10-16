@@ -798,3 +798,62 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .shell .header .btn,.shell .header.on-light .btn,.shell .dock .btn{background:var(--forest);border-color:var(--forest);color:var(--cream)}
 .shell .header .btn:hover,.shell .dock .btn:hover{background:var(--forest-2);border-color:var(--forest-2);color:var(--cream)}
 .shell .header:not(.on-light) .btn{box-shadow:inset 0 0 0 1px rgba(243,237,227,.18)}
+
+/* ---- Correctifs (formulaire, menu, crochets, liste) ---- */
+/* 1. Formulaire : choix sélectionnés bien visibles sur fond blanc */
+.theme-white .booking .chip[aria-pressed="true"]{background:var(--forest);color:var(--cream);box-shadow:none}
+.theme-white .bk-t[aria-pressed="true"]{background:#fff;box-shadow:inset 0 0 0 1.5px var(--forest),0 8px 24px rgba(36,57,47,.14)}
+/* 3. Menu mobile : Daké Face et Daké Studio en vert (éclairci pour rester lisible sur le noir) */
+.menu nav a.menu-ext{color:#5E8E74}
+/* 4. Crochets du titre en vert forêt */
+.shell .br{color:var(--forest);opacity:1}
+/* 5. Liste : la ville prend la place de la taille, alignée à droite */
+.v1-row a{grid-template-columns:4em minmax(0,1fr) 16em 8em 24px}
+.v1-row .city{justify-self:end;text-align:right}
+@media (max-width:860px){.v1-row a{grid-template-columns:64px minmax(0,1fr) 20px}}
+
+/* Flèche éditoriale */
+.arr-ed{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:butt;stroke-linejoin:miter;overflow:visible}
+.v1-row .arr-ed{width:28px;height:19px}
+.v1-row a:hover .arr-ed{transform:translateX(6px);color:var(--forest)}
+.v1-next .arr-ed{width:.72em;height:.48em;margin-left:.15em;vertical-align:.08em;stroke-width:1.1;transition:transform .5s var(--ease)}
+.v1-next:hover .arr-ed{transform:translateX(.12em)}
+/* Liste : la ville centrée entre la catégorie et la flèche */
+.v1-row a{grid-template-columns:4em minmax(0,1fr) 15em minmax(10em,20%) 28px}
+.v1-row .city{justify-self:center;text-align:center}
+@media (max-width:860px){.v1-row a{grid-template-columns:64px minmax(0,1fr) 24px}.v1-row .arr-ed{width:22px;height:15px}}
+
+/* Bouton Lire : triangle dessiné (le caractère ▶ devient un emoji sur iPhone) */
+.play-ic{width:10px;height:12px;fill:currentColor;flex:none;margin-right:2px}
+/* Carte composite : les plans en pied entiers (pas de tête ni de pieds coupés) */
+@media print{.composite .c-pola img{object-fit:contain;background:#fff}}
+
+/* =========================================================
+   CARTE COMPOSITE — DA du site, A4 paysage, sans marges navigateur
+   ========================================================= */
+@media print{
+  @page{size:297mm 210mm;margin:0}
+  html,body{background:#fff !important}
+  .composite{
+    display:grid !important;grid-template-columns:none !important;grid-template-rows:auto 1fr auto !important;gap:0 !important;
+    width:297mm;height:210mm;padding:12mm 13mm 10mm;box-sizing:border-box;overflow:hidden;
+    background:#fff;color:#1A1412;font-family:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  }
+  .cc-head{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:5mm;border-bottom:.2mm solid rgba(26,20,18,.18);margin-bottom:6mm}
+  .cc-name{margin:0;font-family:"Newsreader",Georgia,serif;font-weight:300;font-size:40pt;line-height:.9;letter-spacing:-.04em}
+  .cc-name em{font-style:italic}
+  .cc-cats{margin:0;font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;text-align:right;line-height:1.6}
+  .cc-cats span{display:block;opacity:.55}
+  .cc-body{display:grid;grid-template-columns:auto auto 1fr;gap:3mm;min-height:0;align-items:stretch}
+  .cc-main,.cc-grid > div{overflow:hidden;background:#F0F0EE}
+  .cc-main{height:142mm;aspect-ratio:3/4}
+  .cc-grid{display:grid;grid-template-columns:repeat(2,auto);grid-template-rows:repeat(2,1fr);gap:3mm;height:142mm}
+  .cc-grid > div{height:69.5mm;aspect-ratio:3/4}
+  .composite img{width:100% !important;height:100% !important;object-fit:cover !important;object-position:50% 30%;background:none !important;opacity:1 !important;transform:none !important;display:block}
+  .cc-side{display:flex;flex-direction:column;justify-content:space-between;padding-left:4mm;border-left:.2mm solid rgba(26,20,18,.18);margin-left:3mm;min-width:0}
+  .cc-fiche{display:grid;grid-template-columns:auto 1fr;gap:2.4mm 4mm;margin:0;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:7.5pt;text-transform:uppercase;letter-spacing:.02em;line-height:1.35}
+  .cc-fiche dt{opacity:.5}
+  .cc-fiche dd{margin:0}
+  .cc-brand{margin:0;font-weight:500;font-size:9pt;letter-spacing:-.01em}
+  .cc-foot{display:flex;justify-content:space-between;margin-top:5mm;padding-top:3mm;border-top:.2mm solid rgba(26,20,18,.18);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:7pt;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+}

@@ -8,10 +8,12 @@ window.TALENTS = [
     slug: 'prune', code: 't.01', first: 'Prune', last: 'Gauthier',
     cats: ['mannequin'], specs: ['Publicité', 'Commercial'], city: 'Paris',
     fiche: { taille: 176, poitrine: 82, tailleT: 61, hanches: 89, pointure: 39, yeux: 'Noisette', cheveux: 'Châtain' },
-    cover: '../img/bw-debardeur.jpg',
-    polas: [['../img/bw-debardeur.jpg', 'Face'], ['../img/pola-tresses.jpg', 'Profil'], ['../img/jean-pied.jpg', 'Pied'], ['../img/bw-sol.jpg', '3/4']],
-    book: ['../img/rideau-bleu.jpg', '../img/bw-assise.jpg', '../img/rouge.jpg', 'img/blazer.jpg', '../img/film-pied.jpg', 'img/veste-rouge.jpg', '../img/denim-brun.jpg'],
-    video: { src: '../video/hero-desktop.mp4', poster: '../video/hero-desktop.jpg', title: 'Motion test, publicité', len: '0:24' },
+    cover: 'img/prune/web/polas-01.jpg',
+    polas: [['img/prune/web/polas-01.jpg', 'Portrait'], ['img/prune/web/polas-02.jpg', 'Face'], ['img/prune/web/polas-03.jpg', 'Profil'], ['img/prune/web/polas-04.jpg', '3/4'], ['img/prune/web/polas-05.jpg', 'Pied face'], ['img/prune/web/polas-06.jpg', 'Pied profil'], ['img/prune/web/polas-07.jpg', 'Pied 3/4'], ['img/prune/web/polas-08.jpg', 'Pose'], ['img/prune/web/polas-09.jpg', 'Pose dos'], ['img/prune/web/polas-10.jpg', 'Assise'], ['img/prune/web/polas-11.jpg', 'Assise'], ['img/prune/web/polas-12.jpg', 'Assise pied']],
+    book: ['img/prune/web/book-01.jpg', 'img/prune/web/book-02.jpg', 'img/prune/web/book-03.jpg', 'img/prune/web/book-04.jpg', 'img/prune/web/book-05.jpg', 'img/prune/web/book-06.jpg', 'img/prune/web/book-07.jpg', 'img/prune/web/book-08.jpg', 'img/prune/web/book-09.jpg', 'img/prune/web/book-10.jpg', 'img/prune/web/book-11.jpg', 'img/prune/web/book-12.jpg', 'img/prune/web/book-13.jpg'],
+    // Carte composite : portrait + pied face + pied profil + assise + une image du book
+    composite: ['img/prune/web/polas-05.jpg', 'img/prune/web/polas-06.jpg', 'img/prune/web/polas-12.jpg', 'img/prune/web/book-07.jpg'],
+    video: { src: 'img/prune/web/film.mp4', poster: 'img/prune/web/film-poster.jpg', title: 'Film, campagne Daké', len: '0:30' },
     social: null
   },
   {
@@ -110,7 +112,7 @@ window.TALENTS = [
 // Démo uniquement : complète chaque série à 8 polas avec des images du book
 TALENTS.forEach(t => {
   const extra = ['Profil droit', 'Sourire', 'Dos', 'Mains'];
-  t.book.slice(0, 8 - t.polas.length).forEach((b, k) => t.polas.push([b, extra[k]]));
+  t.book.slice(0, Math.max(0, 8 - t.polas.length)).forEach((b, k) => t.polas.push([b, extra[k]]));
 });
 
 window.CAT_LABEL = { mannequin: 'Mannequin', comedien: 'Comédien·ne', influence: 'Influence' };

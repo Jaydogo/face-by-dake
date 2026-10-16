@@ -98,7 +98,7 @@
           <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Studio ${arr}</a>
           ${ECO.studioSoon ? `<span class="soon">Bientôt ${ECO.studioSoon}</span>` : ''}
         </div>
-        <div><span class="caps">Basé à</span><span>Paris Sud</span><span>Productions partout</span></div>
+        <div><span class="caps">Basé à</span><span>Paris, France</span><span>Castings en France et à l'international</span></div>
         <div><span class="caps">Heure à Paris</span><span class="num" data-clock>--:--</span></div>
       </div>
       <p class="spread" aria-hidden="true">${letters}</p>
@@ -228,6 +228,9 @@
     const tick = () => tz.forEach(el => { el.textContent = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: el.dataset.tz }).format(new Date()); });
     tick(); setInterval(() => { if (b.classList.contains('menu-open')) tick(); }, 1000);
   };
+
+  // Flèche éditoriale (trait droit, pointe en deux courbes)
+  window.ARROW = '<svg class="arr arr-ed" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 8h19" /><path d="M15 1.5c.9 3.4 3.1 5.7 7 6.5-3.9.8-6.1 3.1-7 6.5" /></svg>';
 
   window.esc = esc;
 })();

@@ -5,3 +5,8 @@ video/bandedemo/*.MP4
 video/bandedemo/*.mp4
 !video/bandedemo/apercu.mp4
 .DS_Store
+
+# Originaux de Prune (lourds) : seules les versions web de talents/img/prune/web sont publiées
+talents/img/prune/polas/
+talents/img/prune/book/
+talents/img/prune/video/

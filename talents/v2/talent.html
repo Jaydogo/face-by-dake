@@ -77,7 +77,7 @@ document.getElementById('app').innerHTML = `
       <div class="v2-sec-head"><h2>Vidéo</h2><span class="caps dim">${t.video.len}</span></div>
       <div class="player reveal">
         <video src="${P + t.video.src}" poster="${P + t.video.poster}" playsinline preload="none"></video>
-        <button class="play caps" type="button"><span>▶ Lire</span></button>
+        <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>Lire</span></button>
       </div>
       <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">Réalisée par Daké</span></div>
     </section>

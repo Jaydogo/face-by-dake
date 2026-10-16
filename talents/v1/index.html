@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TALENTS BY DAKĒ ©</title>
-<meta name="description" content="Les visages que Daké a mis dans le cadre. Mannequins, comédiens et créateurs, prêts pour vos campagnes, castings et contenus.">
+<meta name="description" content="Des visages, des voix, des audiences. Photographiés et sélectionnés par Daké.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +25,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
     <p class="caps dim v1-kicker fade-in" id="kicker" hidden></p>
     <h1><span class="rise"><span><span class="br">[</span><em id="title">Talents</em><span class="br">]</span><sup id="count">08</sup></span></span></h1>
     <div class="v1-hero-foot fade-in">
-      <p id="intro">Les visages que Daké a mis dans le cadre. Mannequins, comédiens et créateurs, prêts pour vos campagnes, castings et contenus.</p>
+      <p id="intro">Des visages, des voix, des audiences. Photographiés et sélectionnés par Daké.</p>
       <div class="filters" role="group" aria-label="Filtrer les talents" id="filters"></div>
     </div>
   </section>
@@ -47,7 +47,7 @@ const sel = TU.selection();
 const shown = sel ? sel.talents : TALENTS;
 const list = document.getElementById('list');
 const pad = n => String(n).padStart(2, '0');
-const arrow = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>';
+const arrow = ARROW;
 
 list.innerHTML = shown.map((t, n) => `
   <li class="v1-row" data-cats="${t.cats.join(' ')}" style="--d:${n}">
@@ -57,7 +57,6 @@ list.innerHTML = shown.map((t, n) => `
       <span class="name">${esc(t.first)} <em>${esc(t.last)}</em></span>
       <span class="cat caps">${TU.cats(t)}</span>
       <span class="city caps dim">${esc(t.city)}</span>
-      <span class="h mono dim">${t.fiche.taille} cm</span>
       ${arrow}
     </a>
   </li>`).join('');
