@@ -77,11 +77,12 @@
 
   /* Footer plein, même structure que FACE BY DAKĒ.
      root = chemin vers la racine du site (là où est la page FACE). */
+  // Coordonnées : réglées dans le back office (onglet Réglages)
   window.ECO = {
-    studio: 'https://dake.studio',   // → passer à https://dake.global le jour J
-    studioSoon: '',                  // ex. 'dake.global' pour afficher « Bientôt … » sous Daké Studio
-    mail: 'booking@dake.studio',
-    instagram: 'dake.face'
+    get studio() { return (window.SETTINGS || {}).studio || 'https://dake.studio'; },
+    get studioSoon() { return (window.SETTINGS || {}).studioSoon || ''; },
+    get mail() { return (window.SETTINGS || {}).mail || 'booking@dake.studio'; },
+    get instagram() { return ((window.SETTINGS || {}).instagram || 'dake.face').replace(/^@/, ''); }
   };
   window.renderFooter = function (el, o) {
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';
@@ -92,13 +93,13 @@
       <h2 class="h2">${o.title || 'Un casting, une campagne, <em>une collab ?</em>'}</h2>
       <div class="actions">${(o.actions || [{ label: 'Faire une demande de booking', href: 'mailto:' + ECO.mail, book: '' }]).map(a => `<a class="btn${a.ghost ? ' btn--ghost' : ''}" href="${a.href}"${a.book !== undefined ? ` data-book="${a.book}"` : ''}${a.kind ? ` data-kind="${a.kind}"` : ''}>${a.label}</a>`).join('')}</div>
       <div class="coords">
-        <div><span class="caps">Booking</span><a href="mailto:${ECO.mail}">${ECO.mail}</a><a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
+        <div><span class="caps">Booking</span><a href="mailto:${ECO.mail}">${ECO.mail}</a>${SETTINGS.phone ? `<a href="tel:${esc(SETTINGS.phone.replace(/\s/g, ''))}">${esc(SETTINGS.phone)}</a>` : ''}<a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
         <div><span class="caps">Écosystème</span>
           <a href="${o.root}">Daké Face ${arr}</a>
           <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Studio ${arr}</a>
           ${ECO.studioSoon ? `<span class="soon">Bientôt ${ECO.studioSoon}</span>` : ''}
         </div>
-        <div><span class="caps">Basé à</span><span>Paris, France</span><span>Castings en France et à l'international</span></div>
+        <div><span class="caps">Basé à</span><span>${esc(SETTINGS.city)}</span><span>${esc(SETTINGS.reach)}</span></div>
         <div><span class="caps">Heure à Paris</span><span class="num" data-clock>--:--</span></div>
       </div>
       <p class="spread" aria-hidden="true">${letters}</p>

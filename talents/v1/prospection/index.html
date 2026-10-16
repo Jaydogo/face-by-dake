@@ -67,10 +67,11 @@
   </div>
 </main>
 
+<script src="../../talents-data.js"></script>
 <script src="../../data.js"></script>
 <script src="../../ui.js"></script>
 <script>
-const P = '../../';
+const P = '../../'; window.TALENTS_PREFIX = P;
 const picked = [];
 const $ = id => document.getElementById(id);
 const base = location.href.replace(/prospection\/.*$/, '');
@@ -78,7 +79,7 @@ const base = location.href.replace(/prospection\/.*$/, '');
 $('pick').innerHTML = TALENTS.map(t => `
   <button type="button" data-id="${t.slug}" aria-pressed="false">
     <span class="n"></span>
-    <span class="media"><img src="${P + t.cover}" alt="" loading="lazy"></span>
+    <span class="media"><img src="${TU.src(t.cover)}" alt="" loading="lazy"></span>
     <span class="serif">${esc(t.first)} <em>${esc(t.last)}</em></span>
     <span class="caps dim">${TU.cats(t)}${t.social ? ' · ' + TU.k(TU.reach(t.social)) : ''}</span>
   </button>`).join('');

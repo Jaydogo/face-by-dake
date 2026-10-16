@@ -105,7 +105,7 @@
     // Talents : cartes à cocher
     $('#bk-talents').innerHTML = TALENTS.map(t => `
       <button type="button" class="bk-t" data-id="${t.slug}" aria-pressed="false">
-        <span class="bk-t-img"><img src="${P + t.cover}" alt="" loading="lazy"></span>
+        <span class="bk-t-img"><img src="${TU.src(t.cover)}" alt="" loading="lazy"></span>
         <span class="bk-t-name">${esc(t.first)} <em>${esc(t.last)}</em></span>
         <span class="bk-t-cat">${esc(TU.cats(t))}</span>
         <span class="bk-t-tick" aria-hidden="true"></span>

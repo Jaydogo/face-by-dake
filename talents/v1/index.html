@@ -37,6 +37,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 <footer id="contact"></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="../talents-data.js"></script>
 <script src="../data.js"></script>
 <script src="../ui.js"></script>
 <script src="../premium.js"></script>
@@ -51,9 +52,9 @@ const arrow = ARROW;
 
 list.innerHTML = shown.map((t, n) => `
   <li class="v1-row" data-cats="${t.cats.join(' ')}" style="--d:${n}">
-    <a href="talent.html?t=${t.slug}${sel ? '&' + sel.qs : ''}" data-img="${P + t.cover}">
+    <a href="talent.html?t=${t.slug}${sel ? '&' + sel.qs : ''}" data-img="${TU.src(t.cover)}">
       <span class="code mono dim">${t.code}</span>
-      <span class="thumb media"><img src="${P + t.cover}" alt="" loading="lazy"></span>
+      <span class="thumb media"><img src="${TU.src(t.cover)}" alt="" loading="lazy"></span>
       <span class="name">${esc(t.first)} <em>${esc(t.last)}</em></span>
       <span class="cat caps">${TU.cats(t)}</span>
       <span class="city caps dim">${esc(t.city)}</span>
@@ -119,7 +120,7 @@ list.addEventListener('mouseenter', e => { cx = x = e.clientX; cy = y = e.client
 list.addEventListener('mouseover', e => { const a = e.target.closest('a'); if (!a) return; if (cimg.getAttribute('src') !== a.dataset.img) cimg.src = a.dataset.img; cur.classList.add('on'); });
 list.addEventListener('mouseleave', () => { cur.classList.remove('on'); setTimeout(() => { if (!cur.classList.contains('on')) running = false; }, 400); });
 // Couvertures préchargées : le survol est instantané
-(window.requestIdleCallback || setTimeout)(() => shown.forEach(t => { const i = new Image(); i.src = P + t.cover; }));
+(window.requestIdleCallback || setTimeout)(() => shown.forEach(t => { const i = new Image(); i.src = TU.src(t.cover); }));
 </script>
 </body>
 </html>

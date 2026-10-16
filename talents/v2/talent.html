@@ -20,6 +20,7 @@
 
 <main class="v2-talent" id="app"></main>
 
+<script src="../talents-data.js"></script>
 <script src="../data.js"></script>
 <script src="../ui.js"></script>
 <script>
@@ -38,7 +39,7 @@ if (s) blocks.push(['stats', 'Stats']);
 document.getElementById('app').innerHTML = `
   <aside class="v2-side">
     <a class="back caps" href="./">← Board</a>
-    <figure class="media face"><img src="${P + t.cover}" alt="Portrait de ${esc(t.first)} ${esc(t.last)}"></figure>
+    <figure class="media face"><img src="${TU.src(t.cover)}" alt="Portrait de ${esc(t.first)} ${esc(t.last)}"></figure>
     <div>
       <p class="caps dim" style="margin-bottom:10px">${t.code} · ${TU.cats(t)}</p>
       <h1>${esc(t.first)}<br><em>${esc(t.last)}</em></h1>
@@ -63,20 +64,20 @@ document.getElementById('app').innerHTML = `
       <div class="v2-sec-head"><h2>Polas</h2><span class="caps dim">Digitals · sans retouche</span></div>
       <div class="contact reveal">
         <div class="contact-edge" style="grid-column:1 / -1"><span>DAKĒ FACE ▸ ${t.code.toUpperCase()}</span><span>KODAK 400TX</span><span>${t.polas.length} VUES</span></div>
-        ${t.polas.map((p, k) => `<figure><div class="media"><img src="${P + p[0]}" alt="Pola ${p[1]}" loading="lazy"></div><figcaption><span>${k + 1}A ▸</span><span>${p[1].toUpperCase()}</span></figcaption></figure>`).join('')}
+        ${t.polas.map((p, k) => `<figure><div class="media"><img src="${TU.src(p[0])}" alt="Pola ${p[1]}" loading="lazy"></div><figcaption><span>${k + 1}A ▸</span><span>${p[1].toUpperCase()}</span></figcaption></figure>`).join('')}
       </div>
     </section>
 
     <section class="v2-sec" id="book">
       <div class="v2-sec-head"><h2>Book</h2><div class="strip-nav"><button type="button" data-d="-1" aria-label="Précédent">←</button><button type="button" data-d="1" aria-label="Suivant">→</button></div></div>
-      <div class="strip" id="strip">${t.book.map(b => `<figure class="media"><img src="${P + b}" alt="" loading="lazy"></figure>`).join('')}</div>
+      <div class="strip" id="strip">${t.book.map(b => `<figure class="media"><img src="${TU.src(b)}" alt="" loading="lazy"></figure>`).join('')}</div>
       <p class="caps dim" style="margin-top:14px">${t.book.length} images · Glisser pour parcourir</p>
     </section>
 
     <section class="v2-sec" id="video">
       <div class="v2-sec-head"><h2>Vidéo</h2><span class="caps dim">${t.video.len}</span></div>
       <div class="player reveal">
-        <video src="${P + t.video.src}" poster="${P + t.video.poster}" playsinline preload="none"></video>
+        <video src="${TU.src(t.video.src)}" poster="${TU.src(t.video.poster)}" playsinline preload="none"></video>
         <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>Lire</span></button>
       </div>
       <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">Réalisée par Daké</span></div>
