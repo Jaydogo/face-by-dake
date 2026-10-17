@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr" class="theme-white">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Back office — TALENTS BY DAKĒ ©</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#FFFFFF">
+<script src="../gate.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <a class="logo" href="../v1/" target="_blank" rel="noopener">TALENTS BY DAKĒ<span>©</span> <em>Back office</em></a>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" data-view="talents" aria-current="page">Talents</button>
+      <button type="button" data-view="prospection">Prospection</button>
+      <button type="button" data-view="settings">Réglages</button>
+    </nav>
+    <div class="top-actions">
+      <span class="status" id="status" aria-live="polite"></span>
+      <button class="btn btn--ghost btn--s" type="button" id="discard" hidden>Annuler les modifications</button>
+      <button class="btn btn--s" type="button" id="publish">Publier</button>
+    </div>
+  </header>
+  <main class="views" id="views"></main>
+</div>
+
+<dialog class="modal" id="modal"><form method="dialog" class="modal-box" id="modal-box"></form></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="../talents-data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
