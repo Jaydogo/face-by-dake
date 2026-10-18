@@ -318,7 +318,7 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
 .only-phone,.tabbar{display:none}
 @media (max-width:760px){
   :root{--top:56px;--tabbar:calc(90px + env(safe-area-inset-bottom))}
-  html,body{overflow-x:clip;overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+  html,body{overflow-x:clip;-webkit-tap-highlight-color:transparent}
   body{padding-bottom:var(--tabbar)}
   button,a,.li,.chip{touch-action:manipulation}
   .only-phone{display:flex}
