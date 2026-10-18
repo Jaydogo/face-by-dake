@@ -101,6 +101,7 @@ renderFooter(document.getElementById('contact'), { root: '../../' });
 // Comme sur les mentions de Daké Studio : en haut, un simple « Retour au site » à la place de la nav et du bouton
 document.querySelector('.header .nav').innerHTML = '';
 document.querySelector('.header .header-cta').innerHTML = '<a class="back-top" href="./">Retour au site</a>';
+document.querySelector('.header').classList.add('has-link');
 const dk = document.querySelector('.dock .btn'); if (dk) { dk.textContent = 'Retour au site'; dk.href = './'; dk.removeAttribute('data-book'); }
 
 </script>

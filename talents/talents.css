@@ -900,3 +900,4 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .legal-ed .back-link:hover{color:var(--forest,#24392F)}
 .header .back-top{font-size:.875rem;text-decoration:underline;text-underline-offset:.2em;white-space:nowrap}
 .header .back-top:hover{opacity:.7}
+@media (min-width:861px){.shell.is-scrolled .header.has-link{padding-right:26px}}
