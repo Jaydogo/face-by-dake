@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FACE BY DAKĒ © — Talents : mannequins, comédiens et influence à Paris</title>
-<meta name="description" content="Des visages, des voix, des audiences. Photographiés et sélectionnés par Daké.">
+<title>FACE BY DAKĒ © — Talents des productions Daké, Paris</title>
+<meta name="description" content="Talent roster by Daké Studio. Des visages, des voix, des audiences, intégrés aux productions Daké.">
 <meta name="robots" content="noindex, nofollow"> <!-- SEO-LANCEMENT : à retirer au lancement (voir SEO.md) -->
 <link rel="icon" href="../icon-48.png" sizes="48x48">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
@@ -52,7 +52,7 @@ const shown = sel ? sel.talents : TALENTS;
 const list = document.getElementById('list');
 const pad = n => String(n).padStart(2, '0');
 const arrow = ARROW;
-document.getElementById('intro').textContent = T('Des visages, des voix, des audiences. Photographiés et sélectionnés par Daké.', 'Faces, voices, audiences. Photographed and selected by Daké.');
+document.getElementById('intro').textContent = T('Des visages, des voix, des audiences. Réunis par Daké pour ses productions : campagnes, contenus, films.', 'Faces, voices, audiences. Brought together by Daké for its productions: campaigns, content, films.');
 document.getElementById('filters').setAttribute('aria-label', T('Filtrer les talents', 'Filter talents'));
 
 list.innerHTML = shown.map((t, n) => `
@@ -69,34 +69,34 @@ list.innerHTML = shown.map((t, n) => `
 
 // SEO : titre, description, liste des talents pour Google
 TU.seo({
-  title: T('FACE BY DAKĒ © — Talents : mannequins, comédiens et influence à Paris', 'FACE BY DAKĒ © — Talent: models, actors and influencers in Paris'),
-  description: T('Des visages, des voix, des audiences. Mannequins, comédiens et créateurs de contenu photographiés et sélectionnés par Daké à Paris. Polas, book, vidéo et stats sur chaque fiche.', 'Faces, voices, audiences. Models, actors and content creators photographed and selected by Daké in Paris. Polas, book, video and stats on every profile.'),
+  title: T('FACE BY DAKĒ © — Talents des productions Daké, Paris', 'FACE BY DAKĒ © — Talent roster of Daké productions, Paris'),
+  description: T('Talent roster by Daké Studio. Mannequins, comédiens et créateurs de contenu réunis par Daké pour ses campagnes, contenus et films produits à Paris.', 'Faces, voices, audiences. Models, actors and content creators photographed and selected by Daké in Paris. Polas, book, video and stats on every profile.'),
   ld: { '@graph': [FACE_ORG, { '@type': 'CollectionPage', name: 'Talents', url: SITE_URL + '/talents/v1/', inLanguage: EN ? 'en-GB' : 'fr-FR', about: { '@id': FACE_ORG['@id'] },
     mainEntity: { '@type': 'ItemList', itemListElement: TALENTS.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + '/talents/v1/talent.html?t=' + t.slug, name: t.first + ' ' + t.last })) } }] }
 });
 
-// Mode sélection : titre au nom du prospect, pas de filtres, CTA option groupée
+// Mode casting : proposition de production pour un prospect, casting envisagé, CTA « Parlons du projet »
 if (sel) {
   const n = pad(shown.length);
-  document.title = `${T('Sélection', 'Selection')} ${sel.client || 'Daké'} — FACE BY DAKĒ ©`;
-  const k = document.getElementById('kicker'); k.hidden = false; k.textContent = T('Une sélection Daké pour', 'A Daké selection for');
+  document.title = `Casting ${sel.client || 'Daké'} — FACE BY DAKĒ ©`;
+  const k = document.getElementById('kicker'); k.hidden = false; k.textContent = T('Casting imaginé par Daké pour', 'Casting imagined by Daké for');
   document.getElementById('title').textContent = sel.client || T('Vous', 'You');
   document.getElementById('count').textContent = n;
-  document.getElementById('intro').textContent = TX(sel, 'note') || T(`Les profils que nous vous proposons${sel.project ? ' pour ' + sel.project : ''}. Polas, book, vidéo et audience sur chaque fiche.`, `The profiles we suggest for you${sel.project ? ' for ' + sel.project : ''}. Polas, book, video and audience on each profile.`);
-  document.getElementById('filters').outerHTML = `<a class="btn" href="${TU.mailFor(sel, shown)}" data-book="${sel.ids.join(',')}" data-kind="option">${T('Poser une option sur la sélection', 'Put a hold on the selection')}</a>`;
+  document.getElementById('intro').textContent = TX(sel, 'note') || T(`Les visages que nous imaginons pour une production Daké${sel.project ? ' : ' + sel.project : ''}. Direction artistique, casting, prise de vue et livrables, réunis par Daké.`, `The faces we imagine for a Daké production${sel.project ? ': ' + sel.project : ''}. Art direction, casting, shoot and deliverables, brought together by Daké.`);
+  document.getElementById('filters').outerHTML = `<a class="btn" href="${TU.mailFor(sel, shown)}" data-book="${sel.ids.join(',')}" >${T('Parlons du projet', "Let's talk about the project")}</a>`;
 }
 
 // Nav reprise de DAKĒ STUDIO
 renderShell({
   root: '../../', home: sel ? './?' + sel.qs : './',
-  sections: sel ? [['#list', T('Sélection', 'Selection')], ['#contact', 'Booking']] : [['#list', 'Talents'], ['#contact', 'Booking']],
-  book: sel ? { label: T('Poser une option', 'Put a hold'), href: TU.mailFor(sel, shown), ids: sel.ids.join(','), kind: 'option' } : { label: T('Booker un talent', 'Book a talent'), href: 'mailto:' + ECO.mail, ids: '' },
-  dock: sel ? `${T('Sélection', 'Selection')} <strong>${esc(sel.client || T('privée', 'private'))}</strong>` : `<strong>${shown.length}</strong> talents`
+  sections: sel ? [['#list', 'Casting'], ['#contact', T('Projet', 'Project')]] : [['#list', 'Talents'], ['#contact', T('Projet', 'Project')]],
+  book: sel ? { label: T('Parlons du projet', "Let's talk"), href: TU.mailFor(sel, shown), ids: sel.ids.join(',') } : { label: T('Proposer un projet', 'Start a project'), href: 'mailto:' + ECO.mail, ids: '' },
+  dock: sel ? `Casting <strong>${esc(sel.client || T('privée', 'private'))}</strong>` : `<strong>${shown.length}</strong> talents`
 });
 
 // Footer
 renderFooter(document.getElementById('contact'), sel
-  ? { root: '../../', folio: T('Sélection ', 'Selection ') + esc(sel.client || T('privée', 'private')), title: T('Ces profils <em>vous parlent ?</em>', 'Do these profiles <em>speak to you?</em>'), actions: [{ label: T('Poser une option', 'Put a hold'), href: TU.mailFor(sel, shown), book: sel.ids.join(','), kind: 'option' }] }
+  ? { root: '../../', folio: 'Casting ' + esc(sel.client || T('privé', 'private')), title: T('Ce casting <em>vous parle ?</em>', 'Does this casting <em>speak to you?</em>'), actions: [{ label: T('Construisons la production', "Let's build the production"), href: TU.mailFor(sel, shown), book: sel.ids.join(',') }] }
   : { root: '../../' });
 initReveal();
 

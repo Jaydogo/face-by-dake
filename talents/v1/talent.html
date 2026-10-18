@@ -35,7 +35,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 <script>
 const P = '../';
 const t = TU.get(new URLSearchParams(location.search).get('t'));
-// En mode sélection, on reste dans les profils choisis pour le prospect
+// En mode casting (proposition à une marque), on reste dans les profils envisagés
 const sel = TU.selection();
 const pool = sel && sel.talents.includes(t) ? sel.talents : TALENTS;
 const i = pool.indexOf(t), next = pool[(i + 1) % pool.length];
@@ -49,7 +49,7 @@ TU.seo({
   noindex: t.visible === false || !t.consent || new URLSearchParams(location.search).get('t') !== t.slug,
   title: `${full} — ${catTxt} · FACE BY DAKĒ ©`,
   description: [T(`${full}, ${catTxt.toLowerCase()} basé·e à ${TR(t.city) || 'Paris'}.`, `${full}, ${catTxt.toLowerCase()} based in ${TR(t.city) || 'Paris'}.`),
-    f.taille ? T(`Taille ${f.taille} cm.`, `Height ${f.taille} cm.`) : '', TX(t, 'bio'), T('Polas, book et booking sur FACE BY DAKĒ.', 'Polas, book and booking on FACE BY DAKĒ.')].filter(Boolean).join(' ').slice(0, 300),
+    f.taille ? T(`Taille ${f.taille} cm.`, `Height ${f.taille} cm.`) : '', TX(t, 'bio'), T('Visage FACE BY DAKĒ, intégré aux productions Daké : polas, book et vidéo.', 'A FACE BY DAKĒ profile, part of Daké productions: polas, book and video.')].filter(Boolean).join(' ').slice(0, 300),
   image: TU.abs(t.cover),
   ld: { '@graph': [FACE_ORG, { '@type': 'ProfilePage', url: SITE_URL + '/talents/v1/talent.html?t=' + t.slug, inLanguage: EN ? 'en-GB' : 'fr-FR',
     mainEntity: { '@type': 'Person', name: full, givenName: t.first, familyName: t.last, jobTitle: catTxt, image: TU.abs(t.cover),
@@ -134,12 +134,12 @@ document.getElementById('app').innerHTML = `
     <div class="grid v1-profile-body">
       <figure class="media v1-cover reveal"><img src="${TU.src(t.cover)}" alt="${T('Portrait de', 'Portrait of')} ${esc(full)}" fetchpriority="high"></figure>
       <div class="v1-info reveal">
-        <div class="tags caps">${(t.cats || []).map(c => `<span>${CAT_LABEL[c]}</span>`).concat((t.specs || []).map(x => `<span>${esc(TR(x))}</span>`)).join('')}${t.availability && t.availability !== 'disponible' ? `<span class="avail avail--${t.availability}">${AVAIL_LABEL[t.availability]}</span>` : ''}</div>
+        <div class="tags caps">${(t.cats || []).map(c => `<span>${CAT_LABEL[c]}</span>`).concat((t.specs || []).map(x => `<span>${esc(TR(x))}</span>`)).join('')}</div>
         ${hasSizes ? `<div class="units caps" role="group" aria-label="${T('Unités des mensurations', 'Measurement units')}">${UNIT_BTNS}</div>` : ''}
         <dl class="fiche" id="fiche">${fiche()}</dl>
         ${t.bio ? `<p class="v1-bio">${esc(TX(t, 'bio'))}</p>` : ''}
         ${s ? `<div class="v1-social mono"><a href="#stats">IG ${TU.k(s.ig.followers)}</a><a href="#stats">TT ${TU.k(s.tt.followers)}</a><span class="dim">ER ${TU.pct(TU.erAvg(s))}</span></div>` : ''}
-        <div class="actions"><a class="btn" href="${mail}" data-book="${t.slug}" data-kind="option">${T('Demander une option', 'Request a hold')}</a><button class="btn btn--ghost" type="button" id="composite-btn">${T('Carte composite (PDF)', 'Comp card (PDF)')}</button></div>
+        <div class="actions"><a class="btn" href="${mail}" data-book="${t.slug}">${T('Créer avec', 'Create with')} ${esc(t.first)}</a><button class="btn btn--ghost" type="button" id="composite-btn">${T('Fiche casting (PDF)', 'Casting sheet (PDF)')}</button></div>
       </div>
     </div>
   </section>
@@ -149,12 +149,12 @@ document.getElementById('app').innerHTML = `
   ${ORDER.map(k => SEC[k]()).join('')}
 
   <a class="v1-next" href="talent.html?t=${next.slug}${keep}" data-img="${TU.src(next.cover)}">
-    <span class="caps dim">${sel ? T('Profil suivant de la sélection', 'Next profile in the selection') : T('Talent suivant', 'Next talent') + ' · ' + next.code}</span>
+    <span class="caps dim">${sel ? T('Profil suivant du casting', 'Next profile in the casting') : T('Talent suivant', 'Next talent') + ' · ' + next.code}</span>
     <p class="serif">${esc(next.first)} <em>${esc(next.last)}</em> ${ARROW}</p>
   </a>`;
 
-// Carte composite : une page A4 paysage, à enregistrer en PDF depuis la fenêtre d'impression.
-// Des cadrages variés comme une carte d'agence : pied, profil, 3/4, assise, puis une image du book. Jamais la couverture en double.
+// Fiche casting (carte composite) : une page A4 paysage, à enregistrer en PDF depuis la fenêtre d'impression.
+// Des cadrages variés : pied, profil, 3/4, assise, puis une image du book. Jamais la couverture en double.
 function compositeImgs(t) {
   if (t.composite) return t.composite.slice(0, 4);
   const pool = t.polas.filter(p => p[0] !== t.cover), pick = [];
@@ -181,18 +181,18 @@ comp.innerHTML = `
       <p class="cc-brand">FACE BY DAKĒ<span>©</span></p>
     </aside>
   </div>
-  <footer class="cc-foot"><span>${ECO.mail}</span><span>${T('Carte composite', 'Comp card')}</span><span>${t.code}</span></footer>`;
+  <footer class="cc-foot"><span>${ECO.mail}</span><span>${T('Fiche casting · Production Daké', 'Casting sheet · Daké production')}</span><span>${t.code}</span></footer>`;
 document.body.appendChild(comp);
 // Ordinateur : PDF via l'impression. Téléphone : image JPG à enregistrer ou partager.
 const isMobile = matchMedia('(max-width: 860px), (pointer: coarse)').matches;
 const compBtn = document.getElementById('composite-btn');
-if (isMobile) compBtn.textContent = T('Carte composite (image)', 'Comp card (image)');
+if (isMobile) compBtn.textContent = T('Fiche casting (image)', 'Casting sheet (image)');
 // Aperçu plein écran de la carte (téléphone) avant de l'enregistrer ou de la partager
 function previewComposite(blob, name) {
   const url = URL.createObjectURL(blob), box = document.createElement('div');
-  box.className = 'cc-preview'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', T('Aperçu de la carte composite', 'Comp card preview'));
-  box.innerHTML = `<div class="cc-preview-top caps"><span>${T('Carte composite', 'Comp card')}</span><button type="button" data-x>${T('Fermer', 'Close')}</button></div>
-    <div class="cc-preview-img" data-lenis-prevent><img src="${url}" alt="${esc(full)} — ${T('carte composite', 'comp card')}"></div>
+  box.className = 'cc-preview'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', T('Aperçu de la fiche casting', 'Casting sheet preview'));
+  box.innerHTML = `<div class="cc-preview-top caps"><span>${T('Fiche casting', 'Casting sheet')}</span><button type="button" data-x>${T('Fermer', 'Close')}</button></div>
+    <div class="cc-preview-img" data-lenis-prevent><img src="${url}" alt="${esc(full)} — ${T('fiche casting', 'casting sheet')}"></div>
     <div class="cc-preview-foot"><button class="btn" type="button" data-share>${navigator.canShare ? T('Enregistrer ou partager', 'Save or share') : T('Télécharger', 'Download')}</button></div>`;
   document.body.appendChild(box);
   window.lockScroll?.(true);
@@ -209,18 +209,18 @@ compBtn.addEventListener('click', async () => {
     try {
       const blob = await compositeJPG(t, [t.cover, ...compositeImgs(t)].map(x => TU.src(x)));
       const slug = (t.first + '-' + t.last).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
-      previewComposite(blob, `${slug}-${T('carte-composite', 'comp-card')}-dake.jpg`);
+      previewComposite(blob, `${slug}-${T('fiche-casting', 'casting-sheet')}-dake.jpg`);
     } finally { compBtn.textContent = label; compBtn.disabled = false; }
     return;
   }
   const imgs = [...comp.querySelectorAll('img')];
   Promise.all(imgs.map(im => im.complete ? 1 : new Promise(r => { im.onload = im.onerror = r; }))).then(() => {
-    const old = document.title; document.title = `${full} — ${T('Carte composite', 'Comp card')} Daké`;
+    const old = document.title; document.title = `${full} — ${T('Fiche casting', 'Casting sheet')} Daké`;
     print(); setTimeout(() => { document.title = old; }, 500);
   });
 });
 
-// Fiche de la carte composite : mêmes unités que la page
+// Mensurations de la fiche casting : mêmes unités que la page
 const ccFiche = () => {
   document.getElementById('cc-fiche').innerHTML = ficheRows().filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')
     + ((t.specs || []).length ? `<dt>${T('Spécialités', 'Specialties')}</dt><dd>${t.specs.map(x => esc(TR(x))).join(', ')}</dd>` : '')
@@ -239,16 +239,17 @@ document.addEventListener('units', () => {
 
 renderFooter(document.getElementById('contact'), {
   root: '../../',
-  folio: sel ? T('Sélection ', 'Selection ') + esc(sel.client || T('privée', 'private')) : 'Booking',
-  actions: [{ label: T('Booker ', 'Book ') + esc(t.first), href: mail, book: t.slug }, { label: sel ? T('Revoir la sélection', 'Back to the selection') : T('Tous les talents', 'All talents'), href: sel ? './?' + sel.qs : './', ghost: true }]
+  folio: sel ? T('Casting ', 'Casting ') + esc(sel.client || T('privé', 'private')) : T('Projet', 'Project'),
+  title: T(`Créer avec <em>${esc(t.first)} ?</em>`, `Create with <em>${esc(t.first)}?</em>`),
+  actions: [{ label: T('Proposer un projet', 'Start a project'), href: mail, book: t.slug }, { label: sel ? T('Revoir le casting', 'Back to the casting') : T('Tous les talents', 'All talents'), href: sel ? './?' + sel.qs : './', ghost: true }]
 });
 initPlayer(document);
 initReveal();
 renderShell({
   root: '../../', home: sel ? './?' + sel.qs : './',
   // Même nav que la home : les ancres du profil sont dans la barre sous la photo
-  sections: sel ? [['./?' + sel.qs, T('Sélection', 'Selection')], ['#contact', 'Booking']] : [['./', 'Talents'], ['#contact', 'Booking']],
-  book: { label: T('Booker ', 'Book ') + t.first, href: mail, ids: t.slug },
+  sections: sel ? [['./?' + sel.qs, 'Casting'], ['#contact', T('Projet', 'Project')]] : [['./', 'Talents'], ['#contact', T('Projet', 'Project')]],
+  book: { label: T('Créer avec ', 'Create with ') + t.first, href: mail, ids: t.slug },
   dock: `${esc(t.first)} <strong>${esc(t.last)}</strong>`
 });
 

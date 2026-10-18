@@ -91,7 +91,7 @@
   window.ECO = {
     get studio() { return (window.SETTINGS || {}).studio || 'https://dake.studio'; },
     get studioSoon() { return (window.SETTINGS || {}).studioSoon || ''; },
-    get mail() { return (window.SETTINGS || {}).mail || 'booking@dake.studio'; },
+    get mail() { return (window.SETTINGS || {}).mail || 'contact@dake.studio'; },
     get instagram() { return ((window.SETTINGS || {}).instagram || 'dake.face').replace(/^@/, ''); }
   };
   window.renderFooter = function (el, o) {
@@ -100,10 +100,10 @@
     el.className = 'final';
     el.id = el.id || 'contact';
     el.innerHTML = `
-      <h2 class="h2">${o.title || T('Un casting, une campagne, <em>une collab ?</em>', 'A casting, a campaign, <em>a collab?</em>')}</h2>
-      <div class="actions">${(o.actions || [{ label: T('Faire une demande de booking', 'Send a booking request'), href: 'mailto:' + ECO.mail, book: '' }]).map(a => `<a class="btn${a.ghost ? ' btn--ghost' : ''}" href="${a.href}"${a.book !== undefined ? ` data-book="${a.book}"` : ''}${a.kind ? ` data-kind="${a.kind}"` : ''}>${a.label}</a>`).join('')}</div>
+      <h2 class="h2">${o.title || T('Une campagne, un contenu, <em>un film ?</em>', 'A campaign, content, <em>a film?</em>')}</h2>
+      <div class="actions">${(o.actions || [{ label: T('Proposer un projet', 'Start a project'), href: 'mailto:' + ECO.mail, book: '' }]).map(a => `<a class="btn${a.ghost ? ' btn--ghost' : ''}" href="${a.href}"${a.book !== undefined ? ` data-book="${a.book}"` : ''}${a.kind ? ` data-kind="${a.kind}"` : ''}>${a.label}</a>`).join('')}</div>
       <div class="coords">
-        <div><span class="caps">Booking</span><a href="mailto:${ECO.mail}">${ECO.mail}</a>${SETTINGS.phone ? `<a href="tel:${esc(SETTINGS.phone.replace(/\s/g, ''))}">${esc(SETTINGS.phone)}</a>` : ''}<a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
+        <div><span class="caps">Contact</span><a href="mailto:${ECO.mail}">${ECO.mail}</a>${SETTINGS.phone ? `<a href="tel:${esc(SETTINGS.phone.replace(/\s/g, ''))}">${esc(SETTINGS.phone)}</a>` : ''}<a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
         <div><span class="caps">${T('Écosystème', 'Ecosystem')}</span>
           <a href="${ECO.studio}" target="_blank" rel="noopener">Daké© ${arr}</a>
           <a href="${o.root}${EN ? 'en.html' : ''}">Daké Studio© ${arr}</a>
@@ -116,6 +116,7 @@
       <p class="spread" aria-hidden="true">${letters}</p>
       <div class="final-foot">
         <span>© 2026 <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Creative Studio</a></span>
+        <span class="face-note">${T('Talent roster by Daké Studio. Les talents FACE BY DAKĒ interviennent uniquement dans des productions conçues et réalisées par Daké ; FACE BY DAKĒ n\'est pas une agence de mannequins.', 'Talent roster by Daké Studio. FACE BY DAKĒ talents only take part in productions designed and made by Daké; FACE BY DAKĒ is not a model agency.')}</span>
         <span class="links"><a href="${o.root}${EN ? 'en.html' : ''}">Daké Studio</a><a href="${o.legal || 'mentions.html'}">${T('Mentions légales', 'Legal notice')}</a></span>
       </div>`;
 
@@ -125,7 +126,7 @@
     tick(); setInterval(tick, 15000);
   };
 
-  /* Nav reprise de DAKĒ STUDIO : header verre + menu plein écran + barre « Booker » mobile + footer en volet.
+  /* Nav reprise de DAKĒ STUDIO : header verre + menu plein écran + barre d'action mobile + footer en volet.
      o = { root, home, sections: [[href, label]], book: { label, href }, dock: 'texte à gauche (HTML)' } */
   window.renderShell = function (o) {
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';

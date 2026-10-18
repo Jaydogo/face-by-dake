@@ -1,23 +1,26 @@
 /* =========================================================
-   FACE BY DAKĒ — tunnel « Booker » (même principe que FACE)
-   Tout lien ou bouton [data-book="slug,slug"] ouvre le panneau,
-   talents pré-cochés. Envoi par mail pré-rempli + récap copiable.
+   FACE BY DAKĒ — tunnel « Proposer un projet »
+   Le client propose une PRODUCTION Daké (concept, direction artistique,
+   casting, prise de vue, livrables). Les talents sont un casting envisagé,
+   jamais une réservation : pas de date bloquée, pas d'option, pas de budget talent.
+   Tout lien ou bouton [data-book="slug,slug"] ouvre le panneau, talents pré-cochés.
+   Envoi par mail pré-rempli + récap copiable.
    Le brouillon est gardé dans ce navigateur (localStorage).
    ========================================================= */
 (function () {
   const P = window.TALENTS_PREFIX || '../';
   const KEY = 'dake-talents-booking';
-  const STEPS = T(['Talents', 'Projet', 'Dates & budget', 'Contact', 'Récapitulatif'], ['Talents', 'Project', 'Dates & budget', 'Contact', 'Summary']);
-  const TYPES = T(['Campagne', 'Publicité', 'Éditorial', 'E-shop / lookbook', 'Contenu UGC', 'Défilé / événement', 'Film / série', 'Autre'], ['Campaign', 'Advertising', 'Editorial', 'E-commerce / lookbook', 'UGC content', 'Runway / event', 'Film / series', 'Other']);
+  const STEPS = T(['Projet', 'Casting', 'Production', 'Contact', 'Récapitulatif'], ['Project', 'Casting', 'Production', 'Contact', 'Summary']);
+  const TYPES = T(['Campagne', 'Contenu réseaux sociaux', 'Éditorial', 'E-shop / lookbook', 'Film / vidéo', 'Événement', 'Autre'], ['Campaign', 'Social content', 'Editorial', 'E-commerce / lookbook', 'Film / video', 'Event', 'Other']);
   const USAGES = T(['Réseaux sociaux', 'Web', 'Print', 'Affichage', 'TV / cinéma', 'Interne'], ['Social media', 'Web', 'Print', 'Out of home', 'TV / cinema', 'Internal']);
-  const DURS = T(['½ journée', '1 jour', '2 jours', '3 jours et +'], ['½ day', '1 day', '2 days', '3 days +']);
-  const BUDGETS = T(['À définir', '< 1 000 €', '1 000 – 3 000 €', '3 000 – 8 000 €', '8 000 € +'], ['To be defined', '< €1,000', '€1,000 – 3,000', '€3,000 – 8,000', '€8,000 +']);
+  const DELIVERABLES = T(['Photos', 'Vidéo', 'Formats courts', 'Film', 'Direction artistique seule'], ['Photos', 'Video', 'Short formats', 'Film', 'Art direction only']);
+  const BUDGETS = T(['À définir', '< 3 000 €', '3 000 – 8 000 €', '8 000 – 20 000 €', '20 000 € +'], ['To be defined', '< €3,000', '€3,000 – 8,000', '€8,000 – 20,000', '€20,000 +']);
   const OPT = T('facultatif', 'optional');
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  const blank = () => ({ kind: 'booking', talents: [], type: '', usages: [], brand: '', brief: '', date: '', duration: '', city: 'Paris', flexible: false, budget: '', first: '', last: '', role: '', email: '', phone: '', message: '' });
+  const blank = () => ({ kind: 'project', talents: [], casting: false, type: '', usages: [], deliverables: [], brand: '', brief: '', date: '', city: 'Paris', flexible: true, budget: '', first: '', last: '', role: '', email: '', phone: '', message: '' });
   let state = blank();
-  try { const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d) state = Object.assign(blank(), d, { talents: [], kind: 'booking' }); } catch (e) {}
+  try { const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d) state = Object.assign(blank(), d, { talents: [], kind: 'project' }); if (!Array.isArray(state.deliverables)) state.deliverables = []; } catch (e) {}
   const save = () => { try { const { talents, ...keep } = state; localStorage.setItem(KEY, JSON.stringify(keep)); } catch (e) {} };
 
   let step = 1, el, lastFocus;
@@ -39,31 +42,31 @@
         <div class="bk-body" data-lenis-prevent>
 
           <section class="bk-step" data-step="1">
-            <h3>${T('Quel <em>talent ?</em>', 'Which <em>talent?</em>')}</h3>
-            <p class="hint">${T('Un ou plusieurs profils. Tu pourras en ajouter après.', 'One or more profiles. You can add more later.')}</p>
-            <div class="bk-talents" id="bk-talents"></div>
-            <p class="err" id="err-talents">${T('Choisis au moins un talent.', 'Pick at least one talent.')}</p>
+            <h3>${T('Votre <em>projet</em>', 'Your <em>project</em>')}</h3>
+            <p class="hint">${T('Daké conçoit et produit : direction artistique, casting, prise de vue, livrables.', 'Daké designs and produces: art direction, casting, shoot, deliverables.')}</p>
+            <div class="field"><span class="label">${T('Type de production', 'Type of production')}</span><div class="chips" data-single="type">${TYPES.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div><p class="err" id="err-type">${T('Choisis un type de production.', 'Pick a type of production.')}</p></div>
+            <div class="field"><span class="label">${T('Diffusion', 'Usage')} <span class="opt">${T('plusieurs choix', 'multiple choice')}</span></span><div class="chips" data-multi="usages">${USAGES.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>
+            <div class="field"><label for="bk-brand">${T('Marque ou société', 'Brand or company')}</label><input class="input" id="bk-brand" data-f="brand" autocomplete="organization"><p class="err" id="err-brand">${T('Indique la marque ou la société.', 'Enter the brand or company.')}</p></div>
+            <div class="field"><label for="bk-brief">${T('Le projet en deux lignes', 'The project in two lines')} <span class="opt">${OPT}</span></label><textarea class="input" id="bk-brief" data-f="brief" placeholder="${T('Ambiance, références, message de la campagne…', 'Mood, references, campaign message…')}"></textarea></div>
           </section>
 
           <section class="bk-step" data-step="2" hidden>
-            <h3>${T('Le <em>projet</em>', 'The <em>project</em>')}</h3>
-            <p class="hint">${T('Pour qu\'on te réponde avec un vrai devis.', 'So we can reply with a real quote.')}</p>
-            <div class="field"><span class="label">${T('Type de projet', 'Project type')}</span><div class="chips" data-single="type">${TYPES.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div><p class="err" id="err-type">${T('Choisis un type de projet.', 'Pick a project type.')}</p></div>
-            <div class="field"><span class="label">${T('Diffusion', 'Usage')} <span class="opt">${T('plusieurs choix', 'multiple choice')}</span></span><div class="chips" data-multi="usages">${USAGES.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>
-            <div class="field"><label for="bk-brand">${T('Marque ou société', 'Brand or company')}</label><input class="input" id="bk-brand" data-f="brand" autocomplete="organization"><p class="err" id="err-brand">${T('Indique la marque ou la société.', 'Enter the brand or company.')}</p></div>
-            <div class="field"><label for="bk-brief">${T('Le projet en deux lignes', 'The project in two lines')} <span class="opt">${OPT}</span></label><textarea class="input" id="bk-brief" data-f="brief" placeholder="${T('Ambiance, références, nombre de looks…', 'Mood, references, number of looks…')}"></textarea></div>
+            <h3>${T('Le <em>casting</em>', 'The <em>casting</em>')}</h3>
+            <p class="hint">${T('Des visages Daké Face en tête ? Ils seront intégrés à la production. Sinon, Daké compose le casting.', 'Daké Face profiles in mind? They will be part of the production. Otherwise, Daké builds the casting.')}</p>
+            <div class="bk-talents" id="bk-talents"></div>
+            <label class="check"><input type="checkbox" id="bk-casting"><span>${T('Laisser Daké proposer le casting', 'Let Daké propose the casting')}</span></label>
           </section>
 
           <section class="bk-step" data-step="3" hidden>
-            <h3>${T('Quand, où, <em>combien ?</em>', 'When, where, <em>how much?</em>')}</h3>
+            <h3>${T('La <em>production</em>', 'The <em>production</em>')}</h3>
             <p class="hint" id="bk-hint3">${T('Une estimation suffit, on affine ensemble.', 'An estimate is enough, we\'ll refine it together.')}</p>
+            <div class="field"><span class="label">${T('Livrables', 'Deliverables')} <span class="opt">${T('plusieurs choix', 'multiple choice')}</span></span><div class="chips" data-multi="deliverables">${DELIVERABLES.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>
             <div class="row2">
-              <div class="field"><label for="bk-date">${T('Date souhaitée', 'Preferred date')}</label><input class="input" id="bk-date" type="date" data-f="date"><p class="err" id="err-date">${T('Choisis une date à venir.', 'Pick a future date.')}</p></div>
-              <div class="field"><label for="bk-city">${T('Ville', 'City')}</label><input class="input" id="bk-city" data-f="city" autocomplete="address-level2"></div>
+              <div class="field"><label for="bk-date">${T('Période envisagée', 'Target timing')} <span class="opt">${OPT}</span></label><input class="input" id="bk-date" type="date" data-f="date"><p class="err" id="err-date">${T('Choisis une date à venir.', 'Pick a future date.')}</p></div>
+              <div class="field"><label for="bk-city">${T('Lieu', 'Location')}</label><input class="input" id="bk-city" data-f="city" autocomplete="address-level2"></div>
             </div>
-            <label class="check"><input type="checkbox" id="bk-flex"><span>${T('Dates flexibles', 'Flexible dates')}</span></label>
-            <div class="field"><span class="label">${T('Durée', 'Duration')}</span><div class="chips" data-single="duration">${DURS.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div><p class="err" id="err-duration">${T('Choisis une durée.', 'Pick a duration.')}</p></div>
-            <div class="field"><span class="label">${T('Budget talent', 'Talent budget')}</span><div class="chips" data-single="budget">${BUDGETS.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>
+            <label class="check"><input type="checkbox" id="bk-flex"><span>${T('Calendrier flexible', 'Flexible timing')}</span></label>
+            <div class="field"><span class="label">${T('Budget de production', 'Production budget')}</span><div class="chips" data-single="budget">${BUDGETS.map(x => `<button type="button" class="chip" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>
           </section>
 
           <section class="bk-step" data-step="4" hidden>
@@ -115,7 +118,7 @@
       const b = e.target.closest('.bk-t'); if (!b) return;
       const id = b.dataset.id, k = state.talents.indexOf(id);
       k < 0 ? state.talents.push(id) : state.talents.splice(k, 1);
-      paint(); $('#err-talents').classList.remove('on');
+      paint();
     });
 
     // Puces à choix unique / multiple
@@ -132,6 +135,7 @@
     }));
     el.querySelectorAll('[data-f]').forEach(i => i.addEventListener('input', () => { state[i.dataset.f] = i.value; save(); el.querySelector('#err-' + i.dataset.f)?.classList.remove('on'); }));
     $('#bk-flex').addEventListener('change', e => { state.flexible = e.target.checked; save(); });
+    $('#bk-casting').addEventListener('change', e => { state.casting = e.target.checked; save(); });
     $('#bk-date').min = today();
 
     el.addEventListener('click', e => { if (e.target.closest('[data-close]')) close(); });
@@ -158,15 +162,15 @@
     el.querySelectorAll('[data-multi]').forEach(g => g.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', state[g.dataset.multi].includes(c.dataset.v))));
     el.querySelectorAll('[data-f]').forEach(i => { if (i.value !== state[i.dataset.f]) i.value = state[i.dataset.f] || ''; });
     $('#bk-flex').checked = !!state.flexible;
+    $('#bk-casting').checked = !!state.casting;
     const n = state.talents.length;
-    $('#bk-next').textContent = step === 1 && n ? `${T('Continuer avec', 'Continue with')} ${n === 1 ? names()[0].split(' ')[0] : n + ' talents'}` : step === 4 ? T('Voir le récapitulatif', 'See the summary') : T('Continuer', 'Continue');
+    $('#bk-next').textContent = step === 2 && n ? `${T('Continuer avec', 'Continue with')} ${n === 1 ? names()[0].split(' ')[0] : n + ' talents'}` : step === 4 ? T('Voir le récapitulatif', 'See the summary') : T('Continuer', 'Continue');
   }
 
   function valid(s) {
     const bad = [];
-    if (s === 1 && !state.talents.length) bad.push('talents');
-    if (s === 2) { if (!state.type) bad.push('type'); if (!state.brand.trim()) bad.push('brand'); }
-    if (s === 3) { if (!state.date || state.date < today()) bad.push('date'); if (!state.duration) bad.push('duration'); }
+    if (s === 1) { if (!state.type) bad.push('type'); if (!state.brand.trim()) bad.push('brand'); }
+    if (s === 3 && state.date && state.date < today()) bad.push('date');
     if (s === 4) { if (!state.first.trim()) bad.push('first'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(state.email.trim())) bad.push('email'); }
     bad.forEach(k => el.querySelector('#err-' + k)?.classList.add('on'));
     if (bad.length) {
@@ -182,24 +186,24 @@
   const fmtDate = d => d ? new Date(d + 'T12:00').toLocaleDateString(T('fr-FR', 'en-GB'), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
   function rows() {
     return [
-      [T('Demande', 'Request'), state.kind === 'option' ? T('Option (pré-réservation des dates)', 'Hold (dates pencilled in)') : 'Booking'],
-      ['Talent' + (state.talents.length > 1 ? 's' : ''), names().join(', ')],
-      [T('Projet', 'Project'), [state.type, state.brand].filter(Boolean).join(' · ')],
+      [T('Demande', 'Request'), T('Projet de production Daké', 'Daké production project')],
+      [T('Production', 'Production'), [state.type, state.brand].filter(Boolean).join(' · ')],
+      [T('Casting envisagé', 'Casting in mind'), [names().join(', '), state.casting ? (state.talents.length ? T('casting complété par Daké', 'casting completed by Daké') : T('casting proposé par Daké', 'casting proposed by Daké')) : ''].filter(Boolean).join(' + ')],
+      [T('Livrables', 'Deliverables'), state.deliverables.join(', ')],
       [T('Diffusion', 'Usage'), state.usages.join(', ')],
-      ['Date', fmtDate(state.date) + (state.flexible ? ' (flexible)' : '')],
-      [T('Durée', 'Duration'), state.duration],
+      [T('Période', 'Timing'), state.date ? fmtDate(state.date) + (state.flexible ? T(' (flexible)', ' (flexible)') : '') : (state.flexible ? T('Flexible', 'Flexible') : '')],
       [T('Lieu', 'Location'), state.city],
-      ['Budget', state.budget],
+      [T('Budget de production', 'Production budget'), state.budget],
       ['Contact', [`${state.first} ${state.last}`.trim(), state.role].filter(Boolean).join(', ')],
       ['Email', state.email], [T('Téléphone', 'Phone'), state.phone],
       ['Brief', state.brief], ['Message', state.message]
     ].filter(r => r[1] && String(r[1]).trim());
   }
   function recapText() {
-    return [T('Bonjour,', 'Hello,'), '', (state.kind === 'option' ? T('Je souhaite poser une option via Face by Daké :', 'I would like to put a hold via Face by Daké:') : T('Nouvelle demande de booking via Face by Daké :', 'New booking request via Face by Daké:')), '', ...rows().map(([k, v]) => `${k}${T(' :', ':')} ${v}`), '', T('Merci !', 'Thank you!'), state.first].join('\n');
+    return [T('Bonjour,', 'Hello,'), '', T('Voici un projet que nous aimerions produire avec Daké :', 'Here is a project we would like to produce with Daké:'), '', ...rows().map(([k, v]) => `${k}${T(' :', ':')} ${v}`), '', T('Merci !', 'Thank you!'), state.first].join('\n');
   }
   function mailHref() {
-    const subject = `${state.kind === 'option' ? 'Option' : 'Booking'} ${names().join(', ')} – ${state.brand || state.type}${state.date ? ' – ' + new Date(state.date + 'T12:00').toLocaleDateString(T('fr-FR', 'en-GB'), { day: 'numeric', month: 'short' }) : ''}`;
+    const subject = `${T('Projet', 'Project')} ${state.brand || state.type}${state.talents.length ? ' – ' + T('avec', 'with') + ' ' + names().join(', ') : ''}${state.date ? ' – ' + new Date(state.date + 'T12:00').toLocaleDateString(T('fr-FR', 'en-GB'), { day: 'numeric', month: 'short' }) : ''}`;
     return `mailto:${ECO.mail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(recapText())}`;
   }
   async function copy(e) {
@@ -258,12 +262,12 @@
   function open(ids, kind) {
     if (!el) build();
     lastFocus = document.activeElement;
-    state.kind = kind === 'option' ? 'option' : 'booking';
-    $('#bk-title').textContent = state.kind === 'option' ? T('Poser une option', 'Put a hold') : T('Demande de booking', 'Booking request');
-    $('#bk-send').textContent = state.kind === 'option' ? T("Envoyer l'option", 'Send the hold') : T('Envoyer la demande', 'Send the request');
+    state.kind = 'project';
+    $('#bk-title').textContent = T('Proposer un projet', 'Start a project');
+    $('#bk-send').textContent = T('Envoyer le projet', 'Send the project');
     state.talents = ids.filter(id => TALENTS.some(t => t.slug === id));
-    // Talents déjà choisis : on passe directement au projet
-    go(state.talents.length ? 2 : 1);
+    // On commence toujours par le projet : c'est la production qui est proposée, pas un talent
+    go(1);
     el.classList.add('is-open'); el.setAttribute('aria-hidden', 'false');
     document.body.classList.add('booking-open');
     window.lockScroll?.(true);

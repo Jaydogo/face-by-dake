@@ -1,5 +1,5 @@
 /* =========================================================
-   CARTE COMPOSITE EN IMAGE (JPG) — pour mobile
+   FICHE CASTING EN IMAGE (JPG) — pour mobile
    Format vertical (A4 portrait), lisible en plein écran sur un téléphone :
    grand portrait + fiche à droite, 4 photos en bandeau, pied mono.
    Dessinée dans un canvas puis partagée / téléchargée.
@@ -101,7 +101,7 @@
     line(ctx, L, yF, R, yF, k);
     const fFoot = `400 ${pt(7)}px "IBM Plex Mono"`, sp = pt(7) * 0.06, yFt = yF + m(3) + pt(7);
     text(ctx, (SETTINGS.mail || '').toUpperCase(), L, yFt, { font: fFoot, spacing: sp, color: 'rgba(26,20,18,.7)' });
-    text(ctx, T('CARTE COMPOSITE', 'COMP CARD'), W / 2, yFt, { font: fFoot, spacing: sp, align: 'center', color: 'rgba(26,20,18,.7)' });
+    text(ctx, T('FICHE CASTING · PRODUCTION DAKÉ', 'CASTING SHEET · DAKÉ PRODUCTION'), W / 2, yFt, { font: fFoot, spacing: sp, align: 'center', color: 'rgba(26,20,18,.7)' });
     text(ctx, (t.code || '').toUpperCase(), R, yFt, { font: fFoot, spacing: sp, align: 'right', color: 'rgba(26,20,18,.7)' });
 
     return new Promise(res => c.toBlob(res, 'image/jpeg', 0.9));

@@ -1,6 +1,6 @@
 /* =========================================================
    FACE BY DAKĒ — logique partagée
-   Les contenus (fiches, sélections, réglages) sont dans talents-data.js,
+   Les contenus (fiches, propositions de casting, réglages) sont dans talents-data.js,
    écrit par le back office (talents/admin). Ce fichier ne contient que du code.
    ========================================================= */
 (function () {
@@ -16,7 +16,6 @@
   (data.talents || []).forEach(t => {
     if (!Array.isArray(t.videos)) t.videos = t.video && (t.video.src || t.video.url) ? [t.video] : [];
     t.videos = t.videos.filter(v => v && (v.src || v.url));
-    t.video = t.videos[0] || null;   // compatibilité (maquette V2)
   });
   window.TALENTS_DATA = data;
 
@@ -25,11 +24,10 @@
   window.TALENTS = window.TALENTS_PREVIEW ? all.slice() : all.filter(t => t.visible !== false && t.consent);
   window.ALL_TALENTS = all;
   window.SELECTIONS = data.selections || {};
-  window.SETTINGS = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international" }, data.settings || {});
+  window.SETTINGS = Object.assign({ mail: 'contact@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Productions en France et à l'international" }, data.settings || {});
 })();
 
 window.CAT_LABEL = { mannequin: T('Mannequin', 'Model'), comedien: T('Comédien·ne', 'Actor'), influence: 'Influence' };
-window.AVAIL_LABEL = { disponible: T('Disponible', 'Available'), option: T('En option', 'On hold'), indisponible: T('Indisponible', 'Unavailable') };
 
 /* Utilitaires partagés */
 window.TU = {
@@ -70,7 +68,7 @@ TU.embed = window.videoEmbed;   // défini dans i18n.js (partagé avec le back o
 /* =========================================================
    SEO : adresse canonique, partage, données structurées
    Une URL par langue (?lang=fr / ?lang=en), l'adresse sans paramètre
-   choisit la langue du visiteur (x-default). Les sélections prospects
+   choisit la langue du visiteur (x-default). Les propositions de casting
    et l'aperçu du back office ne sont jamais indexés.
    ========================================================= */
 window.SITE_URL = 'https://dake.studio';
@@ -82,7 +80,7 @@ TU.seo = function (o) {
   const url = l => { const qs = new URLSearchParams(Object.assign({}, o.params || {}, l ? { lang: l } : {})).toString(); return base + (qs ? '?' + qs : ''); };
   if (o.title) document.title = o.title;
   if (o.description) meta('name', 'description', o.description);
-  // Sélection prospect, aperçu, fiche absente : hors index
+  // Proposition de casting, aperçu, fiche absente : hors index
   if (o.noindex || q.has('sel') || q.has('ids') || q.get('preview') === '1') { meta('name', 'robots', 'noindex, nofollow'); return; }
   link('canonical', url(LANG));
   link('alternate', url('fr'), 'fr'); link('alternate', url('en'), 'en'); link('alternate', url(''), 'x-default');
@@ -97,7 +95,7 @@ TU.seo = function (o) {
   if (o.ld) { const sc = document.createElement('script'); sc.type = 'application/ld+json'; sc.textContent = JSON.stringify(Object.assign({ '@context': 'https://schema.org' }, o.ld)); h.appendChild(sc); }
 };
 TU.abs = x => !x ? '' : /^https?:/.test(x) ? x : SITE_URL + '/talents/' + x;
-window.FACE_ORG = { '@type': 'Organization', '@id': SITE_URL + '/talents/v1/#face', name: 'FACE BY DAKĒ', alternateName: ['Face by Daké', 'Face by Dake'], url: SITE_URL + '/talents/v1/', logo: SITE_URL + '/talents/icon-512.png', parentOrganization: { '@id': SITE_URL + '/#studio', '@type': 'Organization', name: 'DAKĒ STUDIO', url: SITE_URL + '/' } };
+window.FACE_ORG = { '@type': 'Organization', '@id': SITE_URL + '/talents/v1/#face', name: 'FACE BY DAKĒ', alternateName: ['Face by Daké', 'Face by Dake'], description: T('Talent roster by Daké Studio : talents intégrés aux productions photo et vidéo conçues et réalisées par Daké.', 'Talent roster by Daké Studio: talent featured in photo and video productions designed and made by Daké.'), url: SITE_URL + '/talents/v1/', logo: SITE_URL + '/talents/icon-512.png', parentOrganization: { '@id': SITE_URL + '/#studio', '@type': 'Organization', name: 'DAKĒ STUDIO', url: SITE_URL + '/' } };
 
 /* =========================================================
    SÉLECTIONS PAR PROSPECT (gérées dans le back office, onglet Prospection)
@@ -112,7 +110,7 @@ TU.selection = function () {
   if (!s) return null;
   s.talents = (s.ids || []).map(id => TALENTS.find(t => t.slug === id)).filter(Boolean);
   if (!s.talents.length) return null;
-  // Paramètres à recopier sur chaque lien pour garder le contexte de la sélection
+  // Paramètres à recopier sur chaque lien pour garder le contexte du casting
   const keep = new URLSearchParams();
   if (s.key) keep.set('sel', s.key);
   else { keep.set('ids', s.ids.join(',')); if (s.client) keep.set('pour', s.client); if (s.project) keep.set('projet', s.project); if (s.note) keep.set('note', s.note); }
@@ -123,8 +121,8 @@ TU.selection = function () {
 
 TU.mailFor = function (sel, talents) {
   const names = talents.map(t => t.first + ' ' + t.last).join(', ');
-  const subj = sel ? `${T('Sélection', 'Selection')} ${sel.client || 'Daké'} : ${names}` : `Booking ${names}`;
-  const body = sel ? T(`Bonjour,\n\nNous souhaitons poser une option sur : ${names}${sel.project ? '\nProjet : ' + sel.project : ''}\nDates envisagées : \n\nMerci !`, `Hello,\n\nWe would like to put a hold on: ${names}${sel.project ? '\nProject: ' + sel.project : ''}\nProposed dates: \n\nThank you!`) : '';
+  const subj = sel ? `${T('Projet', 'Project')} ${sel.client || 'Daké'} – casting ${names}` : `${T('Projet avec', 'Project with')} ${names}`;
+  const body = sel ? T(`Bonjour,\n\nVotre proposition de production nous intéresse${sel.project ? ' (' + sel.project + ')' : ''}.\nCasting envisagé : ${names}\nPériode et livrables envisagés : \n\nMerci !`, `Hello,\n\nWe are interested in your production proposal${sel.project ? ' (' + sel.project + ')' : ''}.\nCasting in mind: ${names}\nTiming and deliverables in mind: \n\nThank you!`) : '';
   return `mailto:${SETTINGS.mail}?subject=${encodeURIComponent(subj)}${body ? '&body=' + encodeURIComponent(body) : ''}`;
 };
 

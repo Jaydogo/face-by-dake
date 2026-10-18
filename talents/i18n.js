@@ -43,9 +43,8 @@
     'blond fonce': 'Dark blonde', 'blond clair': 'Light blonde', 'blond venitien': 'Strawberry blonde', 'roux': 'Red', 'rousse': 'Red', 'auburn': 'Auburn',
     'blanc': 'White', 'blancs': 'White', 'poivre et sel': 'Salt and pepper', 'rase': 'Shaved', 'chauve': 'Bald', 'boucle': 'Curly', 'boucles': 'Curly',
     'frise': 'Coily', 'crepus': 'Coily', 'tresses': 'Braids', 'locks': 'Locs', 'colores': 'Dyed', 'decolores': 'Bleached',
-    // Catégories, disponibilité
+    // Catégories
     'mannequin': 'Model', 'comedien·ne': 'Actor', 'comedien': 'Actor', 'comedienne': 'Actress', 'influence': 'Influence',
-    'disponible': 'Available', 'en option': 'On hold', 'indisponible': 'Unavailable',
     // Spécialités
     'publicite': 'Advertising', 'commercial': 'Commercial', 'defile': 'Runway', 'editorial': 'Editorial', 'e-shop': 'E-commerce', 'e-commerce': 'E-commerce',
     'lookbook': 'Lookbook', 'beaute': 'Beauty', 'mode': 'Fashion', 'lingerie': 'Lingerie', 'maillot de bain': 'Swimwear', 'fitness': 'Fitness', 'sport': 'Sport',
@@ -67,7 +66,7 @@
     'cote d\'ivoire': 'Ivory Coast', 'paris, france': 'Paris, France',
     // Textes par défaut du back office
     'pris au studio dake': 'Shot at the Daké studio', 'realisee par dake': 'Directed by Daké', 'au *naturel.*': 'Au *naturel.*',
-    'castings en france et a l\'international': 'Castings in France and internationally',
+    'productions en france et a l\'international': 'Productions in France and internationally',
     'film, campagne dake': 'Film, Daké campaign', 'bande demo': 'Showreel', 'bande demo, scene dramatique': 'Showreel, dramatic scene'
   };
   const key = s => String(s || '').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ');

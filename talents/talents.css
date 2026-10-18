@@ -368,7 +368,7 @@ html.locked body > *:not(.gate){display:none !important}
 
 /* =========================================================
    NAV DAKĒ STUDIO (V1) — header verre, menu plein écran,
-   barre « Booker » mobile, footer en volet. Activé par body.shell
+   barre d'action mobile, footer en volet. Activé par body.shell
    ========================================================= */
 .shell{--on-dark:var(--cream)}
 .shell main{position:relative;z-index:1;background:var(--cream);padding-top:var(--header);margin-bottom:100vh;margin-bottom:100lvh}
@@ -453,7 +453,7 @@ html:has(.shell){scroll-padding-top:calc(var(--header) + 12px)}
 .menu-open{overflow:hidden}
 .menu-open .shell .header::before,.menu-open.shell .header::before{opacity:0!important}
 
-/* Barre « Booker » (mobile) */
+/* Barre d'action (mobile) */
 .dock{display:none}
 
 @media (max-width:860px){
@@ -541,7 +541,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .v1-join .btn{justify-self:start}
 @media (max-width:860px){.v1-join .h2,.v1-join .side{grid-column:1 / -1}.v1-join .side{margin-top:28px}}
 
-/* Carte composite : imprimable / « Enregistrer en PDF » */
+/* Fiche casting (carte composite) : imprimable / « Enregistrer en PDF » */
 .composite{display:none}
 @media print{
   @page{size:A4 landscape;margin:10mm}
@@ -643,7 +643,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .shell .logo .c{font-size:inherit;font-weight:400;vertical-align:baseline;margin-left:.08em}
 
 /* =========================================================
-   TUNNEL « BOOKER » — repris du panneau de réservation FACE
+   TUNNEL « PROPOSER UN PROJET » — même panneau que le tunnel de DAKĒ STUDIO
    ========================================================= */
 .booking{position:fixed;inset:0;z-index:60;visibility:hidden;transition:visibility 0s linear .75s;color:var(--ink);--line:rgba(26,20,18,.14)}
 .booking.is-open{visibility:visible;transition:visibility 0s}
@@ -732,7 +732,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
   .booking .row2{grid-template-columns:1fr;gap:0}
 }
 
-/* Arrivée sur le footer : la barre d'ancres s'efface (comme la barre Booker) */
+/* Arrivée sur le footer : la barre d'ancres s'efface (comme la barre d'action) */
 .shell .subnav{transition:background-color .45s var(--ease),color .45s var(--ease),box-shadow .45s var(--ease),opacity .4s var(--ease)}
 .shell.at-end .subnav{opacity:0;pointer-events:none}
 
@@ -753,7 +753,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .shell .pola-ctrl .prog i{background:var(--forest)}
 /* Liste : flèche et nom au survol */
 .shell .v1-list:hover .v1-row a:hover{color:var(--forest)}
-/* Tunnel booking : sélection en vert, erreurs en rouge */
+/* Tunnel « Proposer un projet » : choix en vert, erreurs en rouge */
 .booking .chip[aria-pressed="true"]{background:var(--forest);color:var(--cream)}
 .bk-t[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px var(--forest),0 8px 24px rgba(36,57,47,.14)}
 .bk-t[aria-pressed="true"] .bk-t-tick{background:var(--forest)}
@@ -802,7 +802,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .theme-white .bk-t[aria-pressed="true"]{background:#fff}
 .theme-white .pola{box-shadow:0 0 0 1px rgba(26,20,18,.08)}
 
-/* Boutons collés (Booker du header et de la barre du bas) : vert forêt du footer */
+/* Boutons collés (action du header et de la barre du bas) : vert forêt du footer */
 .shell .header .btn,.shell .header.on-light .btn,.shell .dock .btn{background:var(--forest);border-color:var(--forest);color:var(--cream)}
 .shell .header .btn:hover,.shell .dock .btn:hover{background:var(--forest-2);border-color:var(--forest-2);color:var(--cream)}
 .shell .header:not(.on-light) .btn{box-shadow:inset 0 0 0 1px rgba(243,237,227,.18)}
@@ -837,7 +837,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 @media print{.composite .c-pola img{object-fit:contain;background:#fff}}
 
 /* =========================================================
-   CARTE COMPOSITE — DA du site, A4 paysage, sans marges navigateur
+   FICHE CASTING (carte composite) — DA du site, A4 paysage, sans marges navigateur
    ========================================================= */
 @media print{
   @page{size:297mm 210mm;margin:0}
@@ -866,11 +866,8 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
   .cc-foot{display:flex;justify-content:space-between;margin-top:5mm;padding-top:3mm;border-top:.2mm solid rgba(26,20,18,.18);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:7pt;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
 }
 
-/* Back office : fiche en aperçu, disponibilité, bio */
+/* Fiche en aperçu (brouillon), bio */
 .draft-note{display:inline-block;margin-bottom:18px;padding:6px 12px;border-radius:999px;background:#FFF4D6;color:#7A5A00;font-size:.6875rem}
-.avail{border-color:transparent !important;background:var(--soft)}
-.avail--option{background:#FFF1D6;color:#7A5200}
-.avail--indisponible{background:#F3E0DE;color:#8A2A20}
 .v1-bio{max-width:34em;font-size:1rem;line-height:1.6;color:var(--muted)}
 
 /* Footer : site courant signalé */
@@ -927,7 +924,7 @@ a.player--link{display:block;color:#fff;text-decoration:none}
 a.player--link .play span{transition:background-color .3s var(--ease)}
 a.player--link:hover .play span{background:rgba(0,0,0,.4)}
 
-/* Aperçu de la carte composite (téléphone) : plein écran, monte du bas */
+/* Aperçu de la fiche casting (téléphone) : plein écran, monte du bas */
 .cc-preview{position:fixed;inset:0;z-index:300;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:rgba(26,20,18,.94);color:var(--cream);
   padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);opacity:0;transition:opacity .35s var(--ease)}
 .cc-preview.on{opacity:1}
@@ -938,3 +935,5 @@ a.player--link:hover .play span{background:rgba(0,0,0,.4)}
 .cc-preview-img img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.45);background:#fff}
 .cc-preview-foot{padding:14px 18px 18px}
 .cc-preview-foot .btn{width:100%;background:var(--cream);border-color:var(--cream);color:var(--ink)}
+/* Mention de positionnement dans le pied de page */
+.final-foot .face-note{flex-basis:100%;order:3;max-width:70ch;line-height:1.5}

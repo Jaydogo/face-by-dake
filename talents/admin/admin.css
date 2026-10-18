@@ -350,7 +350,7 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
   #discard{display:none}
   #publish{min-height:36px;padding:0 16px}
 
-  /* Onglets du bas : pilule de verre flottante, même dessin que la barre « Booker » du site */
+  /* Onglets du bas : pilule de verre flottante, même dessin que la barre d'action du site */
   /* « collante » plutôt que fixe : Safari (iOS 26) étend un fond derrière les barres fixées en bas d'écran */
   .tabbar{position:fixed;left:16px;right:16px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:25;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:999px;
     background:rgba(26,20,18,.55);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18);

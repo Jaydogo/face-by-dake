@@ -1,6 +1,6 @@
 /* =========================================================
    FACE BY DAKĒ — back office
-   - Édite talents-data.js (fiches, sélections, réglages)
+   - Édite talents-data.js (fiches, propositions de casting, réglages)
    - Photos redimensionnées dans le navigateur, gardées en brouillon (IndexedDB)
    - « Publier » = un seul commit GitHub (API Git Data) : données + médias + suppressions
    - Aperçu en direct : la vraie fiche du site, lue en mode ?preview=1
@@ -63,7 +63,7 @@
   const SITE = 'https://jaydogo.github.io/face-by-dake/talents/v1/';
   function normalize(d) {
     d = Object.assign(blankData(), d || {});
-    d.settings = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international", siteUrl: SITE }, d.settings || {});
+    d.settings = Object.assign({ mail: 'contact@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Productions en France et à l'international", siteUrl: SITE }, d.settings || {});
     d.selections = d.selections || {};
     // Vidéos : liste (fichiers ou liens). Les anciennes fiches n'avaient qu'un champ « video ».
     d.talents.forEach(t => { if (!Array.isArray(t.videos)) t.videos = t.video && (t.video.src || t.video.url) ? [t.video] : []; delete t.video; });
@@ -314,7 +314,7 @@
     </aside>`;
     if (!t) return `<div class="studio no-preview" id="studio" data-screen="list">${list}<section class="editor"><div class="empty"><div><p class="serif">Aucun talent</p><p>Crée la première fiche.</p><button class="btn" data-a="add" type="button">+ Ajouter un talent</button></div></div></section></div>`;
     const w = talentWarnings(t);
-    const panes = [['profil', 'Profil'], ['fiche', 'Mensurations'], ['polas', 'Polas', (t.polas || []).length], ['book', 'Book', (t.book || []).length], ['video', 'Vidéos', (t.videos || []).length], ['stats', 'Stats'], ['carte', 'Carte composite'], ['publication', 'Publication']];
+    const panes = [['profil', 'Profil'], ['fiche', 'Mensurations'], ['polas', 'Polas', (t.polas || []).length], ['book', 'Book', (t.book || []).length], ['video', 'Vidéos', (t.videos || []).length], ['stats', 'Stats'], ['carte', 'Fiche casting'], ['publication', 'Publication']];
     const pubWarn = w.some(z => z[0] === 'error');
     return `<div class="studio${ui.showPv ? ' show-preview' : ''}" id="studio" data-screen="${ui.screen}">${list}
       <section class="editor" id="editor">
@@ -365,7 +365,7 @@
         ${field('Prénom', 'first', t.first)}${field('Nom', 'last', t.last)}
         ${field('Ville', 'city', t.city, { ph: 'Paris' })}${field('Agence', 'agency', t.agency, { hint: 'si représenté·e', ph: 'Indépendant·e' })}
         ${field('Langues', 'languages', t.languages, { ph: 'Français, anglais (courant)' })}
-        <label class="field"><span>Disponibilité</span><select class="input" data-bind="availability">${AVAIL.map(([k, l]) => `<option value="${k}"${t.availability === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+        <label class="field"><span>Disponibilité <small>interne, jamais affichée sur le site</small></span><select class="input" data-bind="availability">${AVAIL.map(([k, l]) => `<option value="${k}"${t.availability === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         ${field('Bio courte', 'bio', t.bio, { area: 1, cls: 'span-all', hint: 'facultatif, 2–3 lignes', max: 320 })}
         ${field('Bio courte · anglais', 'bio_en', t.bio_en || '', { area: 1, cls: 'span-all', hint: 'facultatif · vide = le français s\'affiche sur la version EN', max: 320, ph: 'Short bio in English' })}
       </div></div>
@@ -467,8 +467,8 @@
     if (ui.pane === 'carte') {
       const imgs = [...(t.polas || []).map(p => p[0]), ...(t.book || [])].filter((x, i, a) => x && x !== t.cover && a.indexOf(x) === i);
       const picks = t.composite || [];
-      return `<div class="section"><h3>Carte composite</h3>
-        <div class="alert alert--info" style="margin-bottom:14px">La carte (PDF sur ordinateur, image sur mobile) montre la couverture + 4 photos. Laisse en <b>automatique</b> (pied, profil, 3/4, assise + une photo du book) ou choisis tes 4 photos dans l'ordre.</div>
+      return `<div class="section"><h3>Fiche casting</h3>
+        <div class="alert alert--info" style="margin-bottom:14px">La fiche casting (PDF sur ordinateur, image sur mobile) montre la couverture + 4 photos. Laisse en <b>automatique</b> (pied, profil, 3/4, assise + une photo du book) ou choisis tes 4 photos dans l'ordre.</div>
         <div class="chips" style="margin-bottom:16px"><button type="button" class="chip" data-a="comp-auto" aria-pressed="${!t.composite}">Automatique</button><button type="button" class="chip" data-a="comp-custom" aria-pressed="${!!t.composite}">Je choisis</button></div>
         ${t.composite ? `<p class="hint">${picks.length}/4 sélectionnées · clique pour ajouter ou retirer</p><div class="thumbs">${imgs.map(p => { const k = picks.indexOf(p); return `<button type="button" class="thumb${k >= 0 ? ' is-pick' : ''}" data-a="comp-pick" data-p="${esc(p)}" style="cursor:pointer"><div class="img"><img src="${esc(srcFor(p))}" alt="" loading="lazy"></div>${k >= 0 ? `<span class="pick-n">${k + 1}</span>` : ''}</button>`; }).join('')}</div>` : ''}
       </div>`;
@@ -521,7 +521,8 @@
   function pitchFor(sel) {
     const names = (sel.ids || []).map(id => db.talents.find(t => t.slug === id)).filter(Boolean);
     const n = names.length, url = selUrl(sel);
-    return n ? `Bonjour,\n\nJe suis Jay, directeur créatif de Daké (Longines, Tissot, Marie Claire). ${sel.project ? `En pensant à ${sel.project}` : 'En pensant à vos prochaines campagnes'}, j'ai réuni ${n === 1 ? 'un profil' : n + ' profils'} que nous avons photographiés au studio${sel.client ? `, choisis pour ${sel.client}` : ''} :\n\n${url}\n\nPolas, book, vidéo et audience Instagram / TikTok sur chaque fiche. Nous pouvons prendre en charge le casting et la production.\n\nUn appel de 15 minutes cette semaine ?\n\nJay` : '';
+    // Daké vend une production complète ; le casting en fait partie (jamais de talent « à réserver »)
+    return n ? `Bonjour,\n\nJe suis Jay, directeur créatif de Daké (Longines, Tissot, Marie Claire). ${sel.project ? `Pour votre projet « ${sel.project} »` : 'Pour votre prochaine campagne'}, nous imaginons une production Daké sur mesure : direction artistique, casting, prise de vue et livrables.\n\nVoici le casting que nous envisageons${sel.client ? ` pour ${sel.client}` : ''}, ${n === 1 ? 'un visage' : n + ' visages'} FACE BY DAKĒ :\n\n${url}\n\nUn appel de 15 minutes cette semaine pour en parler ?\n\nJay` : '';
   }
   const selUrl = sel => `${db.settings.siteUrl}?sel=${encodeURIComponent(sel.key)}`;
   function viewProspection() {
@@ -529,26 +530,26 @@
     const pub = published.selections || {};
     return `<div class="page">
       <h1>Pro<em>spection</em></h1>
-      <p class="lead">Une sélection = une page privée pour une marque, avec les profils choisis pour elle, son nom en titre et un bouton « Poser une option ». Le lien fonctionne une fois la sélection <b>publiée</b>.</p>
-      <div style="margin-bottom:18px"><button class="btn" type="button" data-a="sel-add">+ Nouvelle sélection</button></div>
+      <p class="lead">Une proposition = une page privée pour une marque : le casting que Daké imagine pour une production qu'il réalise, avec un bouton « Parlons du projet ». Daké vend la production, jamais la mise à disposition d'un talent. Le lien fonctionne une fois la proposition <b>publiée</b>.</p>
+      <div style="margin-bottom:18px"><button class="btn" type="button" data-a="sel-add">+ Nouvelle proposition</button></div>
       <div class="cards">${sels.length ? sels.map(s => {
         const live = !!pub[s.key] && JSON.stringify(pub[s.key]) === JSON.stringify(db.selections[s.key]);
         return `<article class="card" data-sel="${esc(s.key)}">
           <div class="card-head"><h3>${esc(s.client || 'Sans nom')} <em>${esc(s.project || '')}</em></h3><span class="mono ${live ? '' : 'muted'}">${live ? '● En ligne' : '○ À publier'}</span></div>
           <div class="grid2">
             <label class="field"><span>Prospect</span><input class="input" data-sbind="client" value="${esc(s.client)}" placeholder="Sézane"></label>
-            <label class="field"><span>Projet</span><input class="input" data-sbind="project" value="${esc(s.project)}" placeholder="Campagne printemps-été 2027"></label>
+            <label class="field"><span>Production</span><input class="input" data-sbind="project" value="${esc(s.project)}" placeholder="Campagne printemps-été 2027"></label>
             <label class="field span-all"><span>Mot d'intro <small>affiché sous le titre</small></span><textarea class="input" data-sbind="note" placeholder="Quatre visages naturels, à l'aise en mouvement…">${esc(s.note)}</textarea></label>
             <label class="field span-all"><span>Mot d'intro · anglais <small>facultatif, pour un prospect anglophone</small></span><textarea class="input" data-sbind="note_en" placeholder="Four natural faces, at ease in motion…">${esc(s.note_en || '')}</textarea></label>
           </div>
-          <p class="label" style="margin:16px 0 8px">Profils <span class="hint">dans l'ordre de clic</span></p>
+          <p class="label" style="margin:16px 0 8px">Casting envisagé <span class="hint">dans l'ordre de clic</span></p>
           <div class="pick">${db.talents.map(t => { const k = (s.ids || []).indexOf(t.slug); return `<button type="button" data-a="sel-pick" data-slug="${esc(t.slug)}" aria-pressed="${k >= 0}">${k >= 0 ? `<span class="num">${k + 1}</span>` : ''}<span class="img">${t.cover ? `<img src="${esc(srcFor(t.cover))}" alt="" loading="lazy">` : ''}</span><span class="nm">${esc(t.first)} <em>${esc(t.last)}</em></span></button>`; }).join('')}</div>
           <p class="label" style="margin:18px 0 8px">Lien</p>
           <div class="out"><code>${esc(selUrl(s))}</code><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(selUrl(s))}">Copier</button><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(selUrl(s))}&amp;lang=en" title="Lien qui ouvre la sélection en anglais">Copier (EN)</button><a class="btn btn--ghost btn--s" href="../v1/?sel=${encodeURIComponent(s.key)}&preview=1" target="_blank" rel="noopener" data-a="pv-sel">Aperçu</a></div>
           <p class="label" style="margin:18px 0 8px">Message de prospection</p>
           <div class="pitch">${esc(pitchFor(s)) || '<span class="muted">Choisis au moins un profil.</span>'}</div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(pitchFor(s))}">Copier le message</button><span class="hint" style="align-self:center">Identifiant : <span class="code">${esc(s.key)}</span></span><span style="flex:1"></span><button class="btn btn--danger btn--s" type="button" data-a="sel-del">Supprimer</button></div>
-        </article>`; }).join('') : '<p class="muted">Aucune sélection pour l\'instant.</p>'}</div>
+        </article>`; }).join('') : '<p class="muted">Aucune proposition pour l\'instant.</p>'}</div>
     </div>`;
   }
 
@@ -560,12 +561,12 @@
       <h1>Ré<em>glages</em></h1><p class="lead">Coordonnées affichées sur le site, connexion à GitHub pour publier, sauvegardes.</p>
       <div class="cards">
         <section class="card"><div class="card-head"><h3>Coordonnées</h3></div><div class="grid2">
-          ${set('Email de booking', 'mail', { ph: 'booking@dake.studio', hint: 'reçoit les demandes du formulaire' })}${set('Téléphone', 'phone', { ph: '+33 6 …', hint: 'facultatif' })}
+          ${set('Email de contact', 'mail', { ph: 'contact@dake.studio', hint: 'reçoit les propositions de projet' })}${set('Téléphone', 'phone', { ph: '+33 6 …', hint: 'facultatif' })}
           ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien Daké©', 'studio', { ph: 'https://dake.studio', mono: 1 })}
           ${set('Mention sous Daké©', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
-          ${set('Zone (footer)', 'reach', { ph: "Castings en France et à l'international", cls: 'span-all' })}
+          ${set('Zone (footer)', 'reach', { ph: "Productions en France et à l'international", cls: 'span-all' })}
           ${set('Zone (footer) · anglais', 'reach_en', { ph: 'Castings in France and internationally', cls: 'span-all', hint: 'facultatif' })}
-          ${set('Adresse publique du site', 'siteUrl', { mono: 1, cls: 'span-all', hint: 'sert à fabriquer les liens de sélection' })}
+          ${set('Adresse publique du site', 'siteUrl', { mono: 1, cls: 'span-all', hint: 'sert à fabriquer les liens de fiches et de casting' })}
         </div></section>
 
         <section class="card"><div class="card-head"><h3>Publication <em>GitHub</em></h3><span class="gh-state">${ok ? '<span class="dot"></span> Clé enregistrée' : '<span class="dot dot--off"></span> Pas connecté'}</span></div>
@@ -587,12 +588,12 @@
         </section>
 
         <section class="card"><div class="card-head"><h3>Code d'<em>accès</em></h3></div>
-          <p class="hint" style="margin:0 0 12px">Protège ce back office et le créateur de sélections. Le nouveau code est pris en compte à la prochaine publication.</p>
+          <p class="hint" style="margin:0 0 12px">Protège ce back office et le créateur de propositions de casting. Le nouveau code est pris en compte à la prochaine publication.</p>
           <div class="out"><input class="input mono" id="new-code" placeholder="Nouveau code" autocomplete="off" style="max-width:260px"><button class="btn btn--ghost btn--s" type="button" data-a="gate">${gateHash ? 'Code modifié · à publier' : 'Changer le code'}</button></div>
         </section>
 
         <section class="card"><div class="card-head"><h3>Sauvegarde</h3></div>
-          <p class="hint" style="margin:0 0 12px">Exporte toutes les données (fiches, sélections, réglages) dans un fichier, pour les garder ou les restaurer. Les photos restent sur GitHub.</p>
+          <p class="hint" style="margin:0 0 12px">Exporte toutes les données (fiches, propositions, réglages) dans un fichier, pour les garder ou les restaurer. Les photos restent sur GitHub.</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn--ghost btn--s" type="button" data-a="export">Exporter (.json)</button><label class="btn btn--ghost btn--s">Importer<input type="file" accept="application/json,.json" data-up="import" hidden></label><button class="btn btn--danger btn--s" type="button" data-a="reset">Repartir de la version en ligne</button></div>
         </section>
       </div></div>`;
@@ -608,7 +609,7 @@
   }
   const numVal = v => { const s = String(v).replace(',', '.').replace(/\s/g, ''); if (s === '') return ''; const n = Number(s); return isNaN(n) ? v : n; };
 
-  // Saisie : champs liés à la fiche (data-bind), aux sélections, aux réglages, à GitHub
+  // Saisie : champs liés à la fiche (data-bind), aux propositions de casting, aux réglages, à GitHub
   document.addEventListener('input', e => {
     const el = e.target;
     if (el.id === 'q') { ui.q = el.value; const p = el.selectionStart; render(); const q = $('#q'); q.focus(); q.setSelectionRange(p, p); return; }
@@ -689,7 +690,7 @@
       db.talents.splice(db.talents.indexOf(t) + 1, 0, c); ui.slug = c.slug; persist(); render(); toast('Fiche dupliquée (brouillon)');
     },
     async del(b, t) {
-      const box = await modal(`<h3>Supprimer <em>${esc(t.first)} ${esc(t.last)}</em> ?</h3><p>La fiche, ses photos et sa vidéo seront supprimées du site à la prochaine publication. Elle est aussi retirée des sélections. Pour la cacher sans la perdre, décoche plutôt « visible ».</p><label class="field"><span>Tape <b>${esc(t.first)}</b> pour confirmer</span><input class="input" name="c" autocomplete="off"></label><div class="acts"><button class="btn btn--ghost" value="cancel">Annuler</button><button class="btn btn--danger" value="ok">Supprimer</button></div>`, box => box.c.value.trim().toLowerCase() === (t.first || '').toLowerCase() || (toast('Le prénom ne correspond pas', true), false));
+      const box = await modal(`<h3>Supprimer <em>${esc(t.first)} ${esc(t.last)}</em> ?</h3><p>La fiche, ses photos et sa vidéo seront supprimées du site à la prochaine publication. Elle est aussi retirée des propositions de casting. Pour la cacher sans la perdre, décoche plutôt « visible ».</p><label class="field"><span>Tape <b>${esc(t.first)}</b> pour confirmer</span><input class="input" name="c" autocomplete="off"></label><div class="acts"><button class="btn btn--ghost" value="cancel">Annuler</button><button class="btn btn--danger" value="ok">Supprimer</button></div>`, box => box.c.value.trim().toLowerCase() === (t.first || '').toLowerCase() || (toast('Le prénom ne correspond pas', true), false));
       if (!box) return;
       const paths = refsOf(t);
       db.talents.splice(db.talents.indexOf(t), 1);
@@ -755,14 +756,14 @@
     'pv-reload'() { pushPreview(); },
     copy(b) { copyText(b.dataset.v).then(ok => toast(ok ? 'Copié' : 'Copie impossible', !ok)); },
     async 'sel-add'() {
-      const box = await modal(`<h3>Nouvelle <em>sélection</em></h3><label class="field"><span>Prospect (marque)</span><input class="input" name="client" required placeholder="Sézane"></label><label class="field"><span>Projet <small>facultatif</small></span><input class="input" name="project" placeholder="Campagne printemps-été 2027"></label><div class="acts"><button class="btn btn--ghost" value="cancel" formnovalidate>Annuler</button><button class="btn" value="ok">Créer</button></div>`);
+      const box = await modal(`<h3>Nouvelle <em>proposition</em></h3><label class="field"><span>Prospect (marque)</span><input class="input" name="client" required placeholder="Sézane"></label><label class="field"><span>Production <small>facultatif</small></span><input class="input" name="project" placeholder="Campagne printemps-été 2027"></label><div class="acts"><button class="btn btn--ghost" value="cancel" formnovalidate>Annuler</button><button class="btn" value="ok">Créer</button></div>`);
       if (!box || !box.client.value.trim()) return;
       let key = slugify(box.client.value), n = 2; while (db.selections[key]) key = slugify(box.client.value) + '-' + n++;
       db.selections[key] = { client: box.client.value.trim(), project: box.project.value.trim(), ids: [], note: '' };
       persist(); render();
     },
     'sel-pick'(b) { const k = b.closest('[data-sel]').dataset.sel, s = db.selections[k], id = b.dataset.slug, i = s.ids.indexOf(id); i < 0 ? s.ids.push(id) : s.ids.splice(i, 1); persist(); render(); },
-    async 'sel-del'(b) { const k = b.closest('[data-sel]').dataset.sel; if (!await confirmBox('Supprimer la sélection ?', `Le lien ?sel=${esc(k)} ne fonctionnera plus après publication.`, 'Supprimer', true)) return; delete db.selections[k]; persist(); render(); },
+    async 'sel-del'(b) { const k = b.closest('[data-sel]').dataset.sel; if (!await confirmBox('Supprimer la proposition ?', `Le lien ?sel=${esc(k)} ne fonctionnera plus après publication.`, 'Supprimer', true)) return; delete db.selections[k]; persist(); render(); },
     async 'gh-test'() { try { const r = await api(`/repos/${gh.owner}/${gh.repo}`); toast(r.permissions && r.permissions.push ? 'Connexion OK · tu peux publier' : 'Connecté, mais la clé ne permet pas d\'écrire (Contents : Read and write)', !(r.permissions && r.permissions.push)); render(); } catch (err) { toast(err.message, true); } },
     async 'gh-pull'() {
       if (dirty() && !await confirmBox('Recharger depuis GitHub ?', 'Tes modifications non publiées seront remplacées par la version en ligne.', 'Recharger', true)) return;
@@ -912,7 +913,7 @@
     const withdrawn = published.talents.filter(p => local.some(t => t.slug === p.slug));
     const wFiles = withdrawn.flatMap(refsOf).filter(p => isOwned(p) && !used.has(p));
     const box = await modal(`<h3>Publier sur le <em>site</em></h3>
-      <ul><li>${pub.length - drafts.length} fiche${pub.length - drafts.length > 1 ? 's' : ''} en ligne${drafts.length ? ` · ${drafts.length} brouillon${drafts.length > 1 ? 's' : ''} enregistré${drafts.length > 1 ? 's' : ''}, invisible${drafts.length > 1 ? 's' : ''} sur le site` : ''}</li><li>${Object.keys(db.selections || {}).length} sélections</li>${uploads.length ? `<li>${uploads.length} fichier${uploads.length > 1 ? 's' : ''} à envoyer (${fmtSize(size)})</li>` : ''}${removed.size ? `<li>${removed.size} fichier${removed.size > 1 ? 's' : ''} supprimé${removed.size > 1 ? 's' : ''}</li>` : ''}${gateHash ? '<li>Nouveau code d\'accès</li>' : ''}</ul>
+      <ul><li>${pub.length - drafts.length} fiche${pub.length - drafts.length > 1 ? 's' : ''} en ligne${drafts.length ? ` · ${drafts.length} brouillon${drafts.length > 1 ? 's' : ''} enregistré${drafts.length > 1 ? 's' : ''}, invisible${drafts.length > 1 ? 's' : ''} sur le site` : ''}</li><li>${Object.keys(db.selections || {}).length} proposition${Object.keys(db.selections || {}).length > 1 ? 's' : ''} de casting</li>${uploads.length ? `<li>${uploads.length} fichier${uploads.length > 1 ? 's' : ''} à envoyer (${fmtSize(size)})</li>` : ''}${removed.size ? `<li>${removed.size} fichier${removed.size > 1 ? 's' : ''} supprimé${removed.size > 1 ? 's' : ''}</li>` : ''}${gateHash ? '<li>Nouveau code d\'accès</li>' : ''}</ul>
       ${local.length ? `<p>Restent dans ce navigateur, sans rien envoyer (accord droit à l'image non signé) : ${local.map(t => esc(t.first + ' ' + t.last)).join(', ')}.</p>` : ''}
       ${withdrawn.length ? `<p class="warn-txt">Retirées du site, photos supprimées du dépôt : ${withdrawn.map(t => esc(t.first + ' ' + t.last)).join(', ')} (accord décoché).</p>` : ''}
       <label class="field"><span>Note <small>facultatif, pour l'historique</small></span><input class="input" name="msg" placeholder="Ajout de Prune, nouvelles photos…"></label>

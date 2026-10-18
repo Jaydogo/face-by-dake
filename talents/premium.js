@@ -2,7 +2,7 @@
    FACE BY DAKĒ — couche « fluide » (V1)
    Scroll lissé (Lenis, même réglage que FACE), images en fondu,
    préchargement des pages, transitions, visionneuse plein écran,
-   carte composite imprimable.
+   fiche casting imprimable.
    ========================================================= */
 (function () {
   const d = document.documentElement;

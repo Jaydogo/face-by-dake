@@ -3,13 +3,13 @@ window.TALENTS_DATA = {
  "version": 1,
  "updated": "2026-10-18T10:17:13.000Z",
  "settings": {
-  "mail": "booking@dake.studio",
+  "mail": "contact@dake.studio",
   "instagram": "dake.face",
   "studio": "https://dake.studio",
   "studioSoon": "",
   "phone": "",
   "city": "Paris, France",
-  "reach": "Castings en France et à l'international"
+  "reach": "Productions en France et à l'international"
  },
  "talents": [
   {
@@ -902,7 +902,7 @@ window.TALENTS_DATA = {
     "jade",
     "maya"
    ],
-   "note": "Quatre visages naturels, à l’aise en mouvement, pour une campagne lumière du jour."
+   "note": "Quatre visages naturels, à l’aise en mouvement, pour une campagne lumière du jour produite par Daké."
   }
  }
 };
