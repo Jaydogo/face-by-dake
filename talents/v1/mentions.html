@@ -24,6 +24,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
     <div class="ed-side">
       <h1 class="h2">Mentions <em>légales.</em></h1>
       <p class="lead">Qui édite FACE BY DAKĒ, qui l'héberge, comment sont publiées les images des talents et ce que deviennent vos données.</p>
+      <a class="back-link" href="./">← Retour au site</a>
     </div>
     <div class="ed-main">
       <section class="ed-ch">
@@ -92,7 +93,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 document.querySelectorAll('[data-mail]').forEach(a => { a.href = 'mailto:' + ECO.mail; a.textContent = ECO.mail; });
 renderShell({
   root: '../../', home: './',
-  sections: [['./', 'Talents'], ['#contact', 'Booking']],
+  sections: [['./', 'Retour au site'], ['#contact', 'Booking']],
   book: { label: 'Booker un talent', href: 'mailto:' + ECO.mail, ids: '' },
   dock: 'Mentions <strong>légales</strong>'
 });

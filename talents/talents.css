@@ -896,3 +896,5 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
   .legal-ed dl{grid-template-columns:1fr;gap:2px 0}
   .legal-ed dt{margin-top:10px}
 }
+.legal-ed .back-link{display:inline-block;margin-top:24px;font-size:.875rem;text-decoration:underline;text-underline-offset:.2em}
+.legal-ed .back-link:hover{color:var(--forest,#24392F)}
