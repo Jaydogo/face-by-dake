@@ -93,11 +93,15 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 document.querySelectorAll('[data-mail]').forEach(a => { a.href = 'mailto:' + ECO.mail; a.textContent = ECO.mail; });
 renderShell({
   root: '../../', home: './',
-  sections: [['./', 'Retour au site'], ['#contact', 'Booking']],
+  sections: [['./', 'Talents']],
   book: { label: 'Booker un talent', href: 'mailto:' + ECO.mail, ids: '' },
   dock: 'Mentions <strong>légales</strong>'
 });
 renderFooter(document.getElementById('contact'), { root: '../../' });
+// Comme sur les mentions de Daké Studio : en haut, un simple « Retour au site » à la place de la nav et du bouton
+document.querySelector('.header .nav').innerHTML = '';
+document.querySelector('.header .header-cta').innerHTML = '<a class="back-top" href="./">Retour au site</a>';
+const dk = document.querySelector('.dock .btn'); if (dk) { dk.textContent = 'Retour au site'; dk.href = './'; dk.removeAttribute('data-book'); }
 
 </script>
 </body>
