@@ -92,7 +92,7 @@
   }
   addEventListener('popstate', () => { if (ui.screen === 'edit') { ui.screen = 'list'; const st = $('#studio'); if (st) { st.dataset.screen = 'list'; animate(st, 'anim-pop'); } window.scrollTo(0, 0); } });
   // Classe d'animation posée le temps de l'animation, puis retirée (pas rejouée aux rendus suivants)
-  function animate(el, cls) { el.classList.remove('anim-push', 'anim-pop', 'anim-fade'); void el.offsetWidth; el.classList.add(cls); clearTimeout(el._anim); el._anim = setTimeout(() => el.classList.remove(cls), 600); }
+  function animate(el, cls) { el.classList.remove('anim-push', 'anim-pop', 'anim-fade', 'anim-next', 'anim-prev'); void el.offsetWidth; el.classList.add(cls); clearTimeout(el._anim); el._anim = setTimeout(() => el.classList.remove(cls), 600); }
   const srcFor = p => !p ? '' : pending.has(p) ? pending.get(p).url : /^(blob:|data:|https?:)/.test(p) ? p : '../' + p;
   const isOwned = p => /^img\/[a-z0-9-]+\/web\//.test(p || '');   // fichiers gérés par le back office (supprimables)
   const refsOf = t => [t.cover, ...(t.polas || []).map(p => p[0]), ...(t.book || []), ...(t.videos || []).flatMap(v => [v.src, v.poster]), ...(t.composite || [])].filter(Boolean);
@@ -280,7 +280,8 @@
     const t = T();
     const items = db.talents.filter(x => !ui.q || (x.first + ' ' + x.last).toLowerCase().includes(ui.q.toLowerCase()));
     const list = `<aside class="list">
-      <div class="list-head"><input class="input" id="q" placeholder="Rechercher" value="${esc(ui.q)}"><button class="btn btn--s" type="button" data-a="add">+ Talent</button></div>
+      <h1 class="large-title only-phone">Talents<sup class="num">${db.talents.length}</sup></h1>
+      <div class="list-head"><input class="input" id="q" type="search" placeholder="Rechercher" value="${esc(ui.q)}" enterkeyhint="search"><button class="btn btn--s" type="button" data-a="add" aria-label="Nouveau talent"><svg class="plus" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Talent</span></button></div>
       <div class="list-items" id="list-items">${[['Brouillons', items.filter(x => !isLive(x))], ['En ligne', items.filter(isLive)]].filter(g => g[1].length).map(([g, arr]) => `<p class="list-group"><span>${g}</span><span class="num">${arr.length}</span></p>` + arr.map(x => {
         const w = talentWarnings(x), state = !isLive(x) ? 'dot--off' : w.some(z => z[0] === 'warn') ? 'dot--warn' : '';
         return `<button class="li${x.slug === ui.slug ? ' is-on' : ''}" type="button" data-a="pick" data-slug="${esc(x.slug)}" draggable="true">
@@ -640,7 +641,7 @@
     // Menu « ••• » (téléphone) : se ferme au clic dehors ou après une action
     const mo = $('.ed-title.is-more'); if (mo && !e.target.closest('[data-a="more"]') && (!e.target.closest('.acts') || e.target.closest('.acts a, .acts button'))) { mo.classList.remove('is-more'); mo.querySelector('[data-a="more"]')?.setAttribute('aria-expanded', 'false'); }
     const tab = e.target.closest('.tabs button'); if (tab) { if (tab.dataset.view === ui.view && ui.screen === 'edit') { ACTIONS.back(); return; } ui.view = tab.dataset.view; ui.screen = 'list'; render(); window.scrollTo(0, 0); return; }
-    const pn = e.target.closest('[data-pane]'); if (pn) { pn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); ui.pane = pn.dataset.pane; $$('.subtabs button').forEach(b => b.toggleAttribute('aria-current', b === pn)); refreshPane(); ls.set(KEY.ui, ui); return; }
+    const pn = e.target.closest('[data-pane]'); if (pn) { const tabs = $$('.subtabs button'), from = tabs.findIndex(b => b.dataset.pane === ui.pane), to = tabs.indexOf(pn); pn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); ui.pane = pn.dataset.pane; setTimeout(() => { const eb = $('#ed-body'); if (eb && to !== from) animate(eb, to > from ? 'anim-next' : 'anim-prev'); }, 0); $$('.subtabs button').forEach(b => b.toggleAttribute('aria-current', b === pn)); refreshPane(); ls.set(KEY.ui, ui); return; }
     const pvp = e.target.closest('[data-pv-page]'); if (pvp) { ui.page = pvp.dataset.pvPage; $$('[data-pv-page]').forEach(b => b.setAttribute('aria-pressed', b === pvp)); setPreviewSrc(); return; }
     const pvd = e.target.closest('[data-pv-dev]'); if (pvd) { ui.device = pvd.dataset.pvDev; $$('[data-pv-dev]').forEach(b => b.setAttribute('aria-pressed', b === pvd)); $('.pv-stage').classList.toggle('is-mobile', ui.device === 'mobile'); ls.set(KEY.ui, ui); return; }
     const b = e.target.closest('[data-a]'); if (!b) return;
