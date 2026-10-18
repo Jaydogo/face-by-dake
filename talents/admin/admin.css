@@ -184,8 +184,10 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
 .pv-head .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .pv-head .sp{flex:1}
 .pv-stage{flex:1;display:grid;place-items:start center;overflow:auto;padding:14px}
-.pv-stage iframe{width:100%;height:100%;min-height:600px;border:0;border-radius:12px;background:#fff;box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(26,20,18,.08)}
-.pv-stage.is-mobile iframe{width:390px;height:780px;min-height:0;border-radius:30px;box-shadow:0 0 0 8px #1A1412,0 20px 40px rgba(26,20,18,.18)}
+.pv-stage{min-height:0}
+.pv-fit{position:relative;flex:none;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(26,20,18,.08);transition:width .4s cubic-bezier(.32,.72,0,1),height .4s cubic-bezier(.32,.72,0,1)}
+.pv-stage iframe{position:absolute;top:0;left:0;border:0;background:#fff;transform-origin:0 0}
+.pv-stage.is-mobile .pv-fit{border-radius:34px;box-shadow:0 0 0 8px #1A1412,0 20px 40px rgba(26,20,18,.18)}
 
 /* Prospection / Réglages */
 .cards{display:grid;gap:12px}
@@ -413,7 +415,8 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
   /* Aperçu : plein écran au-dessus de tout */
   .preview{position:fixed;inset:0;width:100%;z-index:45;padding-top:env(safe-area-inset-top);transform:translateY(100%);transition:transform .45s var(--ease)}
   .studio.show-preview .preview{transform:none;display:flex}
-  .pv-stage.is-mobile iframe{width:100%;height:100%;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+  .pv-stage{padding:12px;place-items:start center}
+  .pv-stage.is-mobile .pv-fit{border-radius:26px;box-shadow:0 0 0 6px #1A1412,0 12px 30px rgba(26,20,18,.18)}
   /* Boutons ronds (recharger, fermer) : centrés et assez grands pour le pouce */
   .pv-head{gap:6px;padding:10px 12px}
   .pv-head .icon-btn{display:inline-grid !important;place-items:center;width:40px;height:40px;padding:0;font-size:1.05rem;line-height:1}

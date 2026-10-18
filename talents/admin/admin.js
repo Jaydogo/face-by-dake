@@ -150,6 +150,23 @@
     });
     return d;
   }
+  /* Aperçu à la vraie taille de l'appareil, réduit pour tenir dans le panneau :
+     « Ordinateur » = page rendue en 1440 px de large, quel que soit l'écran du back office */
+  const PV = { desktop: [1440, 900], mobile: [390, 844] };
+  let pvRO = null;
+  function fitPreview() {
+    const st = $('.pv-stage'), fit = $('.pv-fit'), f = $('#pv-frame'); if (!st || !fit || !f) return;
+    if (!pvRO && 'ResizeObserver' in window) { pvRO = new ResizeObserver(() => fitPreview()); }
+    if (pvRO && !st._ro) { pvRO.observe(st); st._ro = true; }
+    const cs = getComputedStyle(st), aw = st.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), ah = st.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    if (aw <= 0 || ah <= 0) return;
+    const [w, h0] = PV[ui.device === 'mobile' ? 'mobile' : 'desktop'];
+    let k, h;
+    if (ui.device === 'mobile') { k = Math.min(1, (aw - 16) / w, (ah - 16) / h0); h = h0; }   // marge pour le contour du téléphone
+    else { k = Math.min(1, aw / w); h = Math.max(h0 * 0.6, ah / k); }   // ordinateur : toute la hauteur dispo
+    Object.assign(f.style, { width: w + 'px', height: h + 'px', transform: `scale(${k})` });
+    Object.assign(fit.style, { width: w * k + 'px', height: h * k + 'px' });
+  }
   function pushPreview() {
     ls.set(KEY.preview, previewData());
     const f = $('#pv-frame'); if (!f || !f.contentWindow) return;
@@ -251,7 +268,7 @@
     if (ui.view === 'prospection') v.innerHTML = viewProspection();
     if (ui.view === 'settings') v.innerHTML = viewSettings();
     ls.set(KEY.ui, { view: ui.view, slug: ui.slug, pane: ui.pane, device: ui.device, page: ui.page });
-    if (ui.view === 'talents') { bindList(); bindThumbs(); setPreviewSrc(); }
+    if (ui.view === 'talents') { bindList(); bindThumbs(); setPreviewSrc(); fitPreview(); }
     syncStatus();
   }
 
@@ -322,7 +339,7 @@
           <button class="icon-btn" type="button" data-a="pv-reload" title="Recharger l'aperçu">↻</button>
           <button class="icon-btn only-mobile" type="button" data-a="pv-toggle" title="Fermer">×</button>
         </div>
-        <div class="pv-stage${ui.device === 'mobile' ? ' is-mobile' : ''}"><iframe id="pv-frame" title="Aperçu"></iframe></div>
+        <div class="pv-stage${ui.device === 'mobile' ? ' is-mobile' : ''}"><div class="pv-fit"><iframe id="pv-frame" title="Aperçu"></iframe></div></div>
       </aside>
     </div>`;
   }
@@ -643,7 +660,7 @@
     const tab = e.target.closest('.tabs button'); if (tab) { if (tab.dataset.view === ui.view && ui.screen === 'edit') { ACTIONS.back(); return; } ui.view = tab.dataset.view; ui.screen = 'list'; render(); window.scrollTo(0, 0); return; }
     const pn = e.target.closest('[data-pane]'); if (pn) { const tabs = $$('.subtabs button'), from = tabs.findIndex(b => b.dataset.pane === ui.pane), to = tabs.indexOf(pn); pn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); ui.pane = pn.dataset.pane; setTimeout(() => { const eb = $('#ed-body'); if (eb && to !== from) animate(eb, to > from ? 'anim-next' : 'anim-prev'); }, 0); $$('.subtabs button').forEach(b => b.toggleAttribute('aria-current', b === pn)); refreshPane(); ls.set(KEY.ui, ui); return; }
     const pvp = e.target.closest('[data-pv-page]'); if (pvp) { ui.page = pvp.dataset.pvPage; $$('[data-pv-page]').forEach(b => b.setAttribute('aria-pressed', b === pvp)); setPreviewSrc(); return; }
-    const pvd = e.target.closest('[data-pv-dev]'); if (pvd) { ui.device = pvd.dataset.pvDev; $$('[data-pv-dev]').forEach(b => b.setAttribute('aria-pressed', b === pvd)); $('.pv-stage').classList.toggle('is-mobile', ui.device === 'mobile'); ls.set(KEY.ui, ui); return; }
+    const pvd = e.target.closest('[data-pv-dev]'); if (pvd) { ui.device = pvd.dataset.pvDev; $$('[data-pv-dev]').forEach(b => b.setAttribute('aria-pressed', b === pvd)); $('.pv-stage').classList.toggle('is-mobile', ui.device === 'mobile'); fitPreview(); ls.set(KEY.ui, ui); return; }
     const b = e.target.closest('[data-a]'); if (!b) return;
     const a = b.dataset.a, t = T();
     if (a === 'pv-sel') { ls.set(KEY.preview, previewData()); return; }
@@ -731,7 +748,7 @@
     'comp-pick'(b, t) { const p = b.dataset.p, i = t.composite.indexOf(p); if (i >= 0) t.composite.splice(i, 1); else if (t.composite.length < 4) t.composite.push(p); else return toast('4 photos maximum'); persist(); refreshPane(); },
     order(b, t) { const o = orderOf(t), i = o.indexOf(b.dataset.k), j = i + +b.dataset.d; if (j < 0 || j >= o.length) return; o.splice(j, 0, o.splice(i, 1)[0]); t.order = o; persist(); refreshPane(); },
     move(b, t) { const i = db.talents.indexOf(t), j = i + +b.dataset.d; if (j < 0 || j >= db.talents.length) return; db.talents.splice(j, 0, db.talents.splice(i, 1)[0]); persist(); render(); },
-    'pv-toggle'() { ui.showPv = !ui.showPv; $('#studio').classList.toggle('show-preview', ui.showPv); },
+    'pv-toggle'() { ui.showPv = !ui.showPv; $('#studio').classList.toggle('show-preview', ui.showPv); setTimeout(fitPreview, 60); setTimeout(fitPreview, 500); },
     'pv-reload'() { pushPreview(); },
     copy(b) { copyText(b.dataset.v).then(ok => toast(ok ? 'Copié' : 'Copie impossible', !ok)); },
     async 'sel-add'() {
