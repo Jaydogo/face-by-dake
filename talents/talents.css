@@ -868,3 +868,15 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 /* Footer : site courant signalé */
 .coords .is-here{opacity:.55}
 .coords .is-here small{font-size:.75em;margin-left:4px}
+
+/* Mentions légales (Face by Daké) */
+.legal{padding:0 var(--gut) var(--sec);display:grid;gap:0}
+.legal-block{display:grid;grid-template-columns:4em minmax(0,1fr) minmax(0,1.6fr);column-gap:var(--gut);padding:clamp(28px,4vw,48px) 0;border-top:1px solid var(--line)}
+.legal-n{opacity:.5;padding-top:.6em}
+.legal-h{font-family:var(--serif);font-weight:300;font-size:clamp(1.9rem,3.2vw,2.8rem);line-height:1;letter-spacing:-.04em}
+.legal-h em{font-style:italic}
+.legal .fiche{grid-template-columns:9em 1fr;align-content:start}
+.legal .fiche a,.legal-text a{text-decoration:underline;text-underline-offset:.2em;text-decoration-thickness:1px}
+.legal-text{display:grid;gap:14px;max-width:44em;font-size:1rem;line-height:1.6}
+.legal-text b{font-weight:600}
+@media (max-width:860px){.legal-block{grid-template-columns:1fr;row-gap:14px}.legal-n{padding:0}.legal .fiche{grid-template-columns:7.5em 1fr}}

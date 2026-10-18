@@ -634,7 +634,7 @@ select.input{background-image:linear-gradient(45deg,transparent 50%,currentColor
 .menu-open .header::before{opacity:0!important}
 
 /* Menu mobile : Daké Studio dans le rouge du footer, éclairci pour rester lisible sur le noir */
-.menu nav a.menu-ext{color:#D9473A}
+.menu nav a.menu-ext{color:#A8342B} /* bordeaux du footer (#77120D), éclairci pour rester lisible sur le noir du menu */
 
 /* ===== Ajustements formules (mobile) ===== */
 @media (max-width:860px){

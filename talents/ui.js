@@ -106,7 +106,7 @@
       <p class="spread" aria-hidden="true">${letters}</p>
       <div class="final-foot">
         <span>© 2026 <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Creative Studio</a></span>
-        <span class="links"><a href="${o.root}">Daké Studio</a><a href="${o.root}mentions.html">Mentions légales</a></span>
+        <span class="links"><a href="${o.root}">Daké Studio</a><a href="${o.legal || 'mentions.html'}">Mentions légales</a></span>
       </div>`;
 
 
