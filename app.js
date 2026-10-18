@@ -146,7 +146,7 @@ if (A.umamiId) {
 }
 // Événements suivis : boutons de réservation, formules, envoi de la demande, liens sortants
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-book], a[data-lang], a[href*="dake.studio"], a[href*="instagram.com"], a[href^="mailto:"], #send-mail, #send-ig, .offer-head, .ed-qi button');
+  const el = e.target.closest('[data-book], a[data-lang], a[href*="dake.global"], a[href*="instagram.com"], a[href^="mailto:"], #send-mail, #send-ig, .offer-head, .ed-qi button');
   if (!el) return;
   if (el.matches('[data-book]')) stat('reserver-clic', { formule: el.dataset.book || 'aucune', lang: EN ? 'en' : 'fr' });
   else if (el.id === 'send-mail') stat('demande-envoyee', { canal: 'email', formule: state.offer, total: total() });
@@ -154,7 +154,7 @@ document.addEventListener('click', e => {
   else if (el.matches('.offer-head')) stat('formule-ouverte', { formule: el.closest('.offer').dataset.offer });
   else if (el.matches('.ed-qi button')) stat('faq-ouverte', { question: el.textContent.trim().slice(0, 60) });
   else if (el.matches('a[data-lang]')) stat('langue', { vers: EN ? 'fr' : 'en' });
-  else if (el.href.includes('dake.studio') && !el.href.startsWith('mailto:')) stat('lien-dake-studio');
+  else if (el.href.includes('dake.global') && !el.href.startsWith('mailto:')) stat('lien-dake-global');
   else if (el.href.includes('instagram.com')) stat('lien-instagram');
   else if (el.href.startsWith('mailto:')) stat('lien-email', { sujet: el.href.includes('Location') || el.href.includes('hire') ? 'location-studio' : 'contact' });
 }, true);
@@ -761,7 +761,7 @@ function recapText() {
   const o = offerById(state.offer);
   const L = [
     t('Salut Jay, j’espère que tu vas bien !', 'Hi Jay, hope you’re well!'), '',
-    t('Voici ma demande de réservation pour une séance FACE BY DAKĒ :', 'Here is my booking request for a FACE BY DAKĒ session:'), '',
+    t('Voici ma demande de réservation pour une séance DAKĒ STUDIO :', 'Here is my booking request for a DAKĒ STUDIO session:'), '',
     `${t('Formule', 'Session')} : ${o ? `${o.name} (${eur(o.price)})` : ''}`,
     ...lines().slice(1).map(l => `Option : ${l.label} (${l.amount ? eur(l.amount) : t('inclus', 'included')})`),
     ...extrasList().map(x => `${t('Demande', 'Request')} : ${x}`),

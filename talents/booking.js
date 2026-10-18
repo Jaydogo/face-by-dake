@@ -1,5 +1,5 @@
 /* =========================================================
-   TALENTS BY DAKĒ — tunnel « Booker » (même principe que FACE)
+   FACE BY DAKĒ — tunnel « Booker » (même principe que FACE)
    Tout lien ou bouton [data-book="slug,slug"] ouvre le panneau,
    talents pré-cochés. Envoi par mail pré-rempli + récap copiable.
    Le brouillon est gardé dans ce navigateur (localStorage).
@@ -195,7 +195,7 @@
     ].filter(r => r[1] && String(r[1]).trim());
   }
   function recapText() {
-    return ['Bonjour,', '', (state.kind === 'option' ? 'Je souhaite poser une option via Talents by Daké :' : 'Nouvelle demande de booking via Talents by Daké :'), '', ...rows().map(([k, v]) => `${k} : ${v}`), '', 'Merci !', state.first].join('\n');
+    return ['Bonjour,', '', (state.kind === 'option' ? 'Je souhaite poser une option via Face by Daké :' : 'Nouvelle demande de booking via Face by Daké :'), '', ...rows().map(([k, v]) => `${k} : ${v}`), '', 'Merci !', state.first].join('\n');
   }
   function mailHref() {
     const subject = `${state.kind === 'option' ? 'Option' : 'Booking'} ${names().join(', ')} – ${state.brand || state.type}${state.date ? ' – ' + new Date(state.date + 'T12:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : ''}`;

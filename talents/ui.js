@@ -75,18 +75,18 @@
     map.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
   };
 
-  /* Footer plein, même structure que FACE BY DAKĒ.
+  /* Footer plein, même structure que DAKĒ STUDIO.
      root = chemin vers la racine du site (là où est la page FACE). */
   // Coordonnées : réglées dans le back office (onglet Réglages)
   window.ECO = {
-    get studio() { return (window.SETTINGS || {}).studio || 'https://dake.studio'; },
+    get studio() { return (window.SETTINGS || {}).studio || 'https://dake.global'; },
     get studioSoon() { return (window.SETTINGS || {}).studioSoon || ''; },
     get mail() { return (window.SETTINGS || {}).mail || 'booking@dake.studio'; },
     get instagram() { return ((window.SETTINGS || {}).instagram || 'dake.face').replace(/^@/, ''); }
   };
   window.renderFooter = function (el, o) {
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';
-    const letters = 'TALENTS BY DAKĒ'.split('').map(c => c === ' ' ? '<span class="gap"></span>' : `<span>${c}</span>`).join('');
+    const letters = 'FACE BY DAKĒ'.split('').map(c => c === ' ' ? '<span class="gap"></span>' : `<span>${c}</span>`).join('');
     el.className = 'final';
     el.id = el.id || 'contact';
     el.innerHTML = `
@@ -95,8 +95,9 @@
       <div class="coords">
         <div><span class="caps">Booking</span><a href="mailto:${ECO.mail}">${ECO.mail}</a>${SETTINGS.phone ? `<a href="tel:${esc(SETTINGS.phone.replace(/\s/g, ''))}">${esc(SETTINGS.phone)}</a>` : ''}<a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
         <div><span class="caps">Écosystème</span>
-          <a href="${o.root}">Daké Face ${arr}</a>
-          <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Studio ${arr}</a>
+          <a href="${ECO.studio}" target="_blank" rel="noopener">Daké© ${arr}</a>
+          <a href="${o.root}">Daké Studio ${arr}</a>
+          <span class="is-here">Face by Daké<small> · ici</small></span>
           ${ECO.studioSoon ? `<span class="soon">Bientôt ${ECO.studioSoon}</span>` : ''}
         </div>
         <div><span class="caps">Basé à</span><span>${esc(SETTINGS.city)}</span><span>${esc(SETTINGS.reach)}</span></div>
@@ -105,7 +106,7 @@
       <p class="spread" aria-hidden="true">${letters}</p>
       <div class="final-foot">
         <span>© 2026 <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Creative Studio</a></span>
-        <span class="links"><a href="${o.root}">Daké Face</a><a href="${o.root}mentions.html">Mentions légales</a></span>
+        <span class="links"><a href="${o.root}">Daké Studio</a><a href="${o.root}mentions.html">Mentions légales</a></span>
       </div>`;
 
 
@@ -114,18 +115,18 @@
     tick(); setInterval(tick, 15000);
   };
 
-  /* Nav FACE BY DAKĒ : header verre + menu plein écran + barre « Booker » mobile + footer en volet.
+  /* Nav reprise de DAKĒ STUDIO : header verre + menu plein écran + barre « Booker » mobile + footer en volet.
      o = { root, home, sections: [[href, label]], book: { label, href }, dock: 'texte à gauche (HTML)' } */
   window.renderShell = function (o) {
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';
     const b = document.body;
     b.classList.add('shell');
-    const ext = [[o.root, 'Daké Face', false], [ECO.studio, 'Daké Studio', true]];
+    const ext = [[ECO.studio, 'Daké©', true], [o.root, 'Daké Studio', false]];
     const extA = (cls, i) => ext.map(([h, l, blank], k) => `<a class="${cls}" ${i ? `style="--i:${i + k}"` : ''} href="${h}"${blank ? ' target="_blank" rel="noopener"' : ''}>${l} ${arr}</a>`).join('');
     const header = document.createElement('header');
     header.className = 'header on-light';
     header.innerHTML = `
-      <a class="logo" href="${o.home}">TALENTS BY DAKĒ<span class="c">©</span></a>
+      <a class="logo" href="${o.home}">FACE BY DAKĒ<span class="c">©</span></a>
       <nav class="nav caps" aria-label="Sections">${o.sections.map(([h, l]) => `<a href="${h}">${l}</a>`).join('')}</nav>
       <div class="header-cta"><a class="btn btn--s" href="${o.book.href}" data-book="${o.book.ids || ''}"${o.book.kind ? ` data-kind="${o.book.kind}"` : ''}>${o.book.label}</a></div>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>`;

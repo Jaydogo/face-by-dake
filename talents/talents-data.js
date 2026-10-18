@@ -1,11 +1,11 @@
-/* Données Talents by Daké — fichier généré par le back office (talents/admin). Ne pas éditer à la main. */
+/* Données Face by Daké — fichier généré par le back office (talents/admin). Ne pas éditer à la main. */
 window.TALENTS_DATA = {
  "version": 1,
  "updated": "2026-10-16T11:44:14.498Z",
  "settings": {
   "mail": "booking@dake.studio",
   "instagram": "dake.face",
-  "studio": "https://dake.studio",
+  "studio": "https://dake.global",
   "studioSoon": "",
   "phone": "",
   "city": "Paris, France",

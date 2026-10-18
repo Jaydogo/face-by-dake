@@ -1,5 +1,5 @@
 /* =========================================================
-   TALENTS BY DAKĒ — couche « fluide » (V1)
+   FACE BY DAKĒ — couche « fluide » (V1)
    Scroll lissé (Lenis, même réglage que FACE), images en fondu,
    préchargement des pages, transitions, visionneuse plein écran,
    carte composite imprimable.
@@ -8,7 +8,7 @@
   const d = document.documentElement;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Scroll lissé : mêmes valeurs que FACE BY DAKĒ */
+  /* Scroll lissé : mêmes valeurs que DAKĒ STUDIO */
   window.lenis = null;
   if (window.Lenis && !reduced) {
     try { window.lenis = new Lenis({ lerp: 0.08, wheelMultiplier: 0.9, autoRaf: true }); d.classList.add('has-lenis'); } catch (e) { window.lenis = null; }

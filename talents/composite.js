@@ -89,7 +89,7 @@
       ls.forEach((l, j) => text(ctx, l, colV, y + j * lh, { font: fMono }));
       y += rowH + (ls.length - 1) * lh;
     });
-    text(ctx, 'TALENTS BY DAKĒ©', xsT, y0 + hMain, { font: `500 ${pt(9)}px "Instrument Sans"`, spacing: -pt(9) * 0.01 });
+    text(ctx, 'FACE BY DAKĒ©', xsT, y0 + hMain, { font: `500 ${pt(9)}px "Instrument Sans"`, spacing: -pt(9) * 0.01 });
 
     // Pied : filet + mono
     const yF = y0 + hMain + m(5);

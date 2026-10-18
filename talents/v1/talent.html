@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TALENTS BY DAKĒ © — Talent</title>
+<title>FACE BY DAKĒ © — Talent</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@ const i = pool.indexOf(t), next = pool[(i + 1) % pool.length];
 const keep = sel ? '&' + sel.qs : '';
 const f = t.fiche || {}, s = TU.show(t, 'stats') ? t.social : null;
 const full = `${t.first} ${t.last}`;
-document.title = `${full} — TALENTS BY DAKĒ ©`;
+document.title = `${full} — FACE BY DAKĒ ©`;
 const mail = TU.mailFor(sel, [t]);
 const pad = n => String(n).padStart(2, '0');
 
@@ -156,7 +156,7 @@ comp.innerHTML = `
         ${t.specs ? `<dt>Spécialités</dt><dd>${t.specs.map(esc).join(', ')}</dd>` : ''}
         ${s ? `<dt>Instagram</dt><dd>${esc(s.ig.handle)} · ${TU.k(s.ig.followers)}</dd><dt>TikTok</dt><dd>${esc(s.tt.handle)} · ${TU.k(s.tt.followers)}</dd>` : ''}
       </dl>
-      <p class="cc-brand">TALENTS BY DAKĒ<span>©</span></p>
+      <p class="cc-brand">FACE BY DAKĒ<span>©</span></p>
     </aside>
   </div>
   <footer class="cc-foot"><span>${ECO.mail}</span><span>Carte composite</span><span>${t.code}</span></footer>`;

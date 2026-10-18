@@ -1,6 +1,6 @@
 /* =========================================================
-   TALENTS BY DAKĒ — maquettes V1 (Index) et V2 (Planche)
-   Mêmes jetons que FACE BY DAKĒ (site/styles.css).
+   FACE BY DAKĒ — maquettes V1 (Index) et V2 (Planche)
+   Mêmes jetons que DAKĒ STUDIO (site/styles.css).
    ========================================================= */
 :root{
   --cream:#F3EDE3;--paper:#F8F7F5;--ink:#1A1412;--muted:#7A6A62;
@@ -325,7 +325,7 @@ h1,h2,h3,p,figure,dl,dd{margin:0}
 }
 .v1-kicker{margin-bottom:14px}
 
-/* ---------- Footer plein (repris de FACE BY DAKĒ) ---------- */
+/* ---------- Footer plein (repris de DAKĒ STUDIO) ---------- */
 .final{background:var(--bordeaux);color:var(--cream);min-height:100vh;min-height:100svh;padding:var(--sec) var(--gut) calc(var(--gut) + env(safe-area-inset-bottom));display:flex;flex-direction:column;overflow:hidden;--line:rgba(243,237,227,.2)}
 .final .folio{margin-bottom:clamp(20px,4vh,64px)}
 .final .h2{max-width:13ch;font-size:min(var(--fs-h2),10vh)}
@@ -367,7 +367,7 @@ html.locked body > *:not(.gate){display:none !important}
 @keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}
 
 /* =========================================================
-   NAV FACE BY DAKĒ (V1) — header verre, menu plein écran,
+   NAV DAKĒ STUDIO (V1) — header verre, menu plein écran,
    barre « Booker » mobile, footer en volet. Activé par body.shell
    ========================================================= */
 .shell{--on-dark:var(--cream)}
@@ -597,7 +597,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .subnav a.is-active sup{opacity:.7}
 
 /* =========================================================
-   VERRE — valeurs exactes de FACE BY DAKĒ (site/styles.css)
+   VERRE — valeurs exactes de DAKĒ STUDIO (site/styles.css)
    header : sombre .45 / clair .72, blur 20 + saturate 1.4
    ========================================================= */
 .shell .header::before{background:rgba(26,20,18,.45);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);border:0}
@@ -731,7 +731,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 /* =========================================================
    VERT FORÊT — couleur de marque Talents (V1)
    Footer + accents : survols, sélections, progression, stats.
-   Le rouge reste réservé aux erreurs et aux liens Daké Face / Studio du menu.
+   Le rouge reste réservé aux erreurs et aux liens Daké Studio / Daké© du menu.
    ========================================================= */
 .shell{--forest:#24392F;--forest-2:#2F4A3D;--sage:#A9C2AE;--error:#C10707;--accent:var(--forest);--bordeaux:var(--forest)}
 .shell .is-dark,.shell .final{--accent:var(--sage)}
@@ -803,7 +803,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 /* 1. Formulaire : choix sélectionnés bien visibles sur fond blanc */
 .theme-white .booking .chip[aria-pressed="true"]{background:var(--forest);color:var(--cream);box-shadow:none}
 .theme-white .bk-t[aria-pressed="true"]{background:#fff;box-shadow:inset 0 0 0 1.5px var(--forest),0 8px 24px rgba(36,57,47,.14)}
-/* 3. Menu mobile : Daké Face et Daké Studio en vert (éclairci pour rester lisible sur le noir) */
+/* 3. Menu mobile : Daké Studio et Daké© en vert (éclairci pour rester lisible sur le noir) */
 .menu nav a.menu-ext{color:#5E8E74}
 /* 4. Crochets du titre en vert forêt */
 .shell .br{color:var(--forest);opacity:1}
@@ -864,3 +864,7 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .avail--option{background:#FFF1D6;color:#7A5200}
 .avail--indisponible{background:#F3E0DE;color:#8A2A20}
 .v1-bio{max-width:34em;font-size:1rem;line-height:1.6;color:var(--muted)}
+
+/* Footer : site courant signalé */
+.coords .is-here{opacity:.55}
+.coords .is-here small{font-size:.75em;margin-left:4px}

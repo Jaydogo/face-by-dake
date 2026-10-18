@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TALENTS BY DAKĒ © — Talent</title>
+<title>FACE BY DAKĒ © — Talent</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1A1412">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,7 @@
 </head>
 <body class="v2">
 <header class="header">
-  <a class="logo" href="./">TALENTS BY DAKĒ<span class="c">©</span></a>
+  <a class="logo" href="./">FACE BY DAKĒ<span class="c">©</span></a>
   <nav class="nav caps" aria-label="Sections"><a href="./">Board</a><a href="../../">Face studio</a></nav>
   <div class="header-cta caps" id="pager"></div>
 </header>
@@ -29,7 +29,7 @@ const t = TU.get(new URLSearchParams(location.search).get('t'));
 const i = TALENTS.indexOf(t), n = TALENTS.length;
 const prev = TALENTS[(i - 1 + n) % n], next = TALENTS[(i + 1) % n];
 const f = t.fiche, s = t.social;
-document.title = `${t.first} ${t.last} — TALENTS BY DAKĒ ©`;
+document.title = `${t.first} ${t.last} — FACE BY DAKĒ ©`;
 const mail = `mailto:booking@dake.studio?subject=${encodeURIComponent('Booking ' + t.first + ' ' + t.last)}`;
 document.getElementById('pager').innerHTML = `<a href="talent.html?t=${prev.slug}" aria-label="Talent précédent">←</a><span class="mono">${String(i + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}</span><a href="talent.html?t=${next.slug}" aria-label="Talent suivant">→</a>`;
 
@@ -63,7 +63,7 @@ document.getElementById('app').innerHTML = `
     <section class="v2-sec" id="polas">
       <div class="v2-sec-head"><h2>Polas</h2><span class="caps dim">Digitals · sans retouche</span></div>
       <div class="contact reveal">
-        <div class="contact-edge" style="grid-column:1 / -1"><span>DAKĒ FACE ▸ ${t.code.toUpperCase()}</span><span>KODAK 400TX</span><span>${t.polas.length} VUES</span></div>
+        <div class="contact-edge" style="grid-column:1 / -1"><span>FACE BY DAKĒ ▸ ${t.code.toUpperCase()}</span><span>KODAK 400TX</span><span>${t.polas.length} VUES</span></div>
         ${t.polas.map((p, k) => `<figure><div class="media"><img src="${TU.src(p[0])}" alt="Pola ${p[1]}" loading="lazy"></div><figcaption><span>${k + 1}A ▸</span><span>${p[1].toUpperCase()}</span></figcaption></figure>`).join('')}
       </div>
     </section>

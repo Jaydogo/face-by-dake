@@ -1,5 +1,5 @@
 /* =========================================================
-   TALENTS BY DAKĒ — back office
+   FACE BY DAKĒ — back office
    - Édite talents-data.js (fiches, sélections, réglages)
    - Photos redimensionnées dans le navigateur, gardées en brouillon (IndexedDB)
    - « Publier » = un seul commit GitHub (API Git Data) : données + médias + suppressions
@@ -60,7 +60,7 @@
   const SITE = 'https://jaydogo.github.io/face-by-dake/talents/v1/';
   function normalize(d) {
     d = Object.assign(blankData(), d || {});
-    d.settings = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international", siteUrl: SITE }, d.settings || {});
+    d.settings = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.global', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international", siteUrl: SITE }, d.settings || {});
     d.selections = d.selections || {};
     d.talents.forEach((t, i) => { t.code = 't.' + String(i + 1).padStart(2, '0'); });
     return d;
@@ -463,8 +463,8 @@
       <div class="cards">
         <section class="card"><div class="card-head"><h3>Coordonnées</h3></div><div class="grid2">
           ${set('Email de booking', 'mail', { ph: 'booking@dake.studio', hint: 'reçoit les demandes du formulaire' })}${set('Téléphone', 'phone', { ph: '+33 6 …', hint: 'facultatif' })}
-          ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien Daké Studio', 'studio', { ph: 'https://dake.studio', mono: 1 })}
-          ${set('Mention sous Daké Studio', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
+          ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien Daké©', 'studio', { ph: 'https://dake.global', mono: 1 })}
+          ${set('Mention sous Daké©', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
           ${set('Zone (footer)', 'reach', { ph: "Castings en France et à l'international", cls: 'span-all' })}
           ${set('Adresse publique du site', 'siteUrl', { mono: 1, cls: 'span-all', hint: 'sert à fabriquer les liens de sélection' })}
         </div></section>
@@ -758,7 +758,7 @@
   const b64blob = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
   const decodeB64 = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, '')), c => c.charCodeAt(0)));
   function serialize(d) {
-    return '/* Données Talents by Daké — fichier généré par le back office (talents/admin). Ne pas éditer à la main. */\nwindow.TALENTS_DATA = ' + JSON.stringify(d, null, 1) + ';\n';
+    return '/* Données Face by Daké — fichier généré par le back office (talents/admin). Ne pas éditer à la main. */\nwindow.TALENTS_DATA = ' + JSON.stringify(d, null, 1) + ';\n';
   }
   function parseDataFile(txt) { const a = txt.indexOf('{'), b = txt.lastIndexOf('}'); return JSON.parse(txt.slice(a, b + 1)); }
   async function pullData() { const f = await api(`/repos/${gh.owner}/${gh.repo}/contents/${gh.base}talents-data.js?ref=${encodeURIComponent(gh.branch)}`); return parseDataFile(decodeB64(f.content)); }

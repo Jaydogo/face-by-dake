@@ -1,5 +1,5 @@
 /* =========================================================
-   TALENTS BY DAKĒ — logique partagée
+   FACE BY DAKĒ — logique partagée
    Les contenus (fiches, sélections, réglages) sont dans talents-data.js,
    écrit par le back office (talents/admin). Ce fichier ne contient que du code.
    ========================================================= */
@@ -19,7 +19,7 @@
   window.TALENTS = window.TALENTS_PREVIEW ? all.slice() : all.filter(t => t.visible !== false && t.consent);
   window.ALL_TALENTS = all;
   window.SELECTIONS = data.selections || {};
-  window.SETTINGS = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international" }, data.settings || {});
+  window.SETTINGS = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.global', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international" }, data.settings || {});
 })();
 
 window.CAT_LABEL = { mannequin: 'Mannequin', comedien: 'Comédien·ne', influence: 'Influence' };
