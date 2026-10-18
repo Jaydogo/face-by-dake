@@ -1,0 +1,10 @@
+# DAKĒ STUDIO · FACE BY DAKĒ
+User-agent: *
+Disallow: /talents/admin/
+Disallow: /talents/v2/
+Disallow: /talents/v1/prospection/
+Disallow: /propositions
+Disallow: /video/*.MOV
+Disallow: /video/*.mov
+
+Sitemap: https://dake.studio/sitemap.xml

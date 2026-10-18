@@ -855,6 +855,11 @@
       const out = publicView(db); out.updated = new Date().toISOString(); out.version = 1;
       const dataBlob = await api(`${repo}/git/blobs`, { method: 'POST', body: { content: b64text(serialize(out)), encoding: 'base64' } });
       tree.push({ path: gh.base + 'talents-data.js', mode: '100644', type: 'blob', sha: dataBlob.sha });
+      // Plan du site pour Google : à la racine du dépôt, régénéré avec les fiches en ligne
+      if (window.buildSitemap) {
+        const sm = await api(`${repo}/git/blobs`, { method: 'POST', body: { content: b64text(buildSitemap(out)), encoding: 'base64' } });
+        tree.push({ path: gh.base.replace(/talents\/$/, '') + 'sitemap.xml', mode: '100644', type: 'blob', sha: sm.sha });
+      }
       if (gateHash) {
         const g = await (await fetch('../gate.js', { cache: 'no-store' })).text();
         const ng = g.replace(/var HASH = '[0-9a-f]+'/, `var HASH = '${gateHash}'`);

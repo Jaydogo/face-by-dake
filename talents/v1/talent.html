@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FACE BY DAKĒ © — Talent</title>
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex, nofollow"> <!-- SEO-LANCEMENT : à retirer au lancement (voir SEO.md) -->
+<link rel="icon" href="../icon-48.png" sizes="48x48">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +42,21 @@ const i = pool.indexOf(t), next = pool[(i + 1) % pool.length];
 const keep = sel ? '&' + sel.qs : '';
 const f = t.fiche || {}, s = TU.show(t, 'stats') ? t.social : null;
 const full = `${t.first} ${t.last}`;
-document.title = `${full} — FACE BY DAKĒ ©`;
+// SEO : une page par talent (titre, description, fiche Person pour Google)
+const catTxt = (t.cats || []).map(c => CAT_LABEL[c]).join(', ');
+TU.seo({
+  path: 'talent.html', params: { t: t.slug }, type: 'profile',
+  noindex: t.visible === false || !t.consent || new URLSearchParams(location.search).get('t') !== t.slug,
+  title: `${full} — ${catTxt} · FACE BY DAKĒ ©`,
+  description: [T(`${full}, ${catTxt.toLowerCase()} basé·e à ${TR(t.city) || 'Paris'}.`, `${full}, ${catTxt.toLowerCase()} based in ${TR(t.city) || 'Paris'}.`),
+    f.taille ? T(`Taille ${f.taille} cm.`, `Height ${f.taille} cm.`) : '', TX(t, 'bio'), T('Polas, book et booking sur FACE BY DAKĒ.', 'Polas, book and booking on FACE BY DAKĒ.')].filter(Boolean).join(' ').slice(0, 300),
+  image: TU.abs(t.cover),
+  ld: { '@graph': [FACE_ORG, { '@type': 'ProfilePage', url: SITE_URL + '/talents/v1/talent.html?t=' + t.slug, inLanguage: EN ? 'en-GB' : 'fr-FR',
+    mainEntity: { '@type': 'Person', name: full, givenName: t.first, familyName: t.last, jobTitle: catTxt, image: TU.abs(t.cover),
+      height: f.taille ? { '@type': 'QuantitativeValue', value: +f.taille, unitCode: 'CMT' } : undefined,
+      knowsLanguage: t.languages || undefined, homeLocation: t.city ? { '@type': 'Place', name: t.city } : undefined,
+      affiliation: { '@id': FACE_ORG['@id'] } } }] }
+});
 const mail = TU.mailFor(sel, [t]);
 const pad = n => String(n).padStart(2, '0');
 

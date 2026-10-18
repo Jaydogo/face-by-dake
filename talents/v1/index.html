@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FACE BY DAKĒ ©</title>
+<title>FACE BY DAKĒ © — Talents : mannequins, comédiens et influence à Paris</title>
 <meta name="description" content="Des visages, des voix, des audiences. Photographiés et sélectionnés par Daké.">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex, nofollow"> <!-- SEO-LANCEMENT : à retirer au lancement (voir SEO.md) -->
+<link rel="icon" href="../icon-48.png" sizes="48x48">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,6 +66,14 @@ list.innerHTML = shown.map((t, n) => `
       ${arrow}
     </a>
   </li>`).join('');
+
+// SEO : titre, description, liste des talents pour Google
+TU.seo({
+  title: T('FACE BY DAKĒ © — Talents : mannequins, comédiens et influence à Paris', 'FACE BY DAKĒ © — Talent: models, actors and influencers in Paris'),
+  description: T('Des visages, des voix, des audiences. Mannequins, comédiens et créateurs de contenu photographiés et sélectionnés par Daké à Paris. Polas, book, vidéo et stats sur chaque fiche.', 'Faces, voices, audiences. Models, actors and content creators photographed and selected by Daké in Paris. Polas, book, video and stats on every profile.'),
+  ld: { '@graph': [FACE_ORG, { '@type': 'CollectionPage', name: 'Talents', url: SITE_URL + '/talents/v1/', inLanguage: EN ? 'en-GB' : 'fr-FR', about: { '@id': FACE_ORG['@id'] },
+    mainEntity: { '@type': 'ItemList', itemListElement: TALENTS.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + '/talents/v1/talent.html?t=' + t.slug, name: t.first + ' ' + t.last })) } }] }
+});
 
 // Mode sélection : titre au nom du prospect, pas de filtres, CTA option groupée
 if (sel) {

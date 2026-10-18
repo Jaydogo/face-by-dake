@@ -60,6 +60,38 @@ window.TU = {
 };
 
 /* =========================================================
+   SEO : adresse canonique, partage, données structurées
+   Une URL par langue (?lang=fr / ?lang=en), l'adresse sans paramètre
+   choisit la langue du visiteur (x-default). Les sélections prospects
+   et l'aperçu du back office ne sont jamais indexés.
+   ========================================================= */
+window.SITE_URL = 'https://dake.studio';
+TU.seo = function (o) {
+  const h = document.head, q = new URLSearchParams(location.search);
+  const meta = (attr, k, v) => { let m = h.querySelector(`meta[${attr}="${k}"]`); if (!m) { m = document.createElement('meta'); m.setAttribute(attr, k); h.appendChild(m); } m.setAttribute('content', v); };
+  const link = (rel, href, lang) => { const l = document.createElement('link'); l.rel = rel; l.href = href; if (lang) l.hreflang = lang; h.appendChild(l); };
+  const base = SITE_URL + '/talents/v1/' + (o.path || '');
+  const url = l => { const qs = new URLSearchParams(Object.assign({}, o.params || {}, l ? { lang: l } : {})).toString(); return base + (qs ? '?' + qs : ''); };
+  if (o.title) document.title = o.title;
+  if (o.description) meta('name', 'description', o.description);
+  // Sélection prospect, aperçu, fiche absente : hors index
+  if (o.noindex || q.has('sel') || q.has('ids') || q.get('preview') === '1') { meta('name', 'robots', 'noindex, nofollow'); return; }
+  link('canonical', url(LANG));
+  link('alternate', url('fr'), 'fr'); link('alternate', url('en'), 'en'); link('alternate', url(''), 'x-default');
+  meta('property', 'og:type', o.type || 'website');
+  meta('property', 'og:site_name', 'FACE BY DAKĒ');
+  meta('property', 'og:locale', EN ? 'en_GB' : 'fr_FR');
+  meta('property', 'og:url', url(LANG));
+  meta('property', 'og:title', o.title || document.title);
+  if (o.description) meta('property', 'og:description', o.description);
+  meta('property', 'og:image', o.image || SITE_URL + '/talents/img/og-face.jpg');
+  meta('name', 'twitter:card', 'summary_large_image');
+  if (o.ld) { const sc = document.createElement('script'); sc.type = 'application/ld+json'; sc.textContent = JSON.stringify(Object.assign({ '@context': 'https://schema.org' }, o.ld)); h.appendChild(sc); }
+};
+TU.abs = x => !x ? '' : /^https?:/.test(x) ? x : SITE_URL + '/talents/' + x;
+window.FACE_ORG = { '@type': 'Organization', '@id': SITE_URL + '/talents/v1/#face', name: 'FACE BY DAKĒ', alternateName: ['Face by Daké', 'Face by Dake'], url: SITE_URL + '/talents/v1/', logo: SITE_URL + '/talents/icon-512.png', parentOrganization: { '@id': SITE_URL + '/#studio', '@type': 'Organization', name: 'DAKĒ STUDIO', url: SITE_URL + '/' } };
+
+/* =========================================================
    SÉLECTIONS PAR PROSPECT (gérées dans le back office, onglet Prospection)
    1. Enregistrée   → v1/?sel=sezane
    2. À la volée    → v1/?pour=Sézane&projet=…&ids=prune,lou
