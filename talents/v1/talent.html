@@ -23,6 +23,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 <footer id="contact"></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="../i18n.js"></script>
 <script src="../talents-data.js"></script>
 <script src="../data.js"></script>
 <script src="../ui.js"></script>
@@ -44,42 +45,61 @@ const mail = TU.mailFor(sel, [t]);
 const pad = n => String(n).padStart(2, '0');
 
 // Blocs affichés : ceux qui ont du contenu et ne sont pas désactivés dans le back office
-const LABELS = { polas: 'Polas', book: 'Book', video: 'Vidéo', stats: 'Stats & engagement' };
+const LABELS = { polas: 'Polas', book: 'Book', video: T('Vidéo', 'Video'), stats: 'Stats & engagement' };
 const ORDER = ['polas', ...(t.order || ['book', 'video', 'stats']).filter(k => k !== 'polas' && LABELS[k]), ...['book', 'video', 'stats'].filter(k => !(t.order || []).includes(k))]
   .filter((k, i, a) => a.indexOf(k) === i);
 const blocks = ORDER.map(k => [k, LABELS[k]]).filter(b => TU.show(t, b[0]));
 const has = k => blocks.some(b => b[0] === k);
 // Une fiche affichée seulement en aperçu (masquée ou sans accord) le signale
-const draftNote = (t.visible === false || !t.consent) ? `<p class="draft-note mono">${t.visible === false ? 'Fiche masquée' : 'Accord droit à l\'image manquant'} · visible uniquement en aperçu</p>` : '';
+const draftNote = (t.visible === false || !t.consent) ? `<p class="draft-note mono">${t.visible === false ? T('Fiche masquée', 'Hidden profile') : T('Accord droit à l\'image manquant', 'Image release missing')} · ${T('visible uniquement en aperçu', 'preview only')}</p>` : '';
 const row = (k, v) => v || v === 0 ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+// Mensurations : cm / EU ou pouces / US, au choix du visiteur (gardé dans son navigateur)
+const hasSizes = ['taille', 'poitrine', 'tailleT', 'hanches', 'pointure'].some(k => f[k]);
+const UNIT_BTNS = [['metric', 'cm · EU'], ['us', 'in · US']].map(([u, l]) => `<button type="button" data-units="${u}" aria-pressed="${UNITS === u}">${l}</button>`).join('');
+function ficheRows() {
+  return [
+    [T('Taille', 'Height'), SIZE.height(f.taille)],
+    [T('Poitrine', 'Bust'), SIZE.body(f.poitrine)],
+    [T('Tour de taille', 'Waist'), SIZE.body(f.tailleT)],
+    [T('Hanches', 'Hips'), SIZE.body(f.hanches)],
+    [T('Pointure', 'Shoe'), SIZE.shoe(f.pointure, f.genre)],
+    [T('Yeux', 'Eyes'), TR(f.yeux)],
+    [T('Cheveux', 'Hair'), TR(f.cheveux)]
+  ];
+}
+const fiche = () => ficheRows().map(([k, v]) => row(k, v)).join('')
+  + row(T('Langues', 'Languages'), TR(t.languages))
+  + ((t.specs || []).length ? row(T('Spécialités', 'Specialties'), t.specs.map(TR).join(', ')) : '')
+  + row(T('Basé·e à', 'Based in'), TR(t.city))
+  + row(T('Agence', 'Agency'), t.agency);
 const folio = (k, label) => `<div class="folio caps"><span>${esc(full)}</span><span>${label}</span><span>${pad(blocks.findIndex(b => b[0] === k) + 1)} / ${pad(blocks.length)}</span></div>`;
 
 // Sections de la fiche : les polas d'abord, puis l'ordre choisi dans le back office
 const SEC = {
   polas: () => has('polas') ? `<section class="section is-soft" id="polas">
     ${folio('polas', 'Polas / Digitals')}
-    <div class="v1-block-head"><h2 class="h2">${TU.title(t.polasTitle || 'Au *naturel.*')}</h2><p class="caps dim">${esc(t.polasNote || 'Pris au studio Daké')}</p></div>
-    <div class="v1-polas reveal" id="polas-track" tabindex="0" aria-label="Polas, faire défiler">${[0, 1, 2].map(c => t.polas.map((p, n) => `<figure class="pola" data-n="${n}"${c !== 1 ? ' aria-hidden="true"' : ''}><div class="media"><img src="${TU.src(p[0])}" alt="${c === 1 ? 'Pola ' + p[1] : ''}" draggable="false"></div><figcaption class="mono"><span>${p[1]}</span><span class="dim">${pad(n + 1)} / ${pad(t.polas.length)}</span></figcaption></figure>`).join('')).join('')}</div>
-    <div class="pola-ctrl"><span class="mono dim" id="polas-n">01 / ${pad(t.polas.length)}</span><span class="prog"><i id="polas-bar"></i></span><button type="button" data-d="-1" aria-label="Pola précédent">←</button><button type="button" data-d="1" aria-label="Pola suivant">→</button></div>
+    <div class="v1-block-head"><h2 class="h2">${TU.title(TX(t, 'polasTitle', 'Au *naturel.*'))}</h2><p class="caps dim">${esc(TX(t, 'polasNote', 'Pris au studio Daké'))}</p></div>
+    <div class="v1-polas reveal" id="polas-track" tabindex="0" aria-label="${T('Polas, faire défiler', 'Polas, scroll')}">${[0, 1, 2].map(c => t.polas.map((p, n) => `<figure class="pola" data-n="${n}"${c !== 1 ? ' aria-hidden="true"' : ''}><div class="media"><img src="${TU.src(p[0])}" alt="${c === 1 ? 'Pola ' + esc(TR(p[1])) : ''}" draggable="false"></div><figcaption class="mono"><span>${esc(TR(p[1]))}</span><span class="dim">${pad(n + 1)} / ${pad(t.polas.length)}</span></figcaption></figure>`).join('')).join('')}</div>
+    <div class="pola-ctrl"><span class="mono dim" id="polas-n">01 / ${pad(t.polas.length)}</span><span class="prog"><i id="polas-bar"></i></span><button type="button" data-d="-1" aria-label="${T('Pola précédent', 'Previous pola')}">←</button><button type="button" data-d="1" aria-label="${T('Pola suivant', 'Next pola')}">→</button></div>
   </section>` : '',
 
   book: () => has('book') ? `<section class="section" id="book">
     ${folio('book', 'Book')}
-    <div class="v1-book">${t.book.map((b, n) => `<figure class="media reveal" data-n="${n}" role="button" tabindex="0" aria-label="Agrandir la photo ${n + 1}"><img src="${TU.src(b)}" alt="" loading="lazy"></figure>`).join('')}</div>
+    <div class="v1-book">${t.book.map((b, n) => `<figure class="media reveal" data-n="${n}" role="button" tabindex="0" aria-label="${T('Agrandir la photo', 'Enlarge photo')} ${n + 1}"><img src="${TU.src(b)}" alt="" loading="lazy"></figure>`).join('')}</div>
   </section>` : '',
 
   video: () => has('video') ? `<section class="section ${s ? 'is-paper' : 'is-dark'}" id="video"${s ? '' : ' data-tone="dark"'}>
-    ${folio('video', 'Vidéo')}
+    ${folio('video', LABELS.video)}
     <div class="player reveal">
       <video src="${TU.src(t.video.src)}" poster="${TU.src(t.video.poster)}" playsinline preload="none"></video>
-      <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>Lire${t.video.len ? ' · ' + esc(t.video.len) : ''}</span></button>
+      <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>${T('Lire', 'Play')}${t.video.len ? ' · ' + esc(t.video.len) : ''}</span></button>
     </div>
-    <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">${esc(t.video.credit || 'Réalisée par Daké')}</span></div>
+    <div class="player-meta caps"><span>${esc(TX(t.video, 'title'))}</span><span class="dim">${esc(TX(t.video, 'credit', 'Réalisée par Daké'))}</span></div>
   </section>` : '',
 
   stats: () => s ? `<section class="section is-dark" id="stats" data-tone="dark">
     ${folio('stats', 'Stats & engagement')}
-    <div class="v1-block-head"><h2 class="h2">L'audience, <em>en chiffres.</em></h2><p class="caps dim">Instagram · TikTok</p></div>
+    <div class="v1-block-head"><h2 class="h2">${T('L\'audience, <em>en chiffres.</em>', 'The audience, <em>in numbers.</em>')}</h2><p class="caps dim">Instagram · TikTok</p></div>
     ${renderStats(s)}
   </section>` : ''
 };
@@ -89,35 +109,24 @@ document.getElementById('app').innerHTML = `
     ${draftNote}
     <h1 class="v1-name"><span class="rise"><span>${esc(t.first)}</span></span><span class="rise"><span><em>${esc(t.last)}</em></span></span></h1>
     <div class="grid v1-profile-body">
-      <figure class="media v1-cover reveal"><img src="${TU.src(t.cover)}" alt="Portrait de ${esc(full)}" fetchpriority="high"></figure>
+      <figure class="media v1-cover reveal"><img src="${TU.src(t.cover)}" alt="${T('Portrait de', 'Portrait of')} ${esc(full)}" fetchpriority="high"></figure>
       <div class="v1-info reveal">
-        <div class="tags caps">${(t.cats || []).map(c => `<span>${CAT_LABEL[c]}</span>`).concat((t.specs || []).map(x => `<span>${esc(x)}</span>`)).join('')}${t.availability && t.availability !== 'disponible' ? `<span class="avail avail--${t.availability}">${AVAIL_LABEL[t.availability]}</span>` : ''}</div>
-        <dl class="fiche">
-          ${row('Taille', f.taille && f.taille + ' cm')}
-          ${row('Poitrine', f.poitrine && f.poitrine + ' cm')}
-          ${row('Tour de taille', f.tailleT && f.tailleT + ' cm')}
-          ${row('Hanches', f.hanches && f.hanches + ' cm')}
-          ${row('Pointure', f.pointure && f.pointure + ' EU')}
-          ${row('Yeux', f.yeux)}
-          ${row('Cheveux', f.cheveux)}
-          ${row('Langues', t.languages)}
-          ${(t.specs || []).length ? row('Spécialités', t.specs.join(', ')) : ''}
-          ${row('Basé·e à', t.city)}
-          ${row('Agence', t.agency)}
-        </dl>
-        ${t.bio ? `<p class="v1-bio">${esc(t.bio)}</p>` : ''}
+        <div class="tags caps">${(t.cats || []).map(c => `<span>${CAT_LABEL[c]}</span>`).concat((t.specs || []).map(x => `<span>${esc(TR(x))}</span>`)).join('')}${t.availability && t.availability !== 'disponible' ? `<span class="avail avail--${t.availability}">${AVAIL_LABEL[t.availability]}</span>` : ''}</div>
+        ${hasSizes ? `<div class="units caps" role="group" aria-label="${T('Unités des mensurations', 'Measurement units')}">${UNIT_BTNS}</div>` : ''}
+        <dl class="fiche" id="fiche">${fiche()}</dl>
+        ${t.bio ? `<p class="v1-bio">${esc(TX(t, 'bio'))}</p>` : ''}
         ${s ? `<div class="v1-social mono"><a href="#stats">IG ${TU.k(s.ig.followers)}</a><a href="#stats">TT ${TU.k(s.tt.followers)}</a><span class="dim">ER ${TU.pct(TU.erAvg(s))}</span></div>` : ''}
-        <div class="actions"><a class="btn" href="${mail}" data-book="${t.slug}" data-kind="option">Demander une option</a><button class="btn btn--ghost" type="button" id="composite-btn">Carte composite (PDF)</button></div>
+        <div class="actions"><a class="btn" href="${mail}" data-book="${t.slug}" data-kind="option">${T('Demander une option', 'Request a hold')}</a><button class="btn btn--ghost" type="button" id="composite-btn">${T('Carte composite (PDF)', 'Comp card (PDF)')}</button></div>
       </div>
     </div>
   </section>
 
-  <nav class="subnav caps" aria-label="Sur cette fiche">${blocks.map((b, n) => `<a href="#${b[0]}"><sup>${pad(n + 1)}</sup>${b[0] === 'stats' ? 'Stats' : b[1]}</a>`).join('')}</nav>
+  <nav class="subnav caps" aria-label="${T('Sur cette fiche', 'On this profile')}">${blocks.map((b, n) => `<a href="#${b[0]}"><sup>${pad(n + 1)}</sup>${b[0] === 'stats' ? 'Stats' : b[1]}</a>`).join('')}</nav>
 
   ${ORDER.map(k => SEC[k]()).join('')}
 
   <a class="v1-next" href="talent.html?t=${next.slug}${keep}" data-img="${TU.src(next.cover)}">
-    <span class="caps dim">${sel ? 'Profil suivant de la sélection' : 'Talent suivant · ' + next.code}</span>
+    <span class="caps dim">${sel ? T('Profil suivant de la sélection', 'Next profile in the selection') : T('Talent suivant', 'Next talent') + ' · ' + next.code}</span>
     <p class="serif">${esc(next.first)} <em>${esc(next.last)}</em> ${ARROW}</p>
   </a>`;
 
@@ -139,61 +148,68 @@ comp.className = 'composite'; comp.setAttribute('aria-hidden', 'true');
 comp.innerHTML = `
   <header class="cc-head">
     <h1 class="cc-name">${esc(t.first)} <em>${esc(t.last)}</em></h1>
-    <p class="cc-cats">${TU.cats(t)}<span>${esc(t.city)}</span></p>
+    <p class="cc-cats">${TU.cats(t)}<span>${esc(TR(t.city))}</span></p>
   </header>
   <div class="cc-body">
     <div class="cc-main"><img src="${TU.src(t.cover)}" alt=""></div>
     <div class="cc-grid">${compositeImgs(t).map(src => `<div><img src="${TU.src(src)}" alt=""></div>`).join('')}</div>
     <aside class="cc-side">
-      <dl class="cc-fiche">
-        <dt>Taille</dt><dd>${f.taille} cm</dd>
-        <dt>Poitrine</dt><dd>${f.poitrine} cm</dd>
-        <dt>Tour de taille</dt><dd>${f.tailleT} cm</dd>
-        <dt>Hanches</dt><dd>${f.hanches} cm</dd>
-        <dt>Pointure</dt><dd>${f.pointure} EU</dd>
-        <dt>Yeux</dt><dd>${esc(f.yeux)}</dd>
-        <dt>Cheveux</dt><dd>${esc(f.cheveux)}</dd>
-        ${t.specs ? `<dt>Spécialités</dt><dd>${t.specs.map(esc).join(', ')}</dd>` : ''}
-        ${s ? `<dt>Instagram</dt><dd>${esc(s.ig.handle)} · ${TU.k(s.ig.followers)}</dd><dt>TikTok</dt><dd>${esc(s.tt.handle)} · ${TU.k(s.tt.followers)}</dd>` : ''}
-      </dl>
+      <dl class="cc-fiche" id="cc-fiche"></dl>
       <p class="cc-brand">FACE BY DAKĒ<span>©</span></p>
     </aside>
   </div>
-  <footer class="cc-foot"><span>${ECO.mail}</span><span>Carte composite</span><span>${t.code}</span></footer>`;
+  <footer class="cc-foot"><span>${ECO.mail}</span><span>${T('Carte composite', 'Comp card')}</span><span>${t.code}</span></footer>`;
 document.body.appendChild(comp);
 // Ordinateur : PDF via l'impression. Téléphone : image JPG à enregistrer ou partager.
 const isMobile = matchMedia('(max-width: 860px), (pointer: coarse)').matches;
 const compBtn = document.getElementById('composite-btn');
-if (isMobile) compBtn.textContent = 'Carte composite (image)';
+if (isMobile) compBtn.textContent = T('Carte composite (image)', 'Comp card (image)');
 compBtn.addEventListener('click', async () => {
   if (isMobile) {
-    const label = compBtn.textContent; compBtn.textContent = 'Préparation…'; compBtn.disabled = true;
+    const label = compBtn.textContent; compBtn.textContent = T('Préparation…', 'Preparing…'); compBtn.disabled = true;
     try {
       const blob = await compositeJPG(t, [t.cover, ...compositeImgs(t)].map(x => TU.src(x)));
       const slug = (t.first + '-' + t.last).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
-      await shareComposite(blob, `${slug}-carte-composite-dake.jpg`);
+      await shareComposite(blob, `${slug}-${T('carte-composite', 'comp-card')}-dake.jpg`);
     } finally { compBtn.textContent = label; compBtn.disabled = false; }
     return;
   }
   const imgs = [...comp.querySelectorAll('img')];
   Promise.all(imgs.map(im => im.complete ? 1 : new Promise(r => { im.onload = im.onerror = r; }))).then(() => {
-    const old = document.title; document.title = `${full} — Carte composite Daké`;
+    const old = document.title; document.title = `${full} — ${T('Carte composite', 'Comp card')} Daké`;
     print(); setTimeout(() => { document.title = old; }, 500);
   });
 });
 
+// Fiche de la carte composite : mêmes unités que la page
+const ccFiche = () => {
+  document.getElementById('cc-fiche').innerHTML = ficheRows().filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')
+    + ((t.specs || []).length ? `<dt>${T('Spécialités', 'Specialties')}</dt><dd>${t.specs.map(x => esc(TR(x))).join(', ')}</dd>` : '')
+    + (s ? `<dt>Instagram</dt><dd>${esc(s.ig.handle)} · ${TU.k(s.ig.followers)}</dd><dt>TikTok</dt><dd>${esc(s.tt.handle)} · ${TU.k(s.tt.followers)}</dd>` : '');
+};
+ccFiche();
+document.querySelector('.units')?.addEventListener('click', e => {
+  const b = e.target.closest('[data-units]'); if (!b || b.dataset.units === UNITS) return;
+  setUnits(b.dataset.units);
+});
+document.addEventListener('units', () => {
+  document.querySelectorAll('.units [data-units]').forEach(b => b.setAttribute('aria-pressed', b.dataset.units === UNITS));
+  document.getElementById('fiche').innerHTML = fiche();
+  ccFiche();
+});
+
 renderFooter(document.getElementById('contact'), {
   root: '../../',
-  folio: sel ? 'Sélection ' + esc(sel.client || 'privée') : 'Booking',
-  actions: [{ label: 'Booker ' + esc(t.first), href: mail, book: t.slug }, { label: sel ? 'Revoir la sélection' : 'Tous les talents', href: sel ? './?' + sel.qs : './', ghost: true }]
+  folio: sel ? T('Sélection ', 'Selection ') + esc(sel.client || T('privée', 'private')) : 'Booking',
+  actions: [{ label: T('Booker ', 'Book ') + esc(t.first), href: mail, book: t.slug }, { label: sel ? T('Revoir la sélection', 'Back to the selection') : T('Tous les talents', 'All talents'), href: sel ? './?' + sel.qs : './', ghost: true }]
 });
 initPlayer(document);
 initReveal();
 renderShell({
   root: '../../', home: sel ? './?' + sel.qs : './',
   // Même nav que la home : les ancres du profil sont dans la barre sous la photo
-  sections: sel ? [['./?' + sel.qs, 'Sélection'], ['#contact', 'Booking']] : [['./', 'Talents'], ['#contact', 'Booking']],
-  book: { label: 'Booker ' + t.first, href: mail, ids: t.slug },
+  sections: sel ? [['./?' + sel.qs, T('Sélection', 'Selection')], ['#contact', 'Booking']] : [['./', 'Talents'], ['#contact', 'Booking']],
+  book: { label: T('Booker ', 'Book ') + t.first, href: mail, ids: t.slug },
   dock: `${esc(t.first)} <strong>${esc(t.last)}</strong>`
 });
 
@@ -266,7 +282,7 @@ bookEl?.addEventListener('keydown', e => { const m = e.target.closest('.media');
     tr.scrollTo({ left: Math.round(tr.scrollLeft / step()) * step(), behavior: 'smooth' });
   });
 
-  const polaItems = t.polas.map(p => [TU.src(p[0]), p[1]]);
+  const polaItems = t.polas.map(p => [TU.src(p[0]), TR(p[1])]);
   tr.addEventListener('click', e => { const p = e.target.closest('.pola'); if (p && moved < 6) openViewer(polaItems, +p.dataset.n, full + ' · Polas'); });
 
   // Départ sur la copie du milieu, premier pola

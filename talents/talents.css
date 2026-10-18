@@ -416,6 +416,14 @@ html:has(.shell){scroll-padding-top:calc(var(--header) + 12px)}
 .arr{display:inline-block;width:.72em;height:.72em;vertical-align:.02em;margin-left:.15em}
 .shell .header-cta{justify-self:end;display:flex;align-items:center;gap:12px}
 .menu-btn{display:none;justify-self:end;padding:8px 0;font-weight:500}
+/* Sélecteur FR / EN (repris de Daké Studio) */
+.lang-switch{display:inline-flex;align-items:center;gap:2px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+.lang-switch > *{padding:6px 7px;border-radius:999px;transition:opacity .3s var(--ease)}
+.lang-switch .is-current{opacity:1}
+.lang-switch a{opacity:.45}
+.lang-switch a:hover,.lang-switch a:focus-visible{opacity:1}
+.lang-switch--menu{justify-self:start;font-size:.8125rem;margin-left:-7px;opacity:0;transform:translateY(16px);transition:opacity .3s var(--ease),transform .4s var(--ease)}
+.menu-open .lang-switch--menu{opacity:1;transform:none;transition:opacity .6s var(--ease) .65s,transform .9s var(--ease) .65s}
 
 /* Menu plein écran (mobile) */
 .menu{
@@ -901,3 +909,9 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .header .back-top{font-size:.875rem;text-decoration:underline;text-underline-offset:.2em;white-space:nowrap}
 .header .back-top:hover{opacity:.7}
 @media (min-width:861px){.shell.is-scrolled .header.has-link{padding-right:26px}}
+
+/* Mensurations : bascule cm · EU / in · US */
+.units{display:inline-flex;width:fit-content;justify-self:start;align-self:start;gap:2px;padding:3px;margin:0 0 -12px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);font-size:.6875rem;letter-spacing:.12em}
+.units button{padding:6px 12px;border-radius:999px;opacity:.55;transition:opacity .3s var(--ease),background-color .3s var(--ease),color .3s var(--ease)}
+.units button:hover,.units button:focus-visible{opacity:1}
+.units button[aria-pressed="true"]{opacity:1;background:var(--ink);color:var(--cream)}

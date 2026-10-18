@@ -22,17 +22,17 @@
   window.SETTINGS = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international" }, data.settings || {});
 })();
 
-window.CAT_LABEL = { mannequin: 'Mannequin', comedien: 'Comédien·ne', influence: 'Influence' };
-window.AVAIL_LABEL = { disponible: 'Disponible', option: 'En option', indisponible: 'Indisponible' };
+window.CAT_LABEL = { mannequin: T('Mannequin', 'Model'), comedien: T('Comédien·ne', 'Actor'), influence: 'Influence' };
+window.AVAIL_LABEL = { disponible: T('Disponible', 'Available'), option: T('En option', 'On hold'), indisponible: T('Indisponible', 'Unavailable') };
 
 /* Utilitaires partagés */
 window.TU = {
   get(slug) { return TALENTS.find(t => t.slug === slug) || ALL_TALENTS.find(t => t.slug === slug && TALENTS_PREVIEW) || TALENTS[0]; },
   // Chemin d'image : relatif au dossier talents/, sauf adresses complètes (aperçu : blob:, data:, https:)
   src(x) { return !x ? '' : /^(blob:|data:|https?:|\/)/.test(x) ? x : (window.TALENTS_PREFIX || '../') + x; },
-  cats(t) { return (t.cats || []).map(c => CAT_LABEL[c]).concat(t.specs || []).join(' · '); },
-  k(n) { n = +n || 0; return n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + ' M' : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace('.', ',').replace(',0', '') + ' k' : String(n); },
-  pct(n) { return (+n || 0).toFixed(1).replace('.', ',') + ' %'; },
+  cats(t) { return (t.cats || []).map(c => CAT_LABEL[c]).concat((t.specs || []).map(TR)).join(' · '); },
+  k(n) { n = +n || 0; const d = EN ? '.' : ','; return n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', d) + (EN ? 'M' : ' M') : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace('.', d).replace(d + '0', '') + (EN ? 'K' : ' k') : String(n); },
+  pct(n) { return (+n || 0).toFixed(1).replace('.', EN ? '.' : ',') + (EN ? '%' : ' %'); },
   // Courbe d'abonnés sur 12 mois, en SVG
   spark(vals, w = 240, h = 56) {
     vals = (vals || []).map(Number).filter(v => !isNaN(v));
@@ -83,8 +83,8 @@ TU.selection = function () {
 
 TU.mailFor = function (sel, talents) {
   const names = talents.map(t => t.first + ' ' + t.last).join(', ');
-  const subj = sel ? `Sélection ${sel.client || 'Daké'} : ${names}` : `Booking ${names}`;
-  const body = sel ? `Bonjour,\n\nNous souhaitons poser une option sur : ${names}${sel.project ? '\nProjet : ' + sel.project : ''}\nDates envisagées : \n\nMerci !` : '';
+  const subj = sel ? `${T('Sélection', 'Selection')} ${sel.client || 'Daké'} : ${names}` : `Booking ${names}`;
+  const body = sel ? T(`Bonjour,\n\nNous souhaitons poser une option sur : ${names}${sel.project ? '\nProjet : ' + sel.project : ''}\nDates envisagées : \n\nMerci !`, `Hello,\n\nWe would like to put a hold on: ${names}${sel.project ? '\nProject: ' + sel.project : ''}\nProposed dates: \n\nThank you!`) : '';
   return `mailto:${SETTINGS.mail}?subject=${encodeURIComponent(subj)}${body ? '&body=' + encodeURIComponent(body) : ''}`;
 };
 

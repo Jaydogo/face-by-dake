@@ -68,10 +68,10 @@
   window.openViewer = function (items, start, title) {
     if (!box) {
       box = document.createElement('div');
-      box.className = 'viewer'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Visionneuse');
-      box.innerHTML = `<div class="viewer-top caps"><span class="viewer-title"></span><span class="viewer-n mono"></span><button type="button" class="viewer-close">Fermer</button></div>
+      box.className = 'viewer'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', T('Visionneuse', 'Viewer'));
+      box.innerHTML = `<div class="viewer-top caps"><span class="viewer-title"></span><span class="viewer-n mono"></span><button type="button" class="viewer-close">${T('Fermer', 'Close')}</button></div>
         <div class="viewer-track" data-lenis-prevent></div>
-        <div class="viewer-nav"><button type="button" data-d="-1" aria-label="Image précédente">←</button><button type="button" data-d="1" aria-label="Image suivante">→</button></div>`;
+        <div class="viewer-nav"><button type="button" data-d="-1" aria-label="${T('Image précédente', 'Previous image')}">←</button><button type="button" data-d="1" aria-label="${T('Image suivante', 'Next image')}">→</button></div>`;
       document.body.appendChild(box);
       const tr = box.querySelector('.viewer-track');
       const n = () => Math.round(tr.scrollLeft / tr.clientWidth);

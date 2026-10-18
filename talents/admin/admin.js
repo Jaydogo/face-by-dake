@@ -25,6 +25,9 @@
   const AVAIL = [['disponible', 'Disponible'], ['option', 'En option'], ['indisponible', 'Indisponible']];
   const POLA_LABELS = ['Portrait', 'Face', 'Profil', '3/4', 'Pied face', 'Pied profil', 'Pied 3/4', 'Dos', 'Sourire', 'Mains', 'Pose', 'Assise', 'Assise pied'];
   const AGES = ['13–17', '18–24', '25–34', '35–44', '45+'];
+  // Suggestions : ces mots sont traduits automatiquement sur la version anglaise (dictionnaire dans i18n.js)
+  const EYES = ['Noisette', 'Marron', 'Marron foncé', 'Noir', 'Bleu', 'Bleu-vert', 'Vert', 'Gris', 'Gris-bleu', 'Gris-vert', 'Ambre', 'Vairons'];
+  const HAIR = ['Châtain', 'Châtain clair', 'Châtain foncé', 'Brun', 'Noir', 'Blond', 'Blond foncé', 'Blond clair', 'Blond vénitien', 'Roux', 'Auburn', 'Poivre et sel', 'Blanc', 'Rasé', 'Bouclés', 'Frisés', 'Tresses', 'Locks'];
   const MAX = { polas: 1400, book: 1600, cover: 1600, poster: 1280 };
   const VIDEO_WARN = 25e6, VIDEO_MAX = 95e6;
 
@@ -228,6 +231,11 @@
     if (!f.taille || !f.pointure) a.push(['warn', 'Mensurations incomplètes (taille, pointure…).']);
     if ((t.cats || []).includes('influence') && !(t.social && t.social.ig && +t.social.ig.followers)) a.push(['warn', 'Catégorie Influence sans stats renseignées.']);
     if (t.video && t.video.src && pending.has(t.video.src) && pending.get(t.video.src).blob.size > VIDEO_WARN) a.push(['warn', 'Vidéo lourde : la page sera plus lente à charger.']);
+    // Version anglaise : mots saisis que le dictionnaire ne connaît pas (ils resteront en français)
+    if (window.TR_MISSING) {
+      const miss = [...new Set([f.yeux, f.cheveux, t.languages, ...(t.specs || []), ...(t.polas || []).map(p => p[1])].flatMap(v => TR_MISSING(v)))];
+      if (miss.length) a.push(['info', `Version anglaise : pas de traduction pour <b>${miss.map(esc).join('</b>, <b>')}</b>, affiché en français. Utilise un mot proposé dans la liste, ou écris-le en anglais.`]);
+    }
     return a;
   }
   function viewTalents() {
@@ -284,7 +292,7 @@
     f.src = ui.page === 'home' ? '../v1/?preview=1' : `../v1/talent.html?t=${encodeURIComponent(t ? t.slug : '')}&preview=1`;
   }
 
-  const field = (label, path, v, o = {}) => `<label class="field${o.cls ? ' ' + o.cls : ''}"><span>${label}${o.hint ? ` <small>${o.hint}</small>` : ''}</span>${o.unit ? '<span class="with-unit">' : ''}${o.area ? `<textarea class="input" data-bind="${path}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''} maxlength="${o.max || 600}">${esc(v)}</textarea>` : `<input class="input${o.mono ? ' mono' : ''}" data-bind="${path}" value="${esc(v)}"${o.num ? ' inputmode="decimal" data-num="1"' : ''}${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}${o.type ? ` type="${o.type}"` : ''}>`}${o.unit ? `<i>${o.unit}</i></span>` : ''}</label>`;
+  const field = (label, path, v, o = {}) => `<label class="field${o.cls ? ' ' + o.cls : ''}"><span>${label}${o.hint ? ` <small>${o.hint}</small>` : ''}</span>${o.unit ? '<span class="with-unit">' : ''}${o.area ? `<textarea class="input" data-bind="${path}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''} maxlength="${o.max || 600}">${esc(v)}</textarea>` : `<input class="input${o.mono ? ' mono' : ''}" data-bind="${path}" value="${esc(v)}"${o.num ? ' inputmode="decimal" data-num="1"' : ''}${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}${o.type ? ` type="${o.type}"` : ''}${o.list ? ` list="${o.list}"` : ''}>`}${o.unit ? `<i>${o.unit}</i></span>` : ''}</label>`;
   const sw = (label, sub, path, on) => `<label class="switch"><input type="checkbox" data-bind="${path}" data-bool="1"${on ? ' checked' : ''}><span><b>${label}</b>${sub ? `<small>${sub}</small>` : ''}</span></label>`;
   const tagsBox = (path, arr, ph) => `<div class="tags" data-tags="${path}">${(arr || []).map((x, i) => `<span>${esc(x)}<button type="button" data-a="tag-del" data-i="${i}" aria-label="Retirer">×</button></span>`).join('')}<input placeholder="${esc(ph)}" data-tag-in="${path}"></div>`;
   const alerts = w => w.length ? `<div class="alerts">${w.map(([k, m]) => `<div class="alert alert--${k}">${m}</div>`).join('')}</div>` : '';
@@ -296,9 +304,10 @@
       <div class="section"><h3>Identité</h3><div class="grid2">
         ${field('Prénom', 'first', t.first)}${field('Nom', 'last', t.last)}
         ${field('Ville', 'city', t.city, { ph: 'Paris' })}${field('Agence', 'agency', t.agency, { hint: 'si représenté·e', ph: 'Indépendant·e' })}
-        ${field('Langues', 'languages', t.languages, { ph: 'Français, anglais' })}
+        ${field('Langues', 'languages', t.languages, { ph: 'Français, anglais (courant)' })}
         <label class="field"><span>Disponibilité</span><select class="input" data-bind="availability">${AVAIL.map(([k, l]) => `<option value="${k}"${t.availability === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         ${field('Bio courte', 'bio', t.bio, { area: 1, cls: 'span-all', hint: 'facultatif, 2–3 lignes', max: 320 })}
+        ${field('Bio courte · anglais', 'bio_en', t.bio_en || '', { area: 1, cls: 'span-all', hint: 'facultatif · vide = le français s\'affiche sur la version EN', max: 320, ph: 'Short bio in English' })}
       </div></div>
       <div class="section"><h3>Catégories</h3>
         <div class="chips">${CATS.map(([k, l]) => `<button type="button" class="chip" data-a="cat" data-k="${k}" aria-pressed="${(t.cats || []).includes(k)}">${l}</button>`).join('')}</div>
@@ -309,18 +318,22 @@
       </div>
       <div class="section"><h3>Lien de la fiche</h3><div class="grid2">
         ${field('Identifiant', 'slug', t.slug, { mono: 1, hint: 'dans l\'adresse : ?t=…' })}
-        <div class="field"><span>Adresse publique</span><div class="out"><code>${esc(db.settings.siteUrl)}talent.html?t=${esc(t.slug)}</code><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(db.settings.siteUrl)}talent.html?t=${esc(t.slug)}">Copier</button></div></div>
+        <div class="field"><span>Adresse publique</span><div class="out"><code>${esc(db.settings.siteUrl)}talent.html?t=${esc(t.slug)}</code><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(db.settings.siteUrl)}talent.html?t=${esc(t.slug)}">Copier</button><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(db.settings.siteUrl)}talent.html?t=${esc(t.slug)}&amp;lang=en" title="Lien qui ouvre la fiche en anglais">Copier (EN)</button></div></div>
       </div><p class="hint">Changer l'identifiant casse les liens déjà envoyés.</p></div>`;
     if (ui.pane === 'fiche') return `
       <div class="section"><h3>Mensurations</h3><div class="grid4">
         ${field('Taille', 'fiche.taille', f.taille, { num: 1, unit: 'cm' })}${field('Poitrine', 'fiche.poitrine', f.poitrine, { num: 1, unit: 'cm' })}
         ${field('Tour de taille', 'fiche.tailleT', f.tailleT, { num: 1, unit: 'cm' })}${field('Hanches', 'fiche.hanches', f.hanches, { num: 1, unit: 'cm' })}
-        ${field('Pointure', 'fiche.pointure', f.pointure, { num: 1, unit: 'EU' })}${field('Yeux', 'fiche.yeux', f.yeux, { ph: 'Noisette' })}
-        ${field('Cheveux', 'fiche.cheveux', f.cheveux, { ph: 'Châtain', cls: 'span2' })}
-      </div><p class="hint" style="margin-top:12px">Un champ vide n'apparaît pas sur la fiche.</p></div>`;
+        ${field('Pointure', 'fiche.pointure', f.pointure, { num: 1, unit: 'EU' })}${field('Yeux', 'fiche.yeux', f.yeux, { ph: 'Noisette', list: 'dl-yeux' })}
+        ${field('Cheveux', 'fiche.cheveux', f.cheveux, { ph: 'Châtain', cls: 'span2', list: 'dl-cheveux' })}
+        <label class="field span2"><span>Tailles US calculées pour <small>pointure US</small></span><select class="input" data-bind="fiche.genre">${[['', 'Non précisé (femme et homme)'], ['f', 'Femme'], ['h', 'Homme']].map(([k, l]) => `<option value="${k}"${(f.genre || '') === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+      </div>
+      <datalist id="dl-yeux">${EYES.map(l => `<option value="${l}">`).join('')}</datalist><datalist id="dl-cheveux">${HAIR.map(l => `<option value="${l}">`).join('')}</datalist>
+      <p class="hint" style="margin-top:12px">Un champ vide n'apparaît pas sur la fiche. Saisis en cm et en pointure EU : le visiteur peut basculer en pouces / tailles US sur la fiche.</p></div>`;
     if (ui.pane === 'polas') return `
       <div class="section"><h3>Polas / digitals <span class="muted" style="text-transform:none;letter-spacing:0">glisse pour réordonner</span></h3>
-        <div class="grid2">${field('Titre du bloc', 'polasTitle', t.polasTitle || '', { ph: 'Au *naturel.*', hint: '*mot* = italique' })}${field('Sous-titre', 'polasNote', t.polasNote, { ph: 'Pris au studio Daké' })}</div>
+        <div class="grid2">${field('Titre du bloc', 'polasTitle', t.polasTitle || '', { ph: 'Au *naturel.*', hint: '*mot* = italique' })}${field('Sous-titre', 'polasNote', t.polasNote, { ph: 'Pris au studio Daké' })}
+          ${field('Titre · anglais', 'polasTitle_en', t.polasTitle_en || '', { ph: 'Au *naturel.*', hint: 'facultatif' })}${field('Sous-titre · anglais', 'polasNote_en', t.polasNote_en || '', { ph: 'Shot at the Daké studio', hint: 'facultatif' })}</div>
         <label class="drop" style="margin-top:14px" data-drop="polas"><input type="file" accept="image/*" multiple data-up="polas"><b>Ajouter des polas</b><span class="hint">Glisse tes photos ici ou clique · JPG, PNG, HEIC · redimensionnées automatiquement (1400 px)</span><div class="progress" hidden><i></i></div></label>
         <datalist id="pola-labels">${POLA_LABELS.map(l => `<option value="${l}">`).join('')}</datalist>
         <div class="thumbs" data-list="polas">${(t.polas || []).map((p, i) => thumb(t, p[0], i, 'polas', p[1])).join('')}</div>
@@ -341,7 +354,9 @@
           </div>
           <div class="grid3" style="margin-top:16px">
             ${field('Titre', 'video.title', v.title, { ph: 'Bande démo, scène dramatique', cls: 'span2' })}${field('Durée', 'video.len', v.len, { ph: '0:30', mono: 1 })}
-            ${field('Crédit', 'video.credit', v.credit || '', { ph: 'Réalisée par Daké', cls: 'span2' })}
+            ${field('Crédit', 'video.credit', v.credit || '', { ph: 'Réalisée par Daké', cls: 'span2' })}<span></span>
+            ${field('Titre · anglais', 'video.title_en', v.title_en || '', { ph: 'Showreel, dramatic scene', cls: 'span2', hint: 'facultatif' })}<span></span>
+            ${field('Crédit · anglais', 'video.credit_en', v.credit_en || '', { ph: 'Directed by Daké', cls: 'span2', hint: 'facultatif' })}
           </div>
           <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><label class="btn btn--ghost btn--s">Remplacer la vidéo<input type="file" accept="video/mp4,video/quicktime,video/*" data-up="video" hidden></label><button class="btn btn--danger btn--s" type="button" data-a="video-del">Retirer la vidéo</button></div>`
         : `<label class="drop" data-drop="video"><input type="file" accept="video/mp4,video/quicktime,video/*" data-up="video"><b>Ajouter une vidéo</b><span class="hint">MP4 (H.264) conseillé · 25 Mo max conseillé, 95 Mo maximum · l'aperçu et la durée sont faits automatiquement</span><div class="progress" hidden><i></i></div></label>`}
@@ -442,11 +457,12 @@
             <label class="field"><span>Prospect</span><input class="input" data-sbind="client" value="${esc(s.client)}" placeholder="Sézane"></label>
             <label class="field"><span>Projet</span><input class="input" data-sbind="project" value="${esc(s.project)}" placeholder="Campagne printemps-été 2027"></label>
             <label class="field span-all"><span>Mot d'intro <small>affiché sous le titre</small></span><textarea class="input" data-sbind="note" placeholder="Quatre visages naturels, à l'aise en mouvement…">${esc(s.note)}</textarea></label>
+            <label class="field span-all"><span>Mot d'intro · anglais <small>facultatif, pour un prospect anglophone</small></span><textarea class="input" data-sbind="note_en" placeholder="Four natural faces, at ease in motion…">${esc(s.note_en || '')}</textarea></label>
           </div>
           <p class="label" style="margin:16px 0 8px">Profils <span class="hint">dans l'ordre de clic</span></p>
           <div class="pick">${db.talents.map(t => { const k = (s.ids || []).indexOf(t.slug); return `<button type="button" data-a="sel-pick" data-slug="${esc(t.slug)}" aria-pressed="${k >= 0}">${k >= 0 ? `<span class="num">${k + 1}</span>` : ''}<span class="img">${t.cover ? `<img src="${esc(srcFor(t.cover))}" alt="" loading="lazy">` : ''}</span><span class="nm">${esc(t.first)} <em>${esc(t.last)}</em></span></button>`; }).join('')}</div>
           <p class="label" style="margin:18px 0 8px">Lien</p>
-          <div class="out"><code>${esc(selUrl(s))}</code><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(selUrl(s))}">Copier</button><a class="btn btn--ghost btn--s" href="../v1/?sel=${encodeURIComponent(s.key)}&preview=1" target="_blank" rel="noopener" data-a="pv-sel">Aperçu</a></div>
+          <div class="out"><code>${esc(selUrl(s))}</code><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(selUrl(s))}">Copier</button><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(selUrl(s))}&amp;lang=en" title="Lien qui ouvre la sélection en anglais">Copier (EN)</button><a class="btn btn--ghost btn--s" href="../v1/?sel=${encodeURIComponent(s.key)}&preview=1" target="_blank" rel="noopener" data-a="pv-sel">Aperçu</a></div>
           <p class="label" style="margin:18px 0 8px">Message de prospection</p>
           <div class="pitch">${esc(pitchFor(s)) || '<span class="muted">Choisis au moins un profil.</span>'}</div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn--ghost btn--s" type="button" data-a="copy" data-v="${esc(pitchFor(s))}">Copier le message</button><span class="hint" style="align-self:center">Identifiant : <span class="code">${esc(s.key)}</span></span><span style="flex:1"></span><button class="btn btn--danger btn--s" type="button" data-a="sel-del">Supprimer</button></div>
@@ -466,6 +482,7 @@
           ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien Daké©', 'studio', { ph: 'https://dake.studio', mono: 1 })}
           ${set('Mention sous Daké©', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
           ${set('Zone (footer)', 'reach', { ph: "Castings en France et à l'international", cls: 'span-all' })}
+          ${set('Zone (footer) · anglais', 'reach_en', { ph: 'Castings in France and internationally', cls: 'span-all', hint: 'facultatif' })}
           ${set('Adresse publique du site', 'siteUrl', { mono: 1, cls: 'span-all', hint: 'sert à fabriquer les liens de sélection' })}
         </div></section>
 

@@ -53,7 +53,7 @@
     text(ctx, t.last, L + width(ctx, first, fName, -fsName * 0.04), yName, { font: fNameI, spacing: -fsName * 0.04 });
     const fCaps = `500 ${pt(7.5)}px "Instrument Sans"`, capsSp = pt(7.5) * 0.14;
     text(ctx, TU.cats(t).toUpperCase(), R, yName - pt(7.5) * 1.6, { font: fCaps, align: 'right', spacing: capsSp });
-    text(ctx, (t.city || '').toUpperCase(), R, yName, { font: fCaps, align: 'right', spacing: capsSp, color: MUTED });
+    text(ctx, (TR(t.city) || '').toUpperCase(), R, yName, { font: fCaps, align: 'right', spacing: capsSp, color: MUTED });
     const yLine1 = yName + m(5);
     line(ctx, L, yLine1, R, yLine1, k);
 
@@ -67,9 +67,9 @@
     const xs = xg + 2 * wS + g + m(3), xsT = xs + m(4);
     line(ctx, xs, y0, xs, y0 + hMain, k);
     const f = t.fiche || {}, s = t.social;
-    const rows = [['Taille', f.taille && f.taille + ' cm'], ['Poitrine', f.poitrine && f.poitrine + ' cm'], ['Tour de taille', f.tailleT && f.tailleT + ' cm'], ['Hanches', f.hanches && f.hanches + ' cm'], ['Pointure', f.pointure && f.pointure + ' EU'], ['Yeux', f.yeux], ['Cheveux', f.cheveux]]
-      .concat((t.specs || []).length ? [['Spécialités', t.specs.join(', ')]] : [])
-      .concat(t.agency ? [['Agence', t.agency]] : [])
+    const rows = [[T('Taille', 'Height'), SIZE.height(f.taille)], [T('Poitrine', 'Bust'), SIZE.body(f.poitrine)], [T('Tour de taille', 'Waist'), SIZE.body(f.tailleT)], [T('Hanches', 'Hips'), SIZE.body(f.hanches)], [T('Pointure', 'Shoe'), SIZE.shoe(f.pointure, f.genre)], [T('Yeux', 'Eyes'), TR(f.yeux)], [T('Cheveux', 'Hair'), TR(f.cheveux)]]
+      .concat((t.specs || []).length ? [[T('Spécialités', 'Specialties'), t.specs.map(TR).join(', ')]] : [])
+      .concat(t.agency ? [[T('Agence', 'Agency'), t.agency]] : [])
       .concat(s && s.ig && s.tt ? [['Instagram', TU.k(s.ig.followers)], ['TikTok', TU.k(s.tt.followers)]] : [])
       .filter(r => r[1]);
     const fMono = `400 ${pt(7.5)}px "IBM Plex Mono"`, rowH = pt(7.5) * 1.35 + m(2.4);
@@ -96,7 +96,7 @@
     line(ctx, L, yF, R, yF, k);
     const fFoot = `400 ${pt(7)}px "IBM Plex Mono"`, sp = pt(7) * 0.06, yFt = yF + m(3) + pt(7);
     text(ctx, (SETTINGS.mail || '').toUpperCase(), L, yFt, { font: fFoot, spacing: sp, color: 'rgba(26,20,18,.7)' });
-    text(ctx, 'CARTE COMPOSITE', W / 2, yFt, { font: fFoot, spacing: sp, align: 'center', color: 'rgba(26,20,18,.7)' });
+    text(ctx, T('CARTE COMPOSITE', 'COMP CARD'), W / 2, yFt, { font: fFoot, spacing: sp, align: 'center', color: 'rgba(26,20,18,.7)' });
     text(ctx, (t.code || '').toUpperCase(), R, yFt, { font: fFoot, spacing: sp, align: 'right', color: 'rgba(26,20,18,.7)' });
 
     return new Promise(res => c.toBlob(res, 'image/jpeg', 0.9));
