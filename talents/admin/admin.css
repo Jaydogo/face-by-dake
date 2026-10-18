@@ -227,6 +227,7 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
   .preview{position:fixed;inset:var(--top) 0 0 auto;width:min(440px,100%);z-index:15;box-shadow:-20px 0 40px rgba(26,20,18,.12);transform:translateX(100%);transition:transform .45s var(--ease)}
   .studio.show-preview .preview{transform:none}
   .only-mobile{display:inline-flex}
+  .icon-btn.only-mobile{display:inline-grid}
 }
 
 
@@ -370,6 +371,10 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
   .preview{position:fixed;inset:0;width:100%;z-index:45;padding-top:env(safe-area-inset-top);transform:translateY(100%);transition:transform .45s var(--ease)}
   .studio.show-preview .preview{transform:none;display:flex}
   .pv-stage.is-mobile iframe{width:100%;height:100%;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+  /* Boutons ronds (recharger, fermer) : centrés et assez grands pour le pouce */
+  .pv-head{gap:6px;padding:10px 12px}
+  .pv-head .icon-btn{display:inline-grid !important;place-items:center;width:40px;height:40px;padding:0;font-size:1.05rem;line-height:1}
+  .pv-head .seg button{padding:7px 11px}
 
   /* Pages Prospection et Réglages */
   .page{padding:22px 16px 40px}
