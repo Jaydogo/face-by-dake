@@ -150,22 +150,25 @@
     });
     return d;
   }
-  /* Aperçu à la vraie taille de l'appareil, réduit pour tenir dans le panneau :
-     « Ordinateur » = page rendue en 1440 px de large, quel que soit l'écran du back office */
-  const PV = { desktop: [1440, 900], mobile: [390, 844] };
+  /* Aperçu à la vraie taille de l'appareil, réduit pour tenir dans le panneau.
+     Ordinateur : écran de portable 1440 × 900 (16:10) dans une maquette de MacBook.
+     Mobile : iPhone 390 × 844 dans son cadre.
+     Taille fixe : le site calcule certaines tailles d'après la hauteur d'écran, et une fenêtre
+     trop haute gonfle tout (et fait planter Safari sur iPhone, faute de mémoire). */
+  const PV = { desktop: { w: 1440, h: 900, bx: 12, bt: 18, bb: 12, base: 16, wide: 1.12 }, mobile: { w: 390, h: 844, bx: 8, bt: 8, bb: 8, base: 0, wide: 1 } };
   let pvRO = null;
   function fitPreview() {
-    const st = $('.pv-stage'), fit = $('.pv-fit'), f = $('#pv-frame'); if (!st || !fit || !f) return;
-    if (!pvRO && 'ResizeObserver' in window) { pvRO = new ResizeObserver(() => fitPreview()); }
+    const st = $('.pv-stage'), dev = $('.pv-device'), fit = $('.pv-fit'), f = $('#pv-frame'); if (!st || !fit || !f) return;
+    if (!pvRO && 'ResizeObserver' in window) pvRO = new ResizeObserver(() => fitPreview());
     if (pvRO && !st._ro) { pvRO.observe(st); st._ro = true; }
     const cs = getComputedStyle(st), aw = st.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), ah = st.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     if (aw <= 0 || ah <= 0) return;
-    const [w, h0] = PV[ui.device === 'mobile' ? 'mobile' : 'desktop'];
-    let k, h;
-    if (ui.device === 'mobile') { k = Math.min(1, (aw - 16) / w, (ah - 16) / h0); h = h0; }   // marge pour le contour du téléphone
-    else { k = Math.min(1, aw / w); h = Math.max(h0 * 0.6, ah / k); }   // ordinateur : toute la hauteur dispo
-    Object.assign(f.style, { width: w + 'px', height: h + 'px', transform: `scale(${k})` });
-    Object.assign(fit.style, { width: w * k + 'px', height: h * k + 'px' });
+    const d = PV[ui.device === 'mobile' ? 'mobile' : 'desktop'];
+    // l'échelle s'applique à l'écran ; le cadre (bords, socle du portable) garde une épaisseur fixe
+    const k = Math.min(1, (aw / d.wide - 2 * d.bx) / d.w, (ah - d.bt - d.bb - d.base) / d.h);
+    Object.assign(f.style, { width: d.w + 'px', height: d.h + 'px', transform: `scale(${k})` });
+    Object.assign(fit.style, { width: Math.round(d.w * k) + 'px', height: Math.round(d.h * k) + 'px' });
+    dev.className = 'pv-device ' + (ui.device === 'mobile' ? 'is-phone' : 'is-laptop');
   }
   function pushPreview() {
     ls.set(KEY.preview, previewData());
@@ -339,7 +342,7 @@
           <button class="icon-btn" type="button" data-a="pv-reload" title="Recharger l'aperçu">↻</button>
           <button class="icon-btn only-mobile" type="button" data-a="pv-toggle" title="Fermer">×</button>
         </div>
-        <div class="pv-stage${ui.device === 'mobile' ? ' is-mobile' : ''}"><div class="pv-fit"><iframe id="pv-frame" title="Aperçu"></iframe></div></div>
+        <div class="pv-stage${ui.device === 'mobile' ? ' is-mobile' : ''}"><div class="pv-device"><div class="pv-fit"><iframe id="pv-frame" title="Aperçu"></iframe></div></div></div>
       </aside>
     </div>`;
   }
