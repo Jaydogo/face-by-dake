@@ -79,7 +79,7 @@
      root = chemin vers la racine du site (là où est la page FACE). */
   // Coordonnées : réglées dans le back office (onglet Réglages)
   window.ECO = {
-    get studio() { return (window.SETTINGS || {}).studio || 'https://dake.global'; },
+    get studio() { return (window.SETTINGS || {}).studio || 'https://dake.studio'; },
     get studioSoon() { return (window.SETTINGS || {}).studioSoon || ''; },
     get mail() { return (window.SETTINGS || {}).mail || 'booking@dake.studio'; },
     get instagram() { return ((window.SETTINGS || {}).instagram || 'dake.face').replace(/^@/, ''); }
@@ -96,8 +96,8 @@
         <div><span class="caps">Booking</span><a href="mailto:${ECO.mail}">${ECO.mail}</a>${SETTINGS.phone ? `<a href="tel:${esc(SETTINGS.phone.replace(/\s/g, ''))}">${esc(SETTINGS.phone)}</a>` : ''}<a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
         <div><span class="caps">Écosystème</span>
           <a href="${ECO.studio}" target="_blank" rel="noopener">Daké© ${arr}</a>
-          <a href="${o.root}">Daké Studio ${arr}</a>
-          <span class="is-here">Face by Daké<small> · ici</small></span>
+          <a href="${o.root}">Daké Studio© ${arr}</a>
+          <span class="is-here">Face by Daké©<small> · ici</small></span>
           ${ECO.studioSoon ? `<span class="soon">Bientôt ${ECO.studioSoon}</span>` : ''}
         </div>
         <div><span class="caps">Basé à</span><span>${esc(SETTINGS.city)}</span><span>${esc(SETTINGS.reach)}</span></div>
@@ -121,7 +121,7 @@
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';
     const b = document.body;
     b.classList.add('shell');
-    const ext = [[ECO.studio, 'Daké©', true], [o.root, 'Daké Studio', false]];
+    const ext = [[ECO.studio, 'Daké©', true], [o.root, 'Daké Studio©', false]];
     const extA = (cls, i) => ext.map(([h, l, blank], k) => `<a class="${cls}" ${i ? `style="--i:${i + k}"` : ''} href="${h}"${blank ? ' target="_blank" rel="noopener"' : ''}>${l} ${arr}</a>`).join('');
     const header = document.createElement('header');
     header.className = 'header on-light';

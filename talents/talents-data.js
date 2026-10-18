@@ -5,7 +5,7 @@ window.TALENTS_DATA = {
  "settings": {
   "mail": "booking@dake.studio",
   "instagram": "dake.face",
-  "studio": "https://dake.global",
+  "studio": "https://dake.studio",
   "studioSoon": "",
   "phone": "",
   "city": "Paris, France",
