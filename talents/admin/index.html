@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#FFFFFF">
 <!-- Installable sur l'écran d'accueil (iPhone : Partager → Sur l'écran d'accueil) -->
 <link rel="manifest" href="manifest.webmanifest">
+<script>if (navigator.standalone || matchMedia('(display-mode: standalone)').matches) document.documentElement.classList.add('is-app');</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">

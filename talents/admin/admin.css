@@ -319,7 +319,7 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
 @media (max-width:760px){
   :root{--top:56px;--tabbar:calc(90px + env(safe-area-inset-bottom))}
   html,body{overflow-x:clip;-webkit-tap-highlight-color:transparent}
-  body{padding-bottom:0}
+  html.is-app body{padding-bottom:var(--tabbar)}
   button,a,.li,.chip{touch-action:manipulation}
   .only-phone{display:flex}
   .ed-title .acts .only-mobile{display:none !important}
@@ -332,7 +332,15 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
   .large-title{display:block;margin:4px 16px 2px;font-family:var(--serif);font-weight:300;font-size:2.6rem;line-height:1.05;letter-spacing:-.045em}
   .large-title sup{font-family:var(--mono);font-size:.75rem;letter-spacing:0;margin-left:6px;color:var(--muted);vertical-align:super}
   .list-head{position:sticky}
-  .top .tabs:not(.tabbar){display:none}
+  /* Dans Safari : onglets sous le logo (Safari garde le bas pour sa barre et ajoute un fond sous toute barre accrochée en bas).
+     Installé sur l'écran d'accueil (html.is-app) : pilule en bas, comme une app. */
+  html:not(.is-app) .top{height:auto;display:grid;grid-template-columns:1fr auto;align-items:center;row-gap:8px;padding:env(safe-area-inset-top) 16px 10px}
+  html:not(.is-app) .top-actions{min-height:48px;grid-row:1;grid-column:2}
+  html:not(.is-app) .logo{grid-row:1;grid-column:1}
+  html:not(.is-app) .top .tabs:not(.tabbar){grid-row:2;grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,1fr);width:100%}
+  html:not(.is-app) .top .tabs:not(.tabbar) button{padding:9px 0;font-size:.875rem}
+  html:not(.is-app) .tabbar{display:none}
+  html.is-app .top .tabs:not(.tabbar){display:none}
   .logo{font-size:.875rem}
   .logo em{display:none}
   .top-actions{gap:8px}
@@ -344,7 +352,7 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
 
   /* Onglets du bas : pilule de verre flottante, même dessin que la barre « Booker » du site */
   /* « collante » plutôt que fixe : Safari (iOS 26) étend un fond derrière les barres fixées en bas d'écran */
-  .tabbar{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));margin:0 12px calc(12px + env(safe-area-inset-bottom));z-index:25;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:999px;
+  .tabbar{position:fixed;left:16px;right:16px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:25;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:999px;
     background:rgba(26,20,18,.55);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18);
     box-shadow:none}
   .tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;padding:4px 10px;border-radius:999px;font-size:.6875rem;color:rgba(243,237,227,.72);background:none;box-shadow:none;
@@ -356,10 +364,10 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
   .tabbar button{position:relative;z-index:1}
   .tabbar button[aria-current]{background:none;color:var(--ink);font-weight:500;box-shadow:none}
   .tabbar button:active{transform:scale(.94)}
-  .tabbar{transition:transform .5s cubic-bezier(.32,.72,0,1),margin .5s cubic-bezier(.32,.72,0,1)}
+  .tabbar{transform-origin:50% 100%;transition:transform .5s cubic-bezier(.32,.72,0,1)}
   .tabbar button{transition:min-height .45s cubic-bezier(.32,.72,0,1),transform .18s var(--ease),color .3s}
   .tabbar button span{display:block;max-height:16px;overflow:hidden;transition:max-height .4s cubic-bezier(.32,.72,0,1),opacity .25s}
-  .scroll-down .tabbar{margin-left:22%;margin-right:22%}
+  .scroll-down .tabbar{transform:scale(.86)}
   .scroll-down .tabbar button{min-height:40px}
   .scroll-down .tabbar button span{max-height:0;opacity:0}
   /* Écran étroit : seul l'onglet actif garde son libellé */
@@ -379,13 +387,13 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
   .list-head{position:sticky;top:calc(var(--top) + env(safe-area-inset-top));z-index:6;padding:8px 16px 10px;background:#fff;border-bottom:0}
   .list-head input{border-radius:999px;background:var(--soft);border-color:transparent;padding-left:16px}
   /* « + Talent » devient un bouton flottant */
-  .list-head [data-a="add"]{position:fixed;right:18px;bottom:calc(var(--tabbar) + 8px);z-index:24;display:grid;place-items:center;width:56px;height:56px;min-height:0;padding:0;gap:0;border-radius:50%;
+  .list-head [data-a="add"]{position:fixed;right:18px;bottom:calc(var(--fab-b, 18px) + env(safe-area-inset-bottom));z-index:24;display:grid;place-items:center;width:56px;height:56px;min-height:0;padding:0;gap:0;border-radius:50%;
     box-shadow:0 4px 14px rgba(36,57,47,.22);transition:transform .45s cubic-bezier(.32,.72,0,1),opacity .3s,box-shadow .3s}
   .list-head [data-a="add"] span{display:none}
   .list-head [data-a="add"] .plus{width:24px;height:24px;margin:0;stroke-width:1.6}
   .list-head [data-a="add"]:active{transform:scale(.9)}
   .scroll-down .list-head [data-a="add"]{transform:translateY(20px) scale(.6);opacity:0;pointer-events:none}
-  .list-items{display:block;padding:4px 8px 8px;overflow:visible}
+  .list-items{display:block;padding:4px 8px 84px;overflow:visible}
   .list-group{display:flex;flex-direction:row;margin:18px 10px 6px;padding:0;border:0}
   .list-group:not(:first-child){margin-left:10px;padding-left:0;border:0}
   .li{grid-template-columns:52px minmax(0,1fr) auto;gap:14px;padding:10px;border-radius:16px;background:none}
@@ -487,7 +495,8 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:42px;cursor:p
   .combo-hint{margin:10px 8px 0;font-size:.8125rem;color:var(--muted)}
   .combo-scrim{position:fixed;inset:0;z-index:199;background:rgba(26,20,18,.32);opacity:0;transition:opacity .3s}
   .combo-scrim.on{opacity:1}
-  .toast{bottom:calc(var(--tabbar) + 14px);max-width:calc(100% - 32px);white-space:normal;text-align:center}
+  html.is-app{--fab-b:calc(var(--tabbar) - env(safe-area-inset-bottom) + 6px)}
+  .toast{bottom:calc(var(--fab-b, 18px) + env(safe-area-inset-bottom));max-width:calc(100% - 32px);white-space:normal;text-align:center}
 }
 @keyframes sheet-up{from{transform:translateY(100%)}to{transform:none}}
 @keyframes push-in{from{transform:translateX(36px);opacity:0}to{transform:none;opacity:1}}

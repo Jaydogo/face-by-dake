@@ -107,6 +107,12 @@
   new MutationObserver(stagger).observe(document.getElementById('views'), { childList: true });
   stagger();
 
+  // Hauteur réelle de la barre du haut (une ligne dans l'app, deux dans Safari) pour les titres collants
+  const top = document.querySelector('.top');
+  const syncTop = () => { if (!top || !phone()) return document.documentElement.style.removeProperty('--top'); const safe = parseFloat(getComputedStyle(top).paddingTop) || 0; document.documentElement.style.setProperty('--top', (top.offsetHeight - safe) + 'px'); };
+  if (top && 'ResizeObserver' in window) new ResizeObserver(syncTop).observe(top);
+  addEventListener('resize', syncTop); syncTop();
+
   if (calm.matches) b.classList.add('calm');
 })();
 
