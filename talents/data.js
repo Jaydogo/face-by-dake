@@ -46,6 +46,8 @@ window.TU = {
   // Total audience (IG + TT) et ER moyen pondéré
   reach(s) { return (+s.ig.followers || 0) + (+s.tt.followers || 0); },
   erAvg(s) { const a = +s.ig.followers || 0, b = +s.tt.followers || 0; return a + b ? ((+s.ig.er || 0) * a + (+s.tt.er || 0) * b) / (a + b) : 0; },
+  // Titre éditable : *mot* = italique (seul formatage autorisé)
+  title(s) { return String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])).replace(/\*([^*]+)\*/g, '<em>$1</em>'); },
   // Un bloc est affiché s'il a du contenu et n'est pas désactivé dans le back office
   show(t, k) {
     const on = !t.sections || t.sections[k] !== false;

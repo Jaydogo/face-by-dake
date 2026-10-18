@@ -44,12 +44,45 @@ const mail = TU.mailFor(sel, [t]);
 const pad = n => String(n).padStart(2, '0');
 
 // Blocs affichés : ceux qui ont du contenu et ne sont pas désactivés dans le back office
-const blocks = [['polas', 'Polas'], ['book', 'Book'], ['video', 'Vidéo'], ['stats', 'Stats & engagement']].filter(b => TU.show(t, b[0]));
+const LABELS = { polas: 'Polas', book: 'Book', video: 'Vidéo', stats: 'Stats & engagement' };
+const ORDER = ['polas', ...(t.order || ['book', 'video', 'stats']).filter(k => k !== 'polas' && LABELS[k]), ...['book', 'video', 'stats'].filter(k => !(t.order || []).includes(k))]
+  .filter((k, i, a) => a.indexOf(k) === i);
+const blocks = ORDER.map(k => [k, LABELS[k]]).filter(b => TU.show(t, b[0]));
 const has = k => blocks.some(b => b[0] === k);
 // Une fiche affichée seulement en aperçu (masquée ou sans accord) le signale
 const draftNote = (t.visible === false || !t.consent) ? `<p class="draft-note mono">${t.visible === false ? 'Fiche masquée' : 'Accord droit à l\'image manquant'} · visible uniquement en aperçu</p>` : '';
 const row = (k, v) => v || v === 0 ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
 const folio = (k, label) => `<div class="folio caps"><span>${esc(full)}</span><span>${label}</span><span>${pad(blocks.findIndex(b => b[0] === k) + 1)} / ${pad(blocks.length)}</span></div>`;
+
+// Sections de la fiche : les polas d'abord, puis l'ordre choisi dans le back office
+const SEC = {
+  polas: () => has('polas') ? `<section class="section is-soft" id="polas">
+    ${folio('polas', 'Polas / Digitals')}
+    <div class="v1-block-head"><h2 class="h2">${TU.title(t.polasTitle || 'Au *naturel.*')}</h2><p class="caps dim">${esc(t.polasNote || 'Pris au studio Daké')}</p></div>
+    <div class="v1-polas reveal" id="polas-track" tabindex="0" aria-label="Polas, faire défiler">${[0, 1, 2].map(c => t.polas.map((p, n) => `<figure class="pola" data-n="${n}"${c !== 1 ? ' aria-hidden="true"' : ''}><div class="media"><img src="${TU.src(p[0])}" alt="${c === 1 ? 'Pola ' + p[1] : ''}" draggable="false"></div><figcaption class="mono"><span>${p[1]}</span><span class="dim">${pad(n + 1)} / ${pad(t.polas.length)}</span></figcaption></figure>`).join('')).join('')}</div>
+    <div class="pola-ctrl"><span class="mono dim" id="polas-n">01 / ${pad(t.polas.length)}</span><span class="prog"><i id="polas-bar"></i></span><button type="button" data-d="-1" aria-label="Pola précédent">←</button><button type="button" data-d="1" aria-label="Pola suivant">→</button></div>
+  </section>` : '',
+
+  book: () => has('book') ? `<section class="section" id="book">
+    ${folio('book', 'Book')}
+    <div class="v1-book">${t.book.map((b, n) => `<figure class="media reveal" data-n="${n}" role="button" tabindex="0" aria-label="Agrandir la photo ${n + 1}"><img src="${TU.src(b)}" alt="" loading="lazy"></figure>`).join('')}</div>
+  </section>` : '',
+
+  video: () => has('video') ? `<section class="section ${s ? 'is-paper' : 'is-dark'}" id="video"${s ? '' : ' data-tone="dark"'}>
+    ${folio('video', 'Vidéo')}
+    <div class="player reveal">
+      <video src="${TU.src(t.video.src)}" poster="${TU.src(t.video.poster)}" playsinline preload="none"></video>
+      <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>Lire${t.video.len ? ' · ' + esc(t.video.len) : ''}</span></button>
+    </div>
+    <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">${esc(t.video.credit || 'Réalisée par Daké')}</span></div>
+  </section>` : '',
+
+  stats: () => s ? `<section class="section is-dark" id="stats" data-tone="dark">
+    ${folio('stats', 'Stats & engagement')}
+    <div class="v1-block-head"><h2 class="h2">L'audience, <em>en chiffres.</em></h2><p class="caps dim">Instagram · TikTok</p></div>
+    ${renderStats(s)}
+  </section>` : ''
+};
 
 document.getElementById('app').innerHTML = `
   <section class="v1-profile">
@@ -81,32 +114,7 @@ document.getElementById('app').innerHTML = `
 
   <nav class="subnav caps" aria-label="Sur cette fiche">${blocks.map((b, n) => `<a href="#${b[0]}"><sup>${pad(n + 1)}</sup>${b[0] === 'stats' ? 'Stats' : b[1]}</a>`).join('')}</nav>
 
-  ${has('polas') ? `<section class="section is-soft" id="polas">
-    ${folio('polas', 'Polas / Digitals')}
-    <div class="v1-block-head"><h2 class="h2">Sans <em>retouche.</em></h2><p class="caps dim">${esc(t.polasNote || 'Pris au studio Daké')}</p></div>
-    <div class="v1-polas reveal" id="polas-track" tabindex="0" aria-label="Polas, faire défiler">${[0, 1, 2].map(c => t.polas.map((p, n) => `<figure class="pola" data-n="${n}"${c !== 1 ? ' aria-hidden="true"' : ''}><div class="media"><img src="${TU.src(p[0])}" alt="${c === 1 ? 'Pola ' + p[1] : ''}" draggable="false"></div><figcaption class="mono"><span>${p[1]}</span><span class="dim">${pad(n + 1)} / ${pad(t.polas.length)}</span></figcaption></figure>`).join('')).join('')}</div>
-    <div class="pola-ctrl"><span class="mono dim" id="polas-n">01 / ${pad(t.polas.length)}</span><span class="prog"><i id="polas-bar"></i></span><button type="button" data-d="-1" aria-label="Pola précédent">←</button><button type="button" data-d="1" aria-label="Pola suivant">→</button></div>
-  </section>` : ''}
-
-  ${has('book') ? `<section class="section" id="book">
-    ${folio('book', 'Book')}
-    <div class="v1-book">${t.book.map((b, n) => `<figure class="media reveal" data-n="${n}" role="button" tabindex="0" aria-label="Agrandir la photo ${n + 1}"><img src="${TU.src(b)}" alt="" loading="lazy"></figure>`).join('')}</div>
-  </section>` : ''}
-
-  ${has('video') ? `<section class="section ${s ? 'is-paper' : 'is-dark'}" id="video"${s ? '' : ' data-tone="dark"'}>
-    ${folio('video', 'Vidéo')}
-    <div class="player reveal">
-      <video src="${TU.src(t.video.src)}" poster="${TU.src(t.video.poster)}" playsinline preload="none"></video>
-      <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>Lire${t.video.len ? ' · ' + esc(t.video.len) : ''}</span></button>
-    </div>
-    <div class="player-meta caps"><span>${esc(t.video.title)}</span><span class="dim">${esc(t.video.credit || 'Réalisée par Daké')}</span></div>
-  </section>` : ''}
-
-  ${s ? `<section class="section is-dark" id="stats" data-tone="dark">
-    ${folio('stats', 'Stats & engagement')}
-    <div class="v1-block-head"><h2 class="h2">L'audience, <em>en chiffres.</em></h2><p class="caps dim">Instagram · TikTok</p></div>
-    ${renderStats(s)}
-  </section>` : ''}
+  ${ORDER.map(k => SEC[k]()).join('')}
 
   <a class="v1-next" href="talent.html?t=${next.slug}${keep}" data-img="${TU.src(next.cover)}">
     <span class="caps dim">${sel ? 'Profil suivant de la sélection' : 'Talent suivant · ' + next.code}</span>

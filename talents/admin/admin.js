@@ -320,7 +320,7 @@
       </div><p class="hint" style="margin-top:12px">Un champ vide n'apparaît pas sur la fiche.</p></div>`;
     if (ui.pane === 'polas') return `
       <div class="section"><h3>Polas / digitals <span class="muted" style="text-transform:none;letter-spacing:0">glisse pour réordonner</span></h3>
-        ${field('Légende du bloc', 'polasNote', t.polasNote, { ph: 'Pris au studio Daké' })}
+        <div class="grid2">${field('Titre du bloc', 'polasTitle', t.polasTitle || '', { ph: 'Au *naturel.*', hint: '*mot* = italique' })}${field('Sous-titre', 'polasNote', t.polasNote, { ph: 'Pris au studio Daké' })}</div>
         <label class="drop" style="margin-top:14px" data-drop="polas"><input type="file" accept="image/*" multiple data-up="polas"><b>Ajouter des polas</b><span class="hint">Glisse tes photos ici ou clique · JPG, PNG, HEIC · redimensionnées automatiquement (1400 px)</span><div class="progress" hidden><i></i></div></label>
         <datalist id="pola-labels">${POLA_LABELS.map(l => `<option value="${l}">`).join('')}</datalist>
         <div class="thumbs" data-list="polas">${(t.polas || []).map((p, i) => thumb(t, p[0], i, 'polas', p[1])).join('')}</div>
@@ -394,12 +394,17 @@
         ${sw('Vidéo', t.video && t.video.src ? 'vidéo ajoutée' : 'aucune vidéo', 'sections.video', !t.sections || t.sections.video !== false)}
         ${sw('Stats & engagement', t.social ? 'stats renseignées' : 'aucune stat', 'sections.stats', !t.sections || t.sections.stats !== false)}
       </div><p class="hint" style="margin-top:10px">Un bloc vide est masqué automatiquement.</p></div>
+      <div class="section"><h3>Ordre des blocs sur la fiche</h3>
+        <div class="order"><div class="o is-fixed"><span class="mono">01</span><b>Polas</b><span class="hint">toujours en premier</span></div>
+        ${orderOf(t).map((k, i, a) => `<div class="o"><span class="mono">${pad(i + 2)}</span><b>${({ book: 'Book', video: 'Vidéo', stats: 'Stats & engagement' })[k]}</b><button class="icon-btn" type="button" data-a="order" data-k="${k}" data-d="-1" ${i === 0 ? 'disabled' : ''} aria-label="Monter">↑</button><button class="icon-btn" type="button" data-a="order" data-k="${k}" data-d="1" ${i === a.length - 1 ? 'disabled' : ''} aria-label="Descendre">↓</button></div>`).join('')}</div>
+        <p class="hint" style="margin-top:10px">Les blocs vides ou désactivés sont sautés automatiquement.</p></div>
       <div class="section"><h3>Ordre dans la liste</h3><div style="display:flex;gap:8px"><button class="btn btn--ghost btn--s" type="button" data-a="move" data-d="-1">↑ Monter</button><button class="btn btn--ghost btn--s" type="button" data-a="move" data-d="1">↓ Descendre</button><span class="hint" style="align-self:center">Position ${db.talents.indexOf(t) + 1} / ${db.talents.length} · code ${esc(t.code)}</span></div></div>`;
     return '';
   }
   const tk = n => { n = +n || 0; return n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + ' M' : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace('.', ',').replace(',0', '') + ' k' : String(n); };
   const erAvg = s => { const a = +s.ig.followers || 0, b = +s.tt.followers || 0; return a + b ? (((+s.ig.er || 0) * a + (+s.tt.er || 0) * b) / (a + b)).toFixed(1).replace('.', ',') + ' %' : '—'; };
 
+  const orderOf = t => [...(t.order || []).filter(k => ['book', 'video', 'stats'].includes(k)), ...['book', 'video', 'stats'].filter(k => !(t.order || []).includes(k))];
   function coverPicker(t) {
     const imgs = [t.cover, ...(t.polas || []).map(p => p[0]), ...(t.book || [])].filter((x, i, a) => x && a.indexOf(x) === i);
     return `<div class="thumbs">${imgs.map(p => `<button type="button" class="thumb${p === t.cover ? ' is-pick' : ''}" data-a="cover" data-p="${esc(p)}" style="cursor:pointer"><div class="img"><img src="${esc(srcFor(p))}" alt="" loading="lazy"></div>${p === t.cover ? '<span class="badge">Couverture</span>' : ''}</button>`).join('')}
@@ -621,6 +626,7 @@
     'comp-auto'(b, t) { t.composite = null; persist(); refreshPane(); },
     'comp-custom'(b, t) { t.composite = t.composite || []; persist(); refreshPane(); },
     'comp-pick'(b, t) { const p = b.dataset.p, i = t.composite.indexOf(p); if (i >= 0) t.composite.splice(i, 1); else if (t.composite.length < 4) t.composite.push(p); else return toast('4 photos maximum'); persist(); refreshPane(); },
+    order(b, t) { const o = orderOf(t), i = o.indexOf(b.dataset.k), j = i + +b.dataset.d; if (j < 0 || j >= o.length) return; o.splice(j, 0, o.splice(i, 1)[0]); t.order = o; persist(); refreshPane(); },
     move(b, t) { const i = db.talents.indexOf(t), j = i + +b.dataset.d; if (j < 0 || j >= db.talents.length) return; db.talents.splice(j, 0, db.talents.splice(i, 1)[0]); persist(); render(); },
     'pv-toggle'() { ui.showPv = !ui.showPv; $('#studio').classList.toggle('show-preview', ui.showPv); },
     'pv-reload'() { pushPreview(); },
