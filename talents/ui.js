@@ -94,6 +94,13 @@
     get mail() { return (window.SETTINGS || {}).mail || 'contact@dake.studio'; },
     get instagram() { return ((window.SETTINGS || {}).instagram || 'dake.face').replace(/^@/, ''); }
   };
+  // Mention de positionnement (réglable dans le back office, Réglages) ; texte par défaut si vide
+  const NOTE_FR = window.FACE_NOTE.fr, NOTE_EN = window.FACE_NOTE.en;   // texte par défaut : i18n.js
+  function faceNote() {
+    const S = window.SETTINGS || {};
+    if (!EN) return S.note || NOTE_FR;
+    return S.note_en || (S.note && S.note !== NOTE_FR ? S.note : NOTE_EN);
+  }
   window.renderFooter = function (el, o) {
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';
     const letters = 'FACE BY DAKĒ'.split('').map(c => c === ' ' ? '<span class="gap"></span>' : `<span>${c}</span>`).join('');
@@ -114,9 +121,9 @@
         <div><span class="caps">${T('Heure à Paris', 'Paris time')}</span><span class="num" data-clock>--:--</span></div>
       </div>
       <p class="spread" aria-hidden="true">${letters}</p>
+      <div class="face-note"><span class="caps">Talent roster by Daké Studio</span><p>${esc(faceNote())}</p></div>
       <div class="final-foot">
         <span>© 2026 <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Creative Studio</a></span>
-        <span class="face-note">${T('Talent roster by Daké Studio. Les talents FACE BY DAKĒ interviennent uniquement dans des productions conçues et réalisées par Daké ; FACE BY DAKĒ n\'est pas une agence de mannequins.', 'Talent roster by Daké Studio. FACE BY DAKĒ talents only take part in productions designed and made by Daké; FACE BY DAKĒ is not a model agency.')}</span>
         <span class="links"><a href="${o.root}${EN ? 'en.html' : ''}">Daké Studio</a><a href="${o.legal || 'mentions.html'}">${T('Mentions légales', 'Legal notice')}</a></span>
       </div>`;
 

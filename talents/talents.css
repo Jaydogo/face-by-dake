@@ -936,4 +936,11 @@ a.player--link:hover .play span{background:rgba(0,0,0,.4)}
 .cc-preview-foot{padding:14px 18px 18px}
 .cc-preview-foot .btn{width:100%;background:var(--cream);border-color:var(--cream);color:var(--ink)}
 /* Mention de positionnement dans le pied de page */
-.final-foot .face-note{flex-basis:100%;order:3;max-width:70ch;line-height:1.5}
+.face-note{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px var(--gut);margin-top:22px;padding-top:14px;border-top:1px solid rgba(243,237,227,.16);font-size:.75rem;line-height:1.55;opacity:.6}
+.face-note .caps{grid-column:1;font-size:.6875rem;letter-spacing:.14em;padding-top:1px}
+.face-note p{grid-column:2 / 4;margin:0;max-width:62ch}
+.face-note + .final-foot{margin-top:14px}
+@media (max-width:860px){
+  .face-note{grid-template-columns:1fr;gap:4px}
+  .face-note p{grid-column:1}
+}

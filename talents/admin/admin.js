@@ -565,6 +565,8 @@
           ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien Daké©', 'studio', { ph: 'https://dake.studio', mono: 1 })}
           ${set('Mention sous Daké©', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
           ${set('Zone (footer)', 'reach', { ph: "Productions en France et à l'international", cls: 'span-all' })}
+          ${set('Mention de positionnement (footer)', 'note', { ph: FACE_NOTE.fr, cls: 'span-all', hint: 'vide = texte par défaut · à faire valider avant de la changer' })}
+          ${set('Mention de positionnement · anglais', 'note_en', { ph: FACE_NOTE.en, cls: 'span-all', hint: 'facultatif' })}
           ${set('Zone (footer) · anglais', 'reach_en', { ph: 'Castings in France and internationally', cls: 'span-all', hint: 'facultatif' })}
           ${set('Adresse publique du site', 'siteUrl', { mono: 1, cls: 'span-all', hint: 'sert à fabriquer les liens de fiches et de casting' })}
         </div></section>

@@ -123,6 +123,9 @@
     }
   };
 
+  // Mention de positionnement du pied de page (texte par défaut ; modifiable dans le back office)
+  window.FACE_NOTE = { fr: "Les talents FACE BY DAKĒ interviennent uniquement dans des productions conçues et réalisées par Daké. FACE BY DAKĒ n'est pas une agence de mannequins.", en: "FACE BY DAKĒ talents only take part in productions designed and made by Daké. FACE BY DAKĒ is not a model agency." };
+
   /* Lien de plateforme → lecteur intégré. YouTube (watch, youtu.be, shorts), Vimeo ; sinon simple lien. */
   window.videoEmbed = function (url) {
     const u = String(url || '').trim();
