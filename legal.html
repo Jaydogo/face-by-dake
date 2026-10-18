@@ -16,10 +16,6 @@
   .legal{min-height:100vh;padding:calc(var(--header) + var(--folio)) var(--gut) var(--sec)}
   .legal .h2{margin-bottom:24px}
   .legal .lead{color:var(--muted);max-width:34ch}
-  .legal-top{position:fixed;inset:0 0 auto;z-index:40;height:var(--header);display:flex;justify-content:space-between;align-items:center;padding:0 var(--gut);background:rgba(243,237,227,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:inset 0 -1px 0 rgba(26,20,18,.08)}
-  .legal-top .logo{color:var(--ink)}
-  .legal-top nav{display:flex;align-items:center;gap:20px}
-  .legal-top a.back{font-size:.875rem;text-decoration:underline;text-underline-offset:.2em}
   .legal .ed-ch p,.legal .ed-ch li{font-size:1rem;line-height:1.55;max-width:62ch}
   .legal .ed-ch p + p{margin-top:12px}
   .legal .ed-ch ul{margin:10px 0 0;padding-left:18px}
@@ -30,16 +26,17 @@
   .legal dd{margin:0}
   .todo{background:#FCE7C8;color:#7A4A0A;padding:1px 6px;border-radius:6px;font-family:var(--mono);font-size:.8125rem}
   .legal .foot-note{margin-top:32px;font-size:.875rem;color:var(--muted)}
-  .legal-top{transition:background-color .45s var(--ease),color .45s var(--ease),box-shadow .45s var(--ease)}
-  .legal-top.on-dark{background:transparent;box-shadow:none;color:var(--cream);-webkit-backdrop-filter:none;backdrop-filter:none}
-  .legal-top.on-dark .logo{color:var(--cream)}
   @media (max-width:860px){.legal dl{grid-template-columns:1fr;gap:2px 0}.legal dt{margin-top:10px}}
+  .legal-head .header-cta{display:flex;align-items:center;gap:18px}
+  .legal-head .back{font-size:.875rem;text-decoration:underline;text-underline-offset:.2em;white-space:nowrap}
+  @media (max-width:860px){.legal-head > span:empty{display:none}.legal-head .header-cta{display:flex !important;gap:12px}}
 </style>
 </head>
 <body>
-<header class="legal-top">
+<header class="header on-light legal-head">
   <a class="logo" href="en.html">DAKĒ STUDIO<span class="c">©</span></a>
-  <nav><span class="lang-switch" aria-label="Language"><a href="mentions.html" hreflang="fr" lang="fr" aria-label="Version française">FR</a><span class="is-current" aria-current="true">EN</span></span><a class="back" href="en.html">Back to the site</a></nav>
+  <span></span>
+  <div class="header-cta"><span class="lang-switch" aria-label="Language"><a href="mentions.html" hreflang="fr" lang="fr" aria-label="Version française">FR</a><span class="is-current" aria-current="true">EN</span></span><a class="back" href="en.html">Back to the site</a></div>
 </header>
 
 <main class="legal" id="top">
@@ -124,7 +121,10 @@
 // Footer : heure du studio, et transition vers la page d'accueil
 (function(){var c=document.getElementById('clock');function t(){if(c)c.textContent=new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'}).format(new Date())}t();setInterval(t,20000);
 document.documentElement.classList.add('fonts-ready');
-var top=document.querySelector('.legal-top'),end=document.getElementById('reveal-end');function f(){top.classList.toggle('on-dark',end.getBoundingClientRect().top<=60)}addEventListener('scroll',f,{passive:true});f();})();
+(function(){var r=document.documentElement,hd=document.querySelector('.legal-head'),end=document.getElementById('reveal-end');
+function f(){var e=end.getBoundingClientRect().top,full=e<=4||scrollY>=document.documentElement.scrollHeight-innerHeight-24;r.classList.toggle('is-scrolled',scrollY>10&&!full);hd.classList.toggle('on-light',e>hd.getBoundingClientRect().height/2)}
+addEventListener('scroll',f,{passive:true});addEventListener('resize',f);f()})();
+})();
 </script>
 </body>
 </html>
