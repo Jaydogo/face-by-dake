@@ -228,30 +228,7 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
   .studio.show-preview .preview{transform:none}
   .only-mobile{display:inline-flex}
 }
-@media (max-width:760px){
-  :root{--top:auto}
-  .top{flex-wrap:wrap;height:auto;padding:10px 14px;gap:10px}
-  .logo em{display:none}
-  .tabs{order:3;width:100%;justify-content:space-between}
-  .tabs button{flex:1}
-  .studio{display:block;height:auto}
-  .list{border-right:0;border-bottom:1px solid var(--line)}
-  .list-items{display:flex;overflow-x:auto;gap:6px;padding:10px}
-  .list-group{flex:none;flex-direction:column;justify-content:center;gap:2px;margin:0 2px 0 6px;white-space:nowrap}
-  .list-group:not(:first-child){margin-left:12px;padding-left:12px;border-left:1px solid var(--line)}
-  .li{grid-template-columns:40px auto;width:auto;flex:none;padding:6px 12px 6px 6px;border-radius:999px;background:var(--soft)}
-  .li .grip,.li .dot,.li .sub,.list-foot{display:none}
-  .li img,.li .ph{width:32px;height:32px;border-radius:50%}
-  .ed-body{padding:18px 14px 90px}
-  .ed-head{padding:14px 14px 0}
-  .grid2,.grid3,.grid4,.switches,.video-box{grid-template-columns:1fr 1fr}
-  .grid3 > .span-all,.grid4 > .span-all{grid-column:1 / -1}
-  .video-box{grid-template-columns:1fr}
-  .thumbs{grid-template-columns:repeat(2,1fr)}
-  .thumb .tools{opacity:1}
-  .preview{inset:0;width:100%;top:0;z-index:30}
-  .pv-stage.is-mobile iframe{width:100%;height:100%;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
-}
+
 
 /* Liste : nom et catégorie l'un sous l'autre, sans chevaucher la pastille */
 .li > span:nth-child(3){display:grid;gap:2px;min-width:0}
@@ -274,3 +251,120 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
 .state--local{background:var(--warn-bg)}
 .state .btn[disabled]{opacity:.4;pointer-events:none}
 .warn-txt{color:#8A1A10}
+
+/* =========================================================
+   TÉLÉPHONE : le back office se comporte comme une app
+   barre du haut compacte · onglets en bas · liste → fiche empilées
+   · fenêtres en feuilles qui montent du bas · zones de sécurité iPhone
+   ========================================================= */
+.only-phone,.tabbar{display:none}
+@media (max-width:760px){
+  :root{--top:56px;--tabbar:calc(84px + env(safe-area-inset-bottom))}
+  html,body{overflow-x:clip;overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+  body{padding-bottom:var(--tabbar)}
+  button,a,.li,.chip{touch-action:manipulation}
+  .only-phone{display:flex}
+  .ed-title .acts .only-mobile{display:none !important}
+
+  /* Barre du haut : logo, statut court, Publier */
+  .top{height:calc(var(--top) + env(safe-area-inset-top));padding:env(safe-area-inset-top) 16px 0;gap:10px;flex-wrap:nowrap}
+  .top .tabs:not(.tabbar){display:none}
+  .logo{font-size:.875rem}
+  .logo em{display:none}
+  .top-actions{gap:8px}
+  .status{font-size:0}
+  .status::after{content:attr(data-short);font-size:.75rem}
+  .status.is-dirty::before{margin-right:6px}
+  #discard{display:none}
+  #publish{min-height:36px;padding:0 16px}
+
+  /* Onglets du bas : pilule de verre flottante, même dessin que la barre « Booker » du site */
+  .tabbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:25;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:999px;
+    background:rgba(26,20,18,.55);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 12px 40px rgba(26,20,18,.18)}
+  .tabbar button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:0 10px;border-radius:999px;font-size:.8125rem;color:rgba(243,237,227,.72);background:none;box-shadow:none;
+    transition:background-color .35s var(--ease),color .35s var(--ease)}
+  .tabbar button svg{flex:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .tabbar button[aria-current]{background:#F3EDE3;color:var(--ink);font-weight:500;box-shadow:none}
+  .tabbar button:not([aria-current]):active{background:rgba(243,237,227,.14)}
+  /* Écran étroit : seul l'onglet actif garde son libellé */
+  @media (max-width:370px){ .tabbar button:not([aria-current]) span{display:none} }
+
+  /* Champs : 16 px pour éviter le zoom automatique d'iOS, cibles de 44 px */
+  .input,select.input,textarea.input,.list-head input{font-size:16px;min-height:44px}
+  .btn{min-height:44px}
+  .btn--s{min-height:38px}
+  .chip{min-height:38px}
+
+  /* ---------- Écran liste ---------- */
+  .studio{display:block;height:auto}
+  .studio[data-screen="list"] .editor,.studio[data-screen="list"] .preview{display:none}
+  .studio[data-screen="edit"] .list{display:none}
+  .editor{overflow:visible;height:auto;min-height:0}
+  .list{border:0;min-height:calc(100dvh - var(--top) - var(--tabbar))}
+  .list-head{position:sticky;top:calc(var(--top) + env(safe-area-inset-top));z-index:6;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line)}
+  .list-head input{border-radius:999px;background:var(--soft);border-color:transparent;padding-left:16px}
+  /* « + Talent » devient un bouton flottant */
+  .list-head [data-a="add"]{position:fixed;right:16px;bottom:calc(var(--tabbar) + 6px);z-index:24;width:56px;height:56px;min-height:0;padding:0;border-radius:50%;font-size:0;box-shadow:0 10px 30px rgba(26,20,18,.28)}
+  .list-head [data-a="add"]::before{content:"+";font-size:1.8rem;font-weight:300;line-height:1}
+  .list-items{display:block;padding:4px 8px 96px;overflow:visible}
+  .list-group{display:flex;flex-direction:row;margin:18px 10px 6px;padding:0;border:0}
+  .list-group:not(:first-child){margin-left:10px;padding-left:0;border:0}
+  .li{grid-template-columns:52px minmax(0,1fr) auto;gap:14px;padding:10px;border-radius:16px;background:none}
+  .li:active{background:var(--soft)}
+  .li.is-on{background:none}
+  .li .grip{display:none}
+  .li img,.li .ph{width:52px;height:66px;border-radius:10px}
+  .li .nm{font-size:1.25rem}
+  .li .sub,.li .dot{display:block}
+  .li .dot{width:9px;height:9px}
+  .list-foot{display:block;border:0;text-align:center;padding:8px 16px 24px}
+
+  /* ---------- Écran fiche ---------- */
+  /* pas de flou ici : il emprisonnerait la feuille « ••• » (position fixe) dans l'en-tête */
+  .ed-head{top:calc(var(--top) + env(safe-area-inset-top));padding:8px 16px 0;background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .ed-title{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 10px}
+  .back{grid-column:1 / -1;display:inline-flex;align-items:center;gap:2px;justify-self:start;margin-left:-8px;padding:6px 8px;color:var(--forest);font-size:.9375rem}
+  .back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .ed-title h2{font-size:1.75rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ed-quick{gap:8px;align-items:center}
+  .more-btn{width:38px;height:38px;border-radius:50%;background:var(--soft);font-size:.7rem;letter-spacing:1px;color:var(--ink)}
+  /* Actions secondaires : feuille en bas de l'écran */
+  .ed-title .acts{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:40;display:grid;gap:8px;padding:12px;border-radius:22px;background:#fff;box-shadow:0 -10px 60px rgba(26,20,18,.25);
+    transform:translateY(calc(100% + 40px));transition:transform .35s var(--ease);visibility:hidden}
+  .ed-title.is-more .acts{transform:none;visibility:visible}
+  .ed-head:has(.is-more){z-index:50}
+  .ed-title .acts .btn{width:100%;min-height:50px;font-size:.9375rem;text-decoration:none}
+  .ed-title.is-more::after{content:"";position:fixed;inset:0;z-index:39;background:rgba(26,20,18,.3)}
+  .subtabs{margin:10px -16px 0;padding:0 10px;scroll-snap-type:x proximity}
+  .subtabs button{padding:12px 10px;scroll-snap-align:center}
+  .ed-body{padding:18px 16px 40px}
+  .grid2,.grid3,.switches,.video-box{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid3 > .span-all,.grid4 > .span-all,.grid4 > .span2{grid-column:1 / -1}
+  .grid3 > span:empty{display:none}
+  .thumbs{grid-template-columns:repeat(3,1fr);gap:8px}
+  .thumb .tools{opacity:1}
+  .drop{padding:22px 16px}
+
+  /* Aperçu : plein écran au-dessus de tout */
+  .preview{position:fixed;inset:0;width:100%;z-index:45;padding-top:env(safe-area-inset-top);transform:translateY(100%);transition:transform .45s var(--ease)}
+  .studio.show-preview .preview{transform:none;display:flex}
+  .pv-stage.is-mobile iframe{width:100%;height:100%;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+
+  /* Pages Prospection et Réglages */
+  .page{padding:22px 16px 40px}
+  .page h1{font-size:2.2rem}
+
+  /* Fenêtres : feuilles qui montent du bas */
+  .modal{width:100%;max-width:none;margin:auto 0 0;border-radius:24px 24px 0 0;max-height:92dvh;animation:sheet-up .35s var(--ease)}
+  .modal-box{padding:10px 18px calc(18px + env(safe-area-inset-bottom))}
+  .modal-box::before{content:"";justify-self:center;width:38px;height:5px;border-radius:3px;background:var(--soft-2);margin-bottom:6px}
+  .modal-box .acts{display:grid;grid-template-columns:1fr 1fr}
+  .modal-box .acts .btn{min-height:50px}
+
+  .toast{bottom:calc(var(--tabbar) + 14px);max-width:calc(100% - 32px);white-space:normal;text-align:center}
+}
+@keyframes sheet-up{from{transform:translateY(100%)}to{transform:none}}
+/* Lancé depuis l'écran d'accueil : pas de soulignement des liens « web » */
+@media (display-mode:standalone){ .logo{pointer-events:none} }

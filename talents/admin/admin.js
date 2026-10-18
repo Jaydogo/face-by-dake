@@ -78,6 +78,17 @@
   const gh = Object.assign({ owner: 'Jaydogo', repo: 'face-by-dake', branch: 'main', base: 'talents/', token: '' }, ls.get(KEY.gh, {}));
 
   const T = () => db.talents.find(t => t.slug === ui.slug) || null;
+  // Téléphone : la liste et la fiche sont deux écrans ; « retour » (bouton, geste, Android) revient à la liste
+  const phone = () => matchMedia('(max-width:760px)').matches;
+  ui.screen = 'list';
+  function openScreen(sc) {
+    if (ui.screen === sc) return;
+    ui.screen = sc;
+    const st = $('#studio'); if (st) st.dataset.screen = sc;
+    if (sc === 'edit' && phone()) history.pushState({ screen: 'edit' }, '');
+    window.scrollTo(0, 0);
+  }
+  addEventListener('popstate', () => { if (ui.screen === 'edit') { ui.screen = 'list'; const st = $('#studio'); if (st) st.dataset.screen = 'list'; window.scrollTo(0, 0); } });
   const srcFor = p => !p ? '' : pending.has(p) ? pending.get(p).url : /^(blob:|data:|https?:)/.test(p) ? p : '../' + p;
   const isOwned = p => /^img\/[a-z0-9-]+\/web\//.test(p || '');   // fichiers gérés par le back office (supprimables)
   const refsOf = t => [t.cover, ...(t.polas || []).map(p => p[0]), ...(t.book || []), t.video && t.video.src, t.video && t.video.poster, ...(t.composite || [])].filter(Boolean);
@@ -145,6 +156,7 @@
   function syncStatus() {
     const d = dirty(), st = $('#status');
     st.className = 'status' + (d ? ' is-dirty' : '');
+    st.dataset.short = d ? 'À publier' : 'À jour';
     const n = pending.size;
     const loc = db.talents.filter(isLocal).length, locTxt = loc ? ` · ${loc} brouillon${loc > 1 ? 's' : ''} dans ce navigateur` : '';
     st.textContent = (d ? 'Modifications non publiées' : (published.updated ? 'À jour · publié le ' + new Date(published.updated).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'À jour')) + locTxt;
@@ -269,17 +281,19 @@
           <span><span class="nm">${esc(x.first) || 'Sans nom'} <em>${esc(x.last)}</em></span><span class="sub">${isLocal(x) ? 'Dans ce navigateur' : esc(x.code)} · ${esc((x.cats || []).map(c => (CATS.find(k => k[0] === c) || [, c])[1]).join(', '))}</span></span>
           <span class="dot ${state}" title="${isLocal(x) ? 'Brouillon dans ce navigateur (accord non signé)' : !isLive(x) ? 'Brouillon' : state ? 'En ligne · à compléter' : 'En ligne'}"></span>
         </button>`; }).join('')).join('') || '<p class="muted" style="padding:12px">Aucun talent.</p>'}</div>
-      <div class="list-foot">${db.talents.filter(isLive).length} en ligne · ${db.talents.filter(x => !isLive(x)).length} brouillon${db.talents.filter(x => !isLive(x)).length > 1 ? 's' : ''} · glisse pour réordonner</div>
+      <div class="list-foot">${db.talents.filter(isLive).length} en ligne · ${db.talents.filter(x => !isLive(x)).length} brouillon${db.talents.filter(x => !isLive(x)).length > 1 ? 's' : ''}${phone() ? '' : ' · glisse pour réordonner'}</div>
     </aside>`;
-    if (!t) return `<div class="studio no-preview">${list}<section class="editor"><div class="empty"><div><p class="serif">Aucun talent</p><p>Crée la première fiche.</p><button class="btn" data-a="add" type="button">+ Ajouter un talent</button></div></div></section></div>`;
+    if (!t) return `<div class="studio no-preview" id="studio" data-screen="list">${list}<section class="editor"><div class="empty"><div><p class="serif">Aucun talent</p><p>Crée la première fiche.</p><button class="btn" data-a="add" type="button">+ Ajouter un talent</button></div></div></section></div>`;
     const w = talentWarnings(t);
     const panes = [['profil', 'Profil'], ['fiche', 'Mensurations'], ['polas', 'Polas', (t.polas || []).length], ['book', 'Book', (t.book || []).length], ['video', 'Vidéo'], ['stats', 'Stats'], ['carte', 'Carte composite'], ['publication', 'Publication']];
     const pubWarn = w.some(z => z[0] === 'error');
-    return `<div class="studio${ui.showPv ? ' show-preview' : ''}" id="studio">${list}
+    return `<div class="studio${ui.showPv ? ' show-preview' : ''}" id="studio" data-screen="${ui.screen}">${list}
       <section class="editor" id="editor">
         <div class="ed-head">
           <div class="ed-title">
+            <button class="back only-phone" type="button" data-a="back" aria-label="Retour à la liste"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Talents</button>
             <h2>${esc(t.first) || 'Sans nom'} <em>${esc(t.last)}</em></h2>
+            <div class="ed-quick only-phone"><button class="btn btn--ghost btn--s" type="button" data-a="pv-toggle">Aperçu</button><button class="more-btn" type="button" data-a="more" aria-label="Plus d'actions" aria-expanded="false">•••</button></div>
             <div class="acts">
               <button class="btn btn--ghost btn--s only-mobile" type="button" data-a="pv-toggle">Aperçu</button>
               <a class="btn btn--ghost btn--s" href="../v1/talent.html?t=${encodeURIComponent(t.slug)}&preview=1" target="_blank" rel="noopener">Ouvrir l'aperçu</a>
@@ -597,8 +611,10 @@
 
   // Clics
   document.addEventListener('click', async e => {
-    const tab = e.target.closest('.tabs button'); if (tab) { ui.view = tab.dataset.view; render(); return; }
-    const pn = e.target.closest('[data-pane]'); if (pn) { ui.pane = pn.dataset.pane; $$('.subtabs button').forEach(b => b.toggleAttribute('aria-current', b === pn)); refreshPane(); ls.set(KEY.ui, ui); return; }
+    // Menu « ••• » (téléphone) : se ferme au clic dehors ou après une action
+    const mo = $('.ed-title.is-more'); if (mo && !e.target.closest('[data-a="more"]') && (!e.target.closest('.acts') || e.target.closest('.acts a, .acts button'))) { mo.classList.remove('is-more'); mo.querySelector('[data-a="more"]')?.setAttribute('aria-expanded', 'false'); }
+    const tab = e.target.closest('.tabs button'); if (tab) { if (tab.dataset.view === ui.view && ui.screen === 'edit') { ACTIONS.back(); return; } ui.view = tab.dataset.view; ui.screen = 'list'; render(); window.scrollTo(0, 0); return; }
+    const pn = e.target.closest('[data-pane]'); if (pn) { pn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); ui.pane = pn.dataset.pane; $$('.subtabs button').forEach(b => b.toggleAttribute('aria-current', b === pn)); refreshPane(); ls.set(KEY.ui, ui); return; }
     const pvp = e.target.closest('[data-pv-page]'); if (pvp) { ui.page = pvp.dataset.pvPage; $$('[data-pv-page]').forEach(b => b.setAttribute('aria-pressed', b === pvp)); setPreviewSrc(); return; }
     const pvd = e.target.closest('[data-pv-dev]'); if (pvd) { ui.device = pvd.dataset.pvDev; $$('[data-pv-dev]').forEach(b => b.setAttribute('aria-pressed', b === pvd)); $('.pv-stage').classList.toggle('is-mobile', ui.device === 'mobile'); ls.set(KEY.ui, ui); return; }
     const b = e.target.closest('[data-a]'); if (!b) return;
@@ -614,9 +630,11 @@
       if (!box) return;
       const first = box.first.value.trim(), last = box.last.value.trim(); if (!first) return;
       const t = newTalent(first, last); t.slug = uniqueSlug(first + (last ? '-' + last : ''));
-      db.talents.push(t); ui.slug = t.slug; ui.pane = 'profil'; persist(); render(); toast('Fiche créée');
+      db.talents.push(t); ui.slug = t.slug; ui.pane = 'profil'; ui.screen = 'list'; persist(); render(); openScreen('edit'); toast('Fiche créée');
     },
-    pick(b) { ui.slug = b.dataset.slug; render(); },
+    pick(b) { ui.slug = b.dataset.slug; ui.screen = 'list'; render(); openScreen('edit'); },
+    back() { if (history.state && history.state.screen === 'edit') history.back(); else { ui.screen = 'list'; $('#studio').dataset.screen = 'list'; } },
+    more(b) { const box = b.closest('.ed-title'); const on = !box.classList.contains('is-more'); box.classList.toggle('is-more', on); b.setAttribute('aria-expanded', on); },
     'go-live'(b, t) { if (!t.consent) return; t.visible = true; persist(); render(); toast('Prête : clique Publier pour la mettre en ligne'); },
     'to-draft'(b, t) { t.visible = false; persist(); render(); toast('Repassée en brouillon : clique Publier pour la retirer du site'); },
     async dup(b, t) {

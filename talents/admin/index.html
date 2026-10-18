@@ -7,6 +7,14 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#FFFFFF">
+<!-- Installable sur l'écran d'accueil (iPhone : Partager → Sur l'écran d'accueil) -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Face">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="icon" href="../icon-48.png" sizes="48x48">
 <script src="../gate.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +37,12 @@
     </div>
   </header>
   <main class="views" id="views"></main>
+  <!-- Téléphone : onglets en bas, comme une app -->
+  <nav class="tabs tabbar" aria-label="Sections">
+    <button type="button" data-view="talents" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6"/></svg><span>Talents</span></button>
+    <button type="button" data-view="prospection"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v11H4z"/><path d="M4 7l8 6 8-6"/></svg><span>Prospection</span></button>
+    <button type="button" data-view="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg><span>Réglages</span></button>
+  </nav>
 </div>
 
 <dialog class="modal" id="modal"><form method="dialog" class="modal-box" id="modal-box"></form></dialog>
