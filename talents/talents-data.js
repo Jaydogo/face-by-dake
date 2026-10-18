@@ -1,7 +1,7 @@
 /* Données Face by Daké — fichier généré par le back office (talents/admin). Ne pas éditer à la main. */
 window.TALENTS_DATA = {
  "version": 1,
- "updated": "2026-10-16T11:44:14.498Z",
+ "updated": "2026-10-18T10:17:13.000Z",
  "settings": {
   "mail": "booking@dake.studio",
   "instagram": "dake.face",
@@ -30,13 +30,14 @@ window.TALENTS_DATA = {
    ],
    "city": "Paris",
    "fiche": {
-    "taille": 176,
+    "taille": 157,
     "poitrine": 82,
-    "tailleT": 61,
-    "hanches": 89,
-    "pointure": 39,
+    "tailleT": 59,
+    "hanches": 88,
+    "pointure": 37,
     "yeux": "Noisette",
-    "cheveux": "Châtain"
+    "cheveux": "Châtain",
+    "genre": "f"
    },
    "cover": "img/prune/web/polas-01.jpg",
    "polas": [
