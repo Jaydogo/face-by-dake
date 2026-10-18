@@ -65,7 +65,8 @@
     d = Object.assign(blankData(), d || {});
     d.settings = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international", siteUrl: SITE }, d.settings || {});
     d.selections = d.selections || {};
-    d.talents.forEach((t, i) => { t.code = 't.' + String(i + 1).padStart(2, '0'); });
+    let n = 0;   // brouillons locaux (sans accord) : pas de numéro, ils ne sont jamais publiés
+    d.talents.forEach(t => { t.code = t.consent ? 't.' + String(++n).padStart(2, '0') : '—'; });
     return d;
   }
   let published = normalize(clone(window.TALENTS_DATA || blankData()));
@@ -81,7 +82,22 @@
   const isOwned = p => /^img\/[a-z0-9-]+\/web\//.test(p || '');   // fichiers gérés par le back office (supprimables)
   const refsOf = t => [t.cover, ...(t.polas || []).map(p => p[0]), ...(t.book || []), t.video && t.video.src, t.video && t.video.poster, ...(t.composite || [])].filter(Boolean);
   const referenced = (p, except) => db.talents.some(t => t !== except && refsOf(t).includes(p));
-  const dirty = () => pending.size > 0 || removed.size > 0 || !!gateHash || JSON.stringify(db) !== JSON.stringify(published);
+  /* Trois états d'une fiche :
+     - brouillon local : accord droit à l'image non signé → reste dans ce navigateur, rien n'est envoyé sur GitHub
+     - brouillon : accord signé mais pas encore en ligne → enregistré sur GitHub, invisible sur le site
+     - en ligne : accord signé et mise en ligne */
+  const isLocal = t => !t.consent;
+  const isLive = t => !!t.consent && t.visible !== false;
+  const stateOf = t => isLocal(t) ? 'local' : isLive(t) ? 'live' : 'draft';
+  // Ce qui part sur GitHub : tout sauf les brouillons locaux
+  function publicView(d) {
+    const o = clone(d); let n = 0;
+    o.talents = o.talents.filter(t => !isLocal(t));
+    o.talents.forEach(t => { t.code = 't.' + pad(++n); });
+    return o;
+  }
+  const publicFiles = () => new Set(db.talents.filter(t => !isLocal(t)).flatMap(refsOf));
+  const dirty = () => { const u = publicFiles(); return [...pending.keys()].some(p => u.has(p)) || removed.size > 0 || !!gateHash || JSON.stringify(publicView(db).talents) !== JSON.stringify(published.talents) || JSON.stringify(Object.assign({}, publicView(db), { talents: 0 })) !== JSON.stringify(Object.assign({}, published, { talents: 0 })); };
 
   function newTalent(first = '', last = '') {
     return {
@@ -97,7 +113,7 @@
     return { ig: net('@'), tt: net('@'), gender: [60, 38, 2], ages: AGES.map(a => [a, 0]), geo: [['Paris', 0]], brands: [] };
   }
   const uniqueSlug = (base, self) => { let s = slugify(base), n = 2; while (db.talents.some(t => t !== self && t.slug === s)) s = slugify(base) + '-' + n++; return s; };
-  const renumber = () => db.talents.forEach((t, i) => { t.code = 't.' + pad(i + 1); });
+  const renumber = () => { let n = 0; db.talents.forEach(t => { t.code = isLocal(t) ? '—' : 't.' + pad(++n); }); };
 
   /* ---------- Brouillon + aperçu ---------- */
   let saveTimer = 0;
@@ -130,7 +146,8 @@
     const d = dirty(), st = $('#status');
     st.className = 'status' + (d ? ' is-dirty' : '');
     const n = pending.size;
-    st.textContent = d ? `Modifications non publiées${n ? ' · ' + n + ' fichier' + (n > 1 ? 's' : '') : ''}` : (published.updated ? 'À jour · publié le ' + new Date(published.updated).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'À jour');
+    const loc = db.talents.filter(isLocal).length, locTxt = loc ? ` · ${loc} brouillon${loc > 1 ? 's' : ''} dans ce navigateur` : '';
+    st.textContent = (d ? 'Modifications non publiées' : (published.updated ? 'À jour · publié le ' + new Date(published.updated).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'À jour')) + locTxt;
     $('#discard').hidden = !d;
     $('#publish').disabled = !d;
   }
@@ -222,8 +239,8 @@
   function talentWarnings(t) {
     const a = [];
     if (!t.first) a.push(['error', 'Le prénom est obligatoire.']);
-    if (!t.consent) a.push(['error', "<b>Accord droit à l'image</b> non coché : la fiche reste invisible sur le site."]);
-    if (t.visible === false) a.push(['info', 'Fiche <b>masquée</b> : visible seulement dans l\'aperçu.']);
+    if (!t.consent) a.push(['error', "<b>Accord droit à l'image</b> non coché : la fiche reste un <b>brouillon dans ce navigateur</b>. Ni ses infos ni ses photos ne sont envoyées sur GitHub."]);
+    else if (t.visible === false) a.push(['info', '<b>Brouillon</b> : enregistré à la publication, visible seulement dans l\'aperçu. Clique « Mettre en ligne » quand la fiche est prête.']);
     if (!t.cover) a.push(['warn', 'Pas de photo de couverture.']);
     if ((t.polas || []).length < 4) a.push(['warn', `${(t.polas || []).length} polas : 4 minimum conseillés (face, profil, pied, 3/4).`]);
     if (!(t.book || []).length) a.push(['warn', 'Le book est vide.']);
@@ -244,15 +261,15 @@
     const items = db.talents.filter(x => !ui.q || (x.first + ' ' + x.last).toLowerCase().includes(ui.q.toLowerCase()));
     const list = `<aside class="list">
       <div class="list-head"><input class="input" id="q" placeholder="Rechercher" value="${esc(ui.q)}"><button class="btn btn--s" type="button" data-a="add">+ Talent</button></div>
-      <div class="list-items" id="list-items">${items.map(x => {
-        const w = talentWarnings(x), state = !x.consent || x.visible === false ? 'dot--off' : w.some(z => z[0] === 'warn') ? 'dot--warn' : '';
+      <div class="list-items" id="list-items">${[['Brouillons', items.filter(x => !isLive(x))], ['En ligne', items.filter(isLive)]].filter(g => g[1].length).map(([g, arr]) => `<p class="list-group"><span>${g}</span><span class="num">${arr.length}</span></p>` + arr.map(x => {
+        const w = talentWarnings(x), state = !isLive(x) ? 'dot--off' : w.some(z => z[0] === 'warn') ? 'dot--warn' : '';
         return `<button class="li${x.slug === ui.slug ? ' is-on' : ''}" type="button" data-a="pick" data-slug="${esc(x.slug)}" draggable="true">
           <span class="grip" aria-hidden="true">⋮⋮</span>
           ${x.cover ? `<img src="${esc(srcFor(x.cover))}" alt="" loading="lazy">` : '<span class="ph"></span>'}
-          <span><span class="nm">${esc(x.first) || 'Sans nom'} <em>${esc(x.last)}</em></span><span class="sub">${esc(x.code)} · ${esc((x.cats || []).map(c => (CATS.find(k => k[0] === c) || [, c])[1]).join(', '))}</span></span>
-          <span class="dot ${state}" title="${state === 'dot--off' ? 'Non publiée' : state ? 'À compléter' : 'En ligne'}"></span>
-        </button>`; }).join('') || '<p class="muted" style="padding:12px">Aucun talent.</p>'}</div>
-      <div class="list-foot">${db.talents.length} talents · glisse pour réordonner</div>
+          <span><span class="nm">${esc(x.first) || 'Sans nom'} <em>${esc(x.last)}</em></span><span class="sub">${isLocal(x) ? 'Dans ce navigateur' : esc(x.code)} · ${esc((x.cats || []).map(c => (CATS.find(k => k[0] === c) || [, c])[1]).join(', '))}</span></span>
+          <span class="dot ${state}" title="${isLocal(x) ? 'Brouillon dans ce navigateur (accord non signé)' : !isLive(x) ? 'Brouillon' : state ? 'En ligne · à compléter' : 'En ligne'}"></span>
+        </button>`; }).join('')).join('') || '<p class="muted" style="padding:12px">Aucun talent.</p>'}</div>
+      <div class="list-foot">${db.talents.filter(isLive).length} en ligne · ${db.talents.filter(x => !isLive(x)).length} brouillon${db.talents.filter(x => !isLive(x)).length > 1 ? 's' : ''} · glisse pour réordonner</div>
     </aside>`;
     if (!t) return `<div class="studio no-preview">${list}<section class="editor"><div class="empty"><div><p class="serif">Aucun talent</p><p>Crée la première fiche.</p><button class="btn" data-a="add" type="button">+ Ajouter un talent</button></div></div></section></div>`;
     const w = talentWarnings(t);
@@ -295,7 +312,7 @@
   const field = (label, path, v, o = {}) => `<label class="field${o.cls ? ' ' + o.cls : ''}"><span>${label}${o.hint ? ` <small>${o.hint}</small>` : ''}</span>${o.unit ? '<span class="with-unit">' : ''}${o.area ? `<textarea class="input" data-bind="${path}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''} maxlength="${o.max || 600}">${esc(v)}</textarea>` : `<input class="input${o.mono ? ' mono' : ''}" data-bind="${path}" value="${esc(v)}"${o.num ? ' inputmode="decimal" data-num="1"' : ''}${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}${o.type ? ` type="${o.type}"` : ''}${o.list ? ` list="${o.list}"` : ''}>`}${o.unit ? `<i>${o.unit}</i></span>` : ''}</label>`;
   const sw = (label, sub, path, on) => `<label class="switch"><input type="checkbox" data-bind="${path}" data-bool="1"${on ? ' checked' : ''}><span><b>${label}</b>${sub ? `<small>${sub}</small>` : ''}</span></label>`;
   const tagsBox = (path, arr, ph) => `<div class="tags" data-tags="${path}">${(arr || []).map((x, i) => `<span>${esc(x)}<button type="button" data-a="tag-del" data-i="${i}" aria-label="Retirer">×</button></span>`).join('')}<input placeholder="${esc(ph)}" data-tag-in="${path}"></div>`;
-  const alerts = w => w.length ? `<div class="alerts">${w.map(([k, m]) => `<div class="alert alert--${k}">${m}</div>`).join('')}</div>` : '';
+  const alerts = w => w.length ? `<div class="alerts">${w.map(([k, m]) => `<div class="alert alert--${k}"><span>${m}</span></div>`).join('')}</div>` : '';
 
   function pane(t, w) {
     const f = t.fiche || {};
@@ -398,9 +415,14 @@
     }
     if (ui.pane === 'publication') return `
       ${alerts(w)}
-      <div class="section"><h3>Mise en ligne</h3><div class="switches">
-        ${sw('Fiche visible sur le site', 'Décoche pour la masquer sans la supprimer', 'visible', t.visible !== false)}
-        ${sw("Accord droit à l'image signé", 'Obligatoire pour apparaître en ligne', 'consent', !!t.consent)}
+      <div class="section"><h3>Statut</h3>
+        <div class="state state--${stateOf(t)}">
+          <span class="state-badge">${{ local: 'Brouillon · ce navigateur', draft: 'Brouillon', live: 'En ligne' }[stateOf(t)]}</span>
+          <p>${{ local: "Gardé uniquement dans ce navigateur tant que l'accord droit à l'image n'est pas signé. Rien n'est envoyé sur GitHub, même en cliquant Publier.", draft: "Enregistré sur GitHub à chaque publication, retrouvable sur tous tes appareils, mais invisible sur le site.", live: 'Visible sur le site après publication.' }[stateOf(t)]}</p>
+          ${isLive(t) ? '<button class="btn btn--ghost btn--s" type="button" data-a="to-draft">Repasser en brouillon</button>' : `<button class="btn btn--s" type="button" data-a="go-live"${t.consent ? '' : ' disabled'}>Mettre en ligne</button>${t.consent ? '' : '<small class="hint">Coche d\'abord l\'accord droit à l\'image</small>'}`}
+        </div>
+        <div class="switches" style="margin-top:14px">
+        ${sw("Accord droit à l'image signé", 'Obligatoire pour enregistrer la fiche sur GitHub et la mettre en ligne', 'consent', !!t.consent)}
       </div>
       <div class="grid2" style="margin-top:12px">${field("Date de l'accord", 'consentDate', t.consentDate || '', { type: 'date' })}</div></div>
       <div class="section"><h3>Blocs affichés sur la fiche</h3><div class="switches">
@@ -538,7 +560,8 @@
       if (el.dataset.bind === 'consent' && v && !t.consentDate) { t.consentDate = new Date().toISOString().slice(0, 10); }
       persist();
       if (/^(first|last)$/.test(el.dataset.bind)) refreshHead(t);
-      if (el.dataset.bool || /^social\.gender/.test(el.dataset.bind)) refreshPane();
+      if (el.dataset.bind === 'consent') render();   // change le statut (liste groupée, brouillon local)
+      else if (el.dataset.bool || /^social\.gender/.test(el.dataset.bind)) refreshPane();
       return;
     }
     if (el.dataset.sbind) { const k = el.closest('[data-sel]').dataset.sel; db.selections[k][el.dataset.sbind] = el.value; persist(); refreshSelCard(k); return; }
@@ -587,16 +610,18 @@
 
   const ACTIONS = {
     async add() {
-      const box = await modal(`<h3>Nouveau <em>talent</em></h3><div class="grid2"><label class="field"><span>Prénom</span><input class="input" name="first" required></label><label class="field"><span>Nom</span><input class="input" name="last"></label></div><p>La fiche est créée masquée : elle passe en ligne quand tu coches l'accord droit à l'image et « visible ».</p><div class="acts"><button class="btn btn--ghost" value="cancel" formnovalidate>Annuler</button><button class="btn" value="ok">Créer la fiche</button></div>`);
+      const box = await modal(`<h3>Nouveau <em>talent</em></h3><div class="grid2"><label class="field"><span>Prénom</span><input class="input" name="first" required></label><label class="field"><span>Nom</span><input class="input" name="last"></label></div><p>La fiche est créée en <b>brouillon dans ce navigateur</b>. Une fois l'accord droit à l'image coché, elle est enregistrée sur GitHub à chaque publication (toujours invisible), puis « Mettre en ligne » la rend visible.</p><div class="acts"><button class="btn btn--ghost" value="cancel" formnovalidate>Annuler</button><button class="btn" value="ok">Créer la fiche</button></div>`);
       if (!box) return;
       const first = box.first.value.trim(), last = box.last.value.trim(); if (!first) return;
       const t = newTalent(first, last); t.slug = uniqueSlug(first + (last ? '-' + last : ''));
       db.talents.push(t); ui.slug = t.slug; ui.pane = 'profil'; persist(); render(); toast('Fiche créée');
     },
     pick(b) { ui.slug = b.dataset.slug; render(); },
+    'go-live'(b, t) { if (!t.consent) return; t.visible = true; persist(); render(); toast('Prête : clique Publier pour la mettre en ligne'); },
+    'to-draft'(b, t) { t.visible = false; persist(); render(); toast('Repassée en brouillon : clique Publier pour la retirer du site'); },
     async dup(b, t) {
       const c = clone(t); c.first = t.first; c.last = t.last + ' (copie)'; c.slug = uniqueSlug(t.slug + '-copie'); c.visible = false;
-      db.talents.splice(db.talents.indexOf(t) + 1, 0, c); ui.slug = c.slug; persist(); render(); toast('Fiche dupliquée (masquée)');
+      db.talents.splice(db.talents.indexOf(t) + 1, 0, c); ui.slug = c.slug; persist(); render(); toast('Fiche dupliquée (brouillon)');
     },
     async del(b, t) {
       const box = await modal(`<h3>Supprimer <em>${esc(t.first)} ${esc(t.last)}</em> ?</h3><p>La fiche, ses photos et sa vidéo seront supprimées du site à la prochaine publication. Elle est aussi retirée des sélections. Pour la cacher sans la perdre, décoche plutôt « visible ».</p><label class="field"><span>Tape <b>${esc(t.first)}</b> pour confirmer</span><input class="input" name="c" autocomplete="off"></label><div class="acts"><button class="btn btn--ghost" value="cancel">Annuler</button><button class="btn btn--danger" value="ok">Supprimer</button></div>`, box => box.c.value.trim().toLowerCase() === (t.first || '').toLowerCase() || (toast('Le prénom ne correspond pas', true), false));
@@ -671,7 +696,7 @@
       const blob = new Blob([JSON.stringify(db, null, 1)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `talents-dake-${new Date().toISOString().slice(0, 10)}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
     },
-    async reset() { if (!await confirmBox('Repartir de la version en ligne ?', 'Toutes les modifications non publiées et les fichiers en attente seront perdus.', 'Tout annuler', true)) return; await resetTo(published); toast('Brouillon effacé'); }
+    async reset() { if (!await confirmBox('Repartir de la version en ligne ?', 'Toutes les modifications non publiées, les fichiers en attente et les brouillons gardés dans ce navigateur seront perdus.', 'Tout annuler', true)) return; await resetTo(published); toast('Brouillon effacé'); }
   };
   function refreshListThumb(t) { const li = $(`.li[data-slug="${CSS.escape(t.slug)}"]`); if (!li) return; const old = li.querySelector('img,.ph'); old.outerHTML = t.cover ? `<img src="${esc(srcFor(t.cover))}" alt="">` : '<span class="ph"></span>'; }
   function updateCounts(t) { $$('.subtabs button').forEach(b => { const k = b.dataset.pane, c = b.querySelector('.count'); if (c && (k === 'polas' || k === 'book')) c.textContent = (t[k] || []).length; }); }
@@ -791,18 +816,24 @@
     if (!gh.token) { ui.view = 'settings'; render(); return toast('Connecte d\'abord GitHub (clé d\'accès)', true); }
     renumber();
     // On n'envoie que les fichiers encore utilisés
-    const used = new Set(db.talents.flatMap(refsOf));
+    // Les brouillons locaux (accord non signé) ne partent jamais : ni données, ni photos
+    const used = publicFiles();
     const uploads = [...pending.entries()].filter(([p]) => used.has(p));
     const size = uploads.reduce((s, [, v]) => s + v.blob.size, 0);
-    const hidden = db.talents.filter(t => t.visible === false || !t.consent);
+    const pub = db.talents.filter(t => !isLocal(t)), local = db.talents.filter(isLocal);
+    const drafts = pub.filter(t => t.visible === false);
+    // Fiche déjà en ligne dont l'accord a été décoché : retirée du site, ses photos supprimées du dépôt
+    const withdrawn = published.talents.filter(p => local.some(t => t.slug === p.slug));
+    const wFiles = withdrawn.flatMap(refsOf).filter(p => isOwned(p) && !used.has(p));
     const box = await modal(`<h3>Publier sur le <em>site</em></h3>
-      <ul><li>${db.talents.length} fiches (${db.talents.length - hidden.length} en ligne)</li><li>${Object.keys(db.selections || {}).length} sélections</li>${uploads.length ? `<li>${uploads.length} fichier${uploads.length > 1 ? 's' : ''} à envoyer (${fmtSize(size)})</li>` : ''}${removed.size ? `<li>${removed.size} fichier${removed.size > 1 ? 's' : ''} supprimé${removed.size > 1 ? 's' : ''}</li>` : ''}${gateHash ? '<li>Nouveau code d\'accès</li>' : ''}</ul>
-      ${hidden.length ? `<p>Restent hors ligne : ${hidden.map(t => esc(t.first + ' ' + t.last)).join(', ')} (masquées ou sans accord droit à l'image).</p>` : ''}
+      <ul><li>${pub.length - drafts.length} fiche${pub.length - drafts.length > 1 ? 's' : ''} en ligne${drafts.length ? ` · ${drafts.length} brouillon${drafts.length > 1 ? 's' : ''} enregistré${drafts.length > 1 ? 's' : ''}, invisible${drafts.length > 1 ? 's' : ''} sur le site` : ''}</li><li>${Object.keys(db.selections || {}).length} sélections</li>${uploads.length ? `<li>${uploads.length} fichier${uploads.length > 1 ? 's' : ''} à envoyer (${fmtSize(size)})</li>` : ''}${removed.size ? `<li>${removed.size} fichier${removed.size > 1 ? 's' : ''} supprimé${removed.size > 1 ? 's' : ''}</li>` : ''}${gateHash ? '<li>Nouveau code d\'accès</li>' : ''}</ul>
+      ${local.length ? `<p>Restent dans ce navigateur, sans rien envoyer (accord droit à l'image non signé) : ${local.map(t => esc(t.first + ' ' + t.last)).join(', ')}.</p>` : ''}
+      ${withdrawn.length ? `<p class="warn-txt">Retirées du site, photos supprimées du dépôt : ${withdrawn.map(t => esc(t.first + ' ' + t.last)).join(', ')} (accord décoché).</p>` : ''}
       <label class="field"><span>Note <small>facultatif, pour l'historique</small></span><input class="input" name="msg" placeholder="Ajout de Prune, nouvelles photos…"></label>
       <div class="progress" hidden id="pub-prog"><i></i></div><p class="hint" id="pub-step"></p>
-      <div class="acts"><button class="btn btn--ghost" value="cancel">Annuler</button><button class="btn" value="ok" id="pub-go">Publier</button></div>`, box => { runPublish(box, uploads); return false; });
+      <div class="acts"><button class="btn btn--ghost" value="cancel">Annuler</button><button class="btn" value="ok" id="pub-go">Publier</button></div>`, box => { runPublish(box, uploads, wFiles); return false; });
   }
-  async function runPublish(box, uploads) {
+  async function runPublish(box, uploads, wFiles = []) {
     const prog = box.querySelector('#pub-prog'), bar = prog.querySelector('i'), stepEl = box.querySelector('#pub-step'), go = box.querySelector('#pub-go');
     go.disabled = true; prog.hidden = false;
     const step = (txt, i, n) => { stepEl.textContent = txt; bar.style.width = (n ? i / n * 100 : 0) + '%'; };
@@ -821,7 +852,7 @@
         tree.push({ path: gh.base + p, mode: '100644', type: 'blob', sha: blob.sha });
       }
       step('Écriture des données…', n - 1, n);
-      const out = clone(db); out.updated = new Date().toISOString(); out.version = 1;
+      const out = publicView(db); out.updated = new Date().toISOString(); out.version = 1;
       const dataBlob = await api(`${repo}/git/blobs`, { method: 'POST', body: { content: b64text(serialize(out)), encoding: 'base64' } });
       tree.push({ path: gh.base + 'talents-data.js', mode: '100644', type: 'blob', sha: dataBlob.sha });
       if (gateHash) {
@@ -830,21 +861,24 @@
         const gb = await api(`${repo}/git/blobs`, { method: 'POST', body: { content: b64text(ng), encoding: 'base64' } });
         tree.push({ path: gh.base + 'gate.js', mode: '100644', type: 'blob', sha: gb.sha });
       }
-      if (removed.size) {
+      const toRemove = new Set([...removed, ...wFiles]);
+      if (toRemove.size) {
         // ne supprimer que ce qui existe vraiment dans le dépôt
         const full = await api(`${repo}/git/trees/${head.tree.sha}?recursive=1`);
         const exist = new Set(full.tree.map(x => x.path));
-        [...removed].map(p => gh.base + p).filter(p => exist.has(p)).forEach(p => tree.push({ path: p, mode: '100644', type: 'blob', sha: null }));
+        [...toRemove].map(p => gh.base + p).filter(p => exist.has(p)).forEach(p => tree.push({ path: p, mode: '100644', type: 'blob', sha: null }));
       }
       const nt = await api(`${repo}/git/trees`, { method: 'POST', body: { base_tree: head.tree.sha, tree } });
       const msg = (box.msg.value.trim() || 'Mise à jour des talents') + ' (back office)';
       const nc = await api(`${repo}/git/commits`, { method: 'POST', body: { message: msg, tree: nt.sha, parents: [ref.object.sha] } });
       await api(`${repo}/git/refs/heads/${encodeURIComponent(gh.branch)}`, { method: 'PATCH', body: { sha: nc.sha } });
       step('Publié ✓', 1, 1);
-      // Le brouillon devient la version publiée
-      published = normalize(clone(out)); db = clone(published);
-      pending.forEach(v => URL.revokeObjectURL(v.url)); pending.clear(); removed.clear(); gateHash = null;
-      await idb.clear(); ls.del(KEY.draft);
+      // Ce qui est publié devient la référence ; les brouillons locaux et leurs fichiers restent dans ce navigateur
+      published = normalize(clone(out));
+      for (const [p] of uploads) { URL.revokeObjectURL(pending.get(p).url); pending.delete(p); await idb.del(p); }
+      removed.clear(); gateHash = null;
+      if (db.talents.some(isLocal) || pending.size) persist();
+      else { await idb.clear(); ls.del(KEY.draft); }
       $('#modal').close(); render(); pushPreview();
       toast('Publié · le site est à jour dans 1 à 2 minutes');
     } catch (err) {

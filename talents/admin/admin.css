@@ -237,6 +237,8 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
   .studio{display:block;height:auto}
   .list{border-right:0;border-bottom:1px solid var(--line)}
   .list-items{display:flex;overflow-x:auto;gap:6px;padding:10px}
+  .list-group{flex:none;flex-direction:column;justify-content:center;gap:2px;margin:0 2px 0 6px;white-space:nowrap}
+  .list-group:not(:first-child){margin-left:12px;padding-left:12px;border-left:1px solid var(--line)}
   .li{grid-template-columns:40px auto;width:auto;flex:none;padding:6px 12px 6px 6px;border-radius:999px;background:var(--soft)}
   .li .grip,.li .dot,.li .sub,.list-foot{display:none}
   .li img,.li .ph{width:32px;height:32px;border-radius:50%}
@@ -259,3 +261,16 @@ textarea.input{min-height:90px;resize:vertical;line-height:1.5}
 .order .o.is-fixed{background:var(--soft);color:var(--muted)}
 .order .o b{flex:1;font-weight:500;font-size:.875rem}
 .order .o .mono{color:var(--muted)}
+
+/* Liste : groupes Brouillons / En ligne */
+.list-group{display:flex;justify-content:space-between;align-items:baseline;margin:14px 8px 6px;font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.list-group:first-child{margin-top:4px}
+/* Statut de la fiche */
+.state{display:grid;gap:10px;justify-items:start;padding:16px 18px;border-radius:14px;background:var(--soft)}
+.state p{margin:0;font-size:.875rem;line-height:1.45}
+.state-badge{display:inline-flex;align-items:center;gap:8px;font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
+.state-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--soft-2);box-shadow:inset 0 0 0 1px var(--line-2)}
+.state--live .state-badge::before{background:var(--sage);box-shadow:none}
+.state--local{background:var(--warn-bg)}
+.state .btn[disabled]{opacity:.4;pointer-events:none}
+.warn-txt{color:#8A1A10}

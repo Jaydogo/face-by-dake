@@ -51,7 +51,7 @@ const ORDER = ['polas', ...(t.order || ['book', 'video', 'stats']).filter(k => k
 const blocks = ORDER.map(k => [k, LABELS[k]]).filter(b => TU.show(t, b[0]));
 const has = k => blocks.some(b => b[0] === k);
 // Une fiche affichée seulement en aperçu (masquée ou sans accord) le signale
-const draftNote = (t.visible === false || !t.consent) ? `<p class="draft-note mono">${t.visible === false ? T('Fiche masquée', 'Hidden profile') : T('Accord droit à l\'image manquant', 'Image release missing')} · ${T('visible uniquement en aperçu', 'preview only')}</p>` : '';
+const draftNote = (t.visible === false || !t.consent) ? `<p class="draft-note mono">${!t.consent ? T('Brouillon · accord droit à l\'image manquant', 'Draft · image release missing') : T('Brouillon', 'Draft')} · ${T('visible uniquement en aperçu', 'preview only')}</p>` : '';
 const row = (k, v) => v || v === 0 ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
 // Mensurations : cm / EU ou pouces / US, au choix du visiteur (gardé dans son navigateur)
 const hasSizes = ['taille', 'poitrine', 'tailleT', 'hanches', 'pointure'].some(k => f[k]);
