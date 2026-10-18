@@ -38,14 +38,29 @@
   try { ok = localStorage.getItem(KEY) === HASH; } catch (e) {}
   if (ok) return;
   d.classList.add('locked');
+  // Styles du cadenas intégrés ici : il protège n'importe quelle page, même sans talents.css
+  var css = 'html.locked body>*:not(.gate){display:none!important}html.locked body{background:#1A1412!important}'
+    + '.gate{position:fixed;inset:0;z-index:2147483647;background:#1A1412;color:#F3EDE3;display:grid;place-items:center;padding:24px;font-family:"Instrument Sans","Helvetica Neue",Arial,sans-serif}'
+    + '.gate form{width:min(420px,100%);display:grid;gap:22px}'
+    + '.gate .g-k{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin:0}'
+    + '.gate h1{margin:0;font-family:"Newsreader",Georgia,serif;font-weight:300;font-size:clamp(3rem,8vw,5rem);line-height:.9;letter-spacing:-.05em}'
+    + '.gate h1 em{font-style:italic}.gate .br{opacity:.45;font-style:normal}'
+    + '.gate input{font:inherit;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:1.125rem;letter-spacing:.3em;text-transform:uppercase;padding:14px 18px;border:1px solid rgba(243,237,227,.3);border-radius:999px;background:transparent;color:#F3EDE3;text-align:center;outline:none}'
+    + '.gate input:focus{border-color:#F3EDE3}'
+    + '.gate button{min-height:48px;border-radius:999px;border:1px solid #F3EDE3;background:#F3EDE3;color:#1A1412;font:inherit;font-weight:500;cursor:pointer}'
+    + '.gate .err{font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:#E5574C;min-height:1.2em;text-align:center;margin:0}'
+    + '.gate .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
+    + '.gate.shake form{animation:gshake .4s}@keyframes gshake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}';
+  var st = document.createElement('style'); st.textContent = css;
+  (document.head || d).appendChild(st);
 
   document.addEventListener('DOMContentLoaded', function () {
     var g = document.createElement('div');
     g.className = 'gate';
-    g.innerHTML = '<form autocomplete="off"><p class="caps" style="opacity:.6">talents by dakē · accès privé</p>' +
+    g.innerHTML = '<form autocomplete="off"><p class="caps" style="opacity:.6">face by dakē · accès privé</p>' +
       '<h1><span class="br">[</span><em>Code</em><span class="br">]</span></h1>' +
       '<label class="sr-only" for="gate-code">Code d’accès</label><input id="gate-code" type="password" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="••••••" required>' +
-      '<button class="btn" type="submit">Entrer</button><p class="err" aria-live="polite"></p></form>';
+      '<button type="submit">Entrer</button><p class="err" aria-live="polite"></p></form>';
     document.body.appendChild(g);
     var f = g.querySelector('form'), inp = g.querySelector('input'), err = g.querySelector('.err');
     inp.focus();
