@@ -1,7 +1,8 @@
 /* =========================================================
    CARTE COMPOSITE EN IMAGE (JPG) — pour mobile
-   Même mise en page que la version imprimée (A4 paysage, DA du site),
-   dessinée dans un canvas puis partagée / téléchargée.
+   Format vertical (A4 portrait), lisible en plein écran sur un téléphone :
+   grand portrait + fiche à droite, 4 photos en bandeau, pied mono.
+   Dessinée dans un canvas puis partagée / téléchargée.
    ========================================================= */
 (function () {
   const INK = '#1A1412', LINE = 'rgba(26,20,18,.18)', MUTED = 'rgba(26,20,18,.5)', PH = '#F0F0EE';
@@ -30,9 +31,9 @@
   const width = (ctx, s, font, spacing = 0) => { ctx.font = font; if ('letterSpacing' in ctx) ctx.letterSpacing = spacing + 'px'; const w = ctx.measureText(s).width; if ('letterSpacing' in ctx) ctx.letterSpacing = '0px'; return w; };
   const line = (ctx, x1, y1, x2, y2, k) => { ctx.strokeStyle = LINE; ctx.lineWidth = Math.max(1, 0.2 * k); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); };
 
-  /* t : talent, imgs : [couverture, 4 images], opts.k : pixels par millimètre (8 ≈ 2376 px de large) */
+  /* t : talent, imgs : [couverture, 4 images], opts.k : pixels par millimètre (8 ≈ 1680 × 2376 px) */
   window.compositeJPG = async function (t, srcs, opts = {}) {
-    const k = opts.k || 8, W = Math.round(297 * k), H = Math.round(210 * k), m = v => v * k;
+    const k = opts.k || 8, W = Math.round(210 * k), H = Math.round(297 * k), m = v => v * k;
     const pt = v => v * 0.3528 * k; // points typographiques → px
     await Promise.all([
       document.fonts.load(`300 ${pt(40)}px Newsreader`), document.fonts.load(`italic 300 ${pt(40)}px Newsreader`),
@@ -43,11 +44,15 @@
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const ctx = c.getContext('2d');
     ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
-    const L = m(13), R = W - m(13), T = m(12);
+    const L = m(13), R = W - m(13), TOP = m(21);
 
     // En-tête : nom en Newsreader, catégories + ville à droite, filet
-    const fsName = pt(40), fName = `300 ${fsName}px Newsreader`, fNameI = `italic 300 ${fsName}px Newsreader`;
-    const yName = T + fsName * 0.82;
+    let fsName = pt(40);
+    // Nom long : la police rétrécit pour laisser la place aux catégories à droite
+    const nameW = fs => width(ctx, t.first + ' ' + t.last, `italic 300 ${fs}px Newsreader`, -fs * 0.04);
+    while (fsName > pt(24) && nameW(fsName) > (R - L) * 0.6) fsName *= 0.94;
+    const fName = `300 ${fsName}px Newsreader`, fNameI = `italic 300 ${fsName}px Newsreader`;
+    const yName = TOP + fsName * 0.82;
     const first = t.first + ' ';
     text(ctx, first, L, yName, { font: fName, spacing: -fsName * 0.04 });
     text(ctx, t.last, L + width(ctx, first, fName, -fsName * 0.04), yName, { font: fNameI, spacing: -fsName * 0.04 });
@@ -57,14 +62,14 @@
     const yLine1 = yName + m(5);
     line(ctx, L, yLine1, R, yLine1, k);
 
-    // Photos : grand portrait + grille 2×2, toutes en 3:4
-    const y0 = yLine1 + m(6), hMain = m(142), wMain = hMain * 3 / 4, g = m(3);
+    // Photos : grand portrait 3:4 à gauche, fiche à droite, puis 4 photos 3:4 en bandeau
+    const y0 = yLine1 + m(6), wMain = m(120), hMain = wMain * 4 / 3, g = m(3);
     cover(ctx, main, L, y0, wMain, hMain);
-    const hS = (hMain - g) / 2, wS = hS * 3 / 4, xg = L + wMain + g;
-    [0, 1, 2, 3].forEach(n => cover(ctx, rest[n], xg + (n % 2) * (wS + g), y0 + Math.floor(n / 2) * (hS + g), wS, hS));
+    const wS = (R - L - 3 * g) / 4, hS = wS * 4 / 3, yS = y0 + hMain + g;
+    [0, 1, 2, 3].forEach(n => cover(ctx, rest[n], L + n * (wS + g), yS, wS, hS));
 
-    // Colonne fiche (mono)
-    const xs = xg + 2 * wS + g + m(3), xsT = xs + m(4);
+    // Colonne fiche (mono), à droite du portrait
+    const xs = L + wMain + m(3), xsT = xs + m(4);
     line(ctx, xs, y0, xs, y0 + hMain, k);
     const f = t.fiche || {}, s = t.social;
     const rows = [[T('Taille', 'Height'), SIZE.height(f.taille)], [T('Poitrine', 'Bust'), SIZE.body(f.poitrine)], [T('Tour de taille', 'Waist'), SIZE.body(f.tailleT)], [T('Hanches', 'Hips'), SIZE.body(f.hanches)], [T('Pointure', 'Shoe'), SIZE.shoe(f.pointure, f.genre)], [T('Yeux', 'Eyes'), TR(f.yeux)], [T('Cheveux', 'Hair'), TR(f.cheveux)]]
@@ -92,7 +97,7 @@
     text(ctx, 'FACE BY DAKĒ©', xsT, y0 + hMain, { font: `500 ${pt(9)}px "Instrument Sans"`, spacing: -pt(9) * 0.01 });
 
     // Pied : filet + mono
-    const yF = y0 + hMain + m(5);
+    const yF = yS + hS + m(5);
     line(ctx, L, yF, R, yF, k);
     const fFoot = `400 ${pt(7)}px "IBM Plex Mono"`, sp = pt(7) * 0.06, yFt = yF + m(3) + pt(7);
     text(ctx, (SETTINGS.mail || '').toUpperCase(), L, yFt, { font: fFoot, spacing: sp, color: 'rgba(26,20,18,.7)' });

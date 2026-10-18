@@ -61,7 +61,18 @@ const mail = TU.mailFor(sel, [t]);
 const pad = n => String(n).padStart(2, '0');
 
 // Blocs affichés : ceux qui ont du contenu et ne sont pas désactivés dans le back office
-const LABELS = { polas: 'Polas', book: 'Book', video: T('Vidéo', 'Video'), stats: 'Stats & engagement' };
+const LABELS = { polas: 'Polas', book: 'Book', video: (t.videos || []).length > 1 ? T('Vidéos', 'Videos') : T('Vidéo', 'Video'), stats: 'Stats & engagement' };
+// Une vidéo : fichier hébergé ou lien de plateforme (YouTube / Vimeo intégrés, autre site = lien externe)
+const PLAY_IC = '<svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>';
+function videoBlock(v) {
+  const e = v.url ? TU.embed(v.url) : null, title = TX(v, 'title'), poster = v.poster ? TU.src(v.poster) : e && e.thumb;
+  const meta = `<div class="player-meta caps"><span>${esc(title)}</span><span class="dim">${esc(TX(v, 'credit', e ? e.name : 'Réalisée par Daké'))}</span></div>`;
+  if (e && e.kind === 'link') return `<figure class="v1-video reveal"><a class="player player--link" href="${esc(v.url)}" target="_blank" rel="noopener">${poster ? `<img src="${esc(poster)}" alt="" loading="lazy">` : ''}<span class="play caps"><span>${PLAY_IC}${T('Voir sur', 'Watch on')} ${esc(e.name)} ↗</span></span></a>${meta}</figure>`;
+  return `<figure class="v1-video reveal"><div class="player"${e ? ` data-embed="${esc(e.embed)}" data-title="${esc(title)}"` : ''}>
+      ${e ? (poster ? `<img src="${esc(poster)}" alt="" loading="lazy">` : '') : `<video src="${TU.src(v.src)}" poster="${TU.src(v.poster)}" playsinline preload="none"></video>`}
+      <button class="play caps" type="button"><span>${PLAY_IC}${T('Lire', 'Play')}${v.len ? ' · ' + esc(v.len) : ''}</span></button>
+    </div>${meta}</figure>`;
+}
 const ORDER = ['polas', ...(t.order || ['book', 'video', 'stats']).filter(k => k !== 'polas' && LABELS[k]), ...['book', 'video', 'stats'].filter(k => !(t.order || []).includes(k))]
   .filter((k, i, a) => a.indexOf(k) === i);
 const blocks = ORDER.map(k => [k, LABELS[k]]).filter(b => TU.show(t, b[0]));
@@ -106,11 +117,7 @@ const SEC = {
 
   video: () => has('video') ? `<section class="section ${s ? 'is-paper' : 'is-dark'}" id="video"${s ? '' : ' data-tone="dark"'}>
     ${folio('video', LABELS.video)}
-    <div class="player reveal">
-      <video src="${TU.src(t.video.src)}" poster="${TU.src(t.video.poster)}" playsinline preload="none"></video>
-      <button class="play caps" type="button"><span><svg class="play-ic" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z"/></svg>${T('Lire', 'Play')}${t.video.len ? ' · ' + esc(t.video.len) : ''}</span></button>
-    </div>
-    <div class="player-meta caps"><span>${esc(TX(t.video, 'title'))}</span><span class="dim">${esc(TX(t.video, 'credit', 'Réalisée par Daké'))}</span></div>
+    <div class="v1-videos${t.videos.length > 1 ? ' is-multi' : ''}">${t.videos.map(videoBlock).join('')}</div>
   </section>` : '',
 
   stats: () => s ? `<section class="section is-dark" id="stats" data-tone="dark">
@@ -180,13 +187,29 @@ document.body.appendChild(comp);
 const isMobile = matchMedia('(max-width: 860px), (pointer: coarse)').matches;
 const compBtn = document.getElementById('composite-btn');
 if (isMobile) compBtn.textContent = T('Carte composite (image)', 'Comp card (image)');
+// Aperçu plein écran de la carte (téléphone) avant de l'enregistrer ou de la partager
+function previewComposite(blob, name) {
+  const url = URL.createObjectURL(blob), box = document.createElement('div');
+  box.className = 'cc-preview'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', T('Aperçu de la carte composite', 'Comp card preview'));
+  box.innerHTML = `<div class="cc-preview-top caps"><span>${T('Carte composite', 'Comp card')}</span><button type="button" data-x>${T('Fermer', 'Close')}</button></div>
+    <div class="cc-preview-img" data-lenis-prevent><img src="${url}" alt="${esc(full)} — ${T('carte composite', 'comp card')}"></div>
+    <div class="cc-preview-foot"><button class="btn" type="button" data-share>${navigator.canShare ? T('Enregistrer ou partager', 'Save or share') : T('Télécharger', 'Download')}</button></div>`;
+  document.body.appendChild(box);
+  window.lockScroll?.(true);
+  requestAnimationFrame(() => box.classList.add('on'));
+  const close = () => { box.classList.remove('on'); window.lockScroll?.(false); setTimeout(() => { box.remove(); URL.revokeObjectURL(url); }, 450); };
+  box.querySelector('[data-x]').addEventListener('click', close);
+  box.querySelector('[data-share]').addEventListener('click', async () => { if (await shareComposite(blob, name) !== 'cancelled') close(); });
+  box.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  box.querySelector('[data-x]').focus({ preventScroll: true });
+}
 compBtn.addEventListener('click', async () => {
   if (isMobile) {
     const label = compBtn.textContent; compBtn.textContent = T('Préparation…', 'Preparing…'); compBtn.disabled = true;
     try {
       const blob = await compositeJPG(t, [t.cover, ...compositeImgs(t)].map(x => TU.src(x)));
       const slug = (t.first + '-' + t.last).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
-      await shareComposite(blob, `${slug}-${T('carte-composite', 'comp-card')}-dake.jpg`);
+      previewComposite(blob, `${slug}-${T('carte-composite', 'comp-card')}-dake.jpg`);
     } finally { compBtn.textContent = label; compBtn.disabled = false; }
     return;
   }

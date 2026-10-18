@@ -65,6 +65,8 @@
     d = Object.assign(blankData(), d || {});
     d.settings = Object.assign({ mail: 'booking@dake.studio', instagram: 'dake.face', studio: 'https://dake.studio', studioSoon: '', phone: '', city: 'Paris, France', reach: "Castings en France et à l'international", siteUrl: SITE }, d.settings || {});
     d.selections = d.selections || {};
+    // Vidéos : liste (fichiers ou liens). Les anciennes fiches n'avaient qu'un champ « video ».
+    d.talents.forEach(t => { if (!Array.isArray(t.videos)) t.videos = t.video && (t.video.src || t.video.url) ? [t.video] : []; delete t.video; });
     let n = 0;   // brouillons locaux (sans accord) : pas de numéro, ils ne sont jamais publiés
     d.talents.forEach(t => { t.code = t.consent ? 't.' + String(++n).padStart(2, '0') : '—'; });
     return d;
@@ -84,14 +86,16 @@
   function openScreen(sc) {
     if (ui.screen === sc) return;
     ui.screen = sc;
-    const st = $('#studio'); if (st) st.dataset.screen = sc;
+    const st = $('#studio'); if (st) { st.dataset.screen = sc; animate(st, sc === 'edit' ? 'anim-push' : 'anim-pop'); }
     if (sc === 'edit' && phone()) history.pushState({ screen: 'edit' }, '');
     window.scrollTo(0, 0);
   }
-  addEventListener('popstate', () => { if (ui.screen === 'edit') { ui.screen = 'list'; const st = $('#studio'); if (st) st.dataset.screen = 'list'; window.scrollTo(0, 0); } });
+  addEventListener('popstate', () => { if (ui.screen === 'edit') { ui.screen = 'list'; const st = $('#studio'); if (st) { st.dataset.screen = 'list'; animate(st, 'anim-pop'); } window.scrollTo(0, 0); } });
+  // Classe d'animation posée le temps de l'animation, puis retirée (pas rejouée aux rendus suivants)
+  function animate(el, cls) { el.classList.remove('anim-push', 'anim-pop', 'anim-fade'); void el.offsetWidth; el.classList.add(cls); clearTimeout(el._anim); el._anim = setTimeout(() => el.classList.remove(cls), 600); }
   const srcFor = p => !p ? '' : pending.has(p) ? pending.get(p).url : /^(blob:|data:|https?:)/.test(p) ? p : '../' + p;
   const isOwned = p => /^img\/[a-z0-9-]+\/web\//.test(p || '');   // fichiers gérés par le back office (supprimables)
-  const refsOf = t => [t.cover, ...(t.polas || []).map(p => p[0]), ...(t.book || []), t.video && t.video.src, t.video && t.video.poster, ...(t.composite || [])].filter(Boolean);
+  const refsOf = t => [t.cover, ...(t.polas || []).map(p => p[0]), ...(t.book || []), ...(t.videos || []).flatMap(v => [v.src, v.poster]), ...(t.composite || [])].filter(Boolean);
   const referenced = (p, except) => db.talents.some(t => t !== except && refsOf(t).includes(p));
   /* Trois états d'une fiche :
      - brouillon local : accord droit à l'image non signé → reste dans ce navigateur, rien n'est envoyé sur GitHub
@@ -115,7 +119,7 @@
       slug: '', code: '', first, last, visible: false, consent: false, consentDate: '', availability: 'disponible', agency: '', languages: '', bio: '',
       cats: ['mannequin'], specs: [], city: 'Paris',
       fiche: { taille: '', poitrine: '', tailleT: '', hanches: '', pointure: '', yeux: '', cheveux: '' },
-      cover: '', polas: [], polasNote: 'Pris au studio Daké', book: [], video: null, social: null, composite: null,
+      cover: '', polas: [], polasNote: 'Pris au studio Daké', book: [], videos: [], social: null, composite: null,
       sections: { polas: true, book: true, video: true, stats: true }
     };
   }
@@ -141,7 +145,7 @@
       t.cover = map(t.cover);
       t.polas = (t.polas || []).map(p => [map(p[0]), p[1]]);
       t.book = (t.book || []).map(map);
-      if (t.video) { t.video.src = map(t.video.src); t.video.poster = map(t.video.poster); }
+      (t.videos || []).forEach(v => { if (v.src) v.src = map(v.src); if (v.poster) v.poster = map(v.poster); });
       if (t.composite) t.composite = t.composite.map(map);
     });
     return d;
@@ -236,9 +240,13 @@
   /* =========================================================
      RENDU
      ========================================================= */
+  let lastView = null;
   function render() {
     $$('.tabs button').forEach(b => b.toggleAttribute('aria-current', b.dataset.view === ui.view));
+    const tb = $('.tabbar'); if (tb) tb.style.setProperty('--i', ['talents', 'prospection', 'settings'].indexOf(ui.view));
     const v = $('#views');
+    if (lastView && lastView !== ui.view) animate(v, 'anim-fade');
+    lastView = ui.view;
     if (ui.view === 'talents') v.innerHTML = viewTalents();
     if (ui.view === 'prospection') v.innerHTML = viewProspection();
     if (ui.view === 'settings') v.innerHTML = viewSettings();
@@ -259,7 +267,7 @@
     const f = t.fiche || {};
     if (!f.taille || !f.pointure) a.push(['warn', 'Mensurations incomplètes (taille, pointure…).']);
     if ((t.cats || []).includes('influence') && !(t.social && t.social.ig && +t.social.ig.followers)) a.push(['warn', 'Catégorie Influence sans stats renseignées.']);
-    if (t.video && t.video.src && pending.has(t.video.src) && pending.get(t.video.src).blob.size > VIDEO_WARN) a.push(['warn', 'Vidéo lourde : la page sera plus lente à charger.']);
+    if ((t.videos || []).some(v => v.src && pending.has(v.src) && pending.get(v.src).blob.size > VIDEO_WARN)) a.push(['warn', 'Vidéo lourde : la page sera plus lente à charger.']);
     // Version anglaise : mots saisis que le dictionnaire ne connaît pas (ils resteront en français)
     if (window.TR_MISSING) {
       const miss = [...new Set([f.yeux, f.cheveux, t.languages, ...(t.specs || []), ...(t.polas || []).map(p => p[1])].flatMap(v => TR_MISSING(v)))];
@@ -285,7 +293,7 @@
     </aside>`;
     if (!t) return `<div class="studio no-preview" id="studio" data-screen="list">${list}<section class="editor"><div class="empty"><div><p class="serif">Aucun talent</p><p>Crée la première fiche.</p><button class="btn" data-a="add" type="button">+ Ajouter un talent</button></div></div></section></div>`;
     const w = talentWarnings(t);
-    const panes = [['profil', 'Profil'], ['fiche', 'Mensurations'], ['polas', 'Polas', (t.polas || []).length], ['book', 'Book', (t.book || []).length], ['video', 'Vidéo'], ['stats', 'Stats'], ['carte', 'Carte composite'], ['publication', 'Publication']];
+    const panes = [['profil', 'Profil'], ['fiche', 'Mensurations'], ['polas', 'Polas', (t.polas || []).length], ['book', 'Book', (t.book || []).length], ['video', 'Vidéos', (t.videos || []).length], ['stats', 'Stats'], ['carte', 'Carte composite'], ['publication', 'Publication']];
     const pubWarn = w.some(z => z[0] === 'error');
     return `<div class="studio${ui.showPv ? ' show-preview' : ''}" id="studio" data-screen="${ui.screen}">${list}
       <section class="editor" id="editor">
@@ -375,23 +383,40 @@
         <div class="thumbs" data-list="book">${(t.book || []).map((b, i) => thumb(t, b, i, 'book')).join('')}</div>
       </div>`;
     if (ui.pane === 'video') {
-      const v = t.video;
-      return `<div class="section"><h3>Vidéo</h3>
-        ${v && v.src ? `<div class="video-box">
-            <video src="${esc(srcFor(v.src))}" controls playsinline preload="metadata" id="ed-video"></video>
-            <div class="field"><span>Image d'aperçu</span><div class="poster">${v.poster ? `<img src="${esc(srcFor(v.poster))}" alt="">` : ''}</div>
-              <button class="btn btn--ghost btn--s" type="button" data-a="poster">Prendre l'image affichée</button>
-              <label class="link" style="cursor:pointer">ou importer une image<input type="file" accept="image/*" data-up="poster" hidden></label></div>
+      const vs = t.videos || [];
+      const card = (v, i) => {
+        const e = v.url ? videoEmbed(v.url) : null, n = vs.length;
+        const head = `<div class="card-head"><h3><span class="num">${pad(i + 1)}</span> ${e ? esc(e.name) : 'Fichier vidéo'}</h3><div class="vid-tools">
+            <button class="icon-btn" type="button" data-a="video-move" data-i="${i}" data-d="-1"${i ? '' : ' disabled'} aria-label="Monter">↑</button>
+            <button class="icon-btn" type="button" data-a="video-move" data-i="${i}" data-d="1"${i < n - 1 ? '' : ' disabled'} aria-label="Descendre">↓</button>
+            <button class="icon-btn" type="button" data-a="video-del" data-i="${i}" aria-label="Retirer">×</button></div></div>`;
+        const media = e
+          ? `<div class="vid-link">${e.thumb ? `<img src="${esc(e.thumb)}" alt="">` : `<span class="ph">${esc(e.name)}</span>`}</div>
+             ${field('Lien', `videos.${i}.url`, v.url, { mono: 1, cls: 'span-all', hint: e.kind === 'link' ? 'site non intégré : affiché comme lien' : 'lecteur intégré, chargé au clic' })}`
+          : `<div class="video-box">
+              <video src="${esc(srcFor(v.src))}" controls playsinline preload="metadata" data-vid="${i}"></video>
+              <div class="field"><span>Image d'aperçu</span><div class="poster">${v.poster ? `<img src="${esc(srcFor(v.poster))}" alt="">` : ''}</div>
+                <button class="btn btn--ghost btn--s" type="button" data-a="poster" data-i="${i}">Prendre l'image affichée</button>
+                <label class="link" style="cursor:pointer">ou importer une image<input type="file" accept="image/*" data-up="poster" data-i="${i}" hidden></label></div>
+            </div>`;
+        return `<article class="card vid-card">${head}${media}
+          <div class="grid3" style="margin-top:14px">
+            ${field('Titre', `videos.${i}.title`, v.title || '', { ph: 'Bande démo, scène dramatique', cls: 'span2' })}${field('Durée', `videos.${i}.len`, v.len || '', { ph: '0:30', mono: 1 })}
+            ${field('Crédit', `videos.${i}.credit`, v.credit || '', { ph: e ? e.name : 'Réalisée par Daké', cls: 'span2' })}<span></span>
+            ${field('Titre · anglais', `videos.${i}.title_en`, v.title_en || '', { ph: 'Showreel, dramatic scene', cls: 'span2', hint: 'facultatif' })}<span></span>
+            ${field('Crédit · anglais', `videos.${i}.credit_en`, v.credit_en || '', { ph: e ? e.name : 'Directed by Daké', cls: 'span2', hint: 'facultatif' })}
           </div>
-          <div class="grid3" style="margin-top:16px">
-            ${field('Titre', 'video.title', v.title, { ph: 'Bande démo, scène dramatique', cls: 'span2' })}${field('Durée', 'video.len', v.len, { ph: '0:30', mono: 1 })}
-            ${field('Crédit', 'video.credit', v.credit || '', { ph: 'Réalisée par Daké', cls: 'span2' })}<span></span>
-            ${field('Titre · anglais', 'video.title_en', v.title_en || '', { ph: 'Showreel, dramatic scene', cls: 'span2', hint: 'facultatif' })}<span></span>
-            ${field('Crédit · anglais', 'video.credit_en', v.credit_en || '', { ph: 'Directed by Daké', cls: 'span2', hint: 'facultatif' })}
-          </div>
-          <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><label class="btn btn--ghost btn--s">Remplacer la vidéo<input type="file" accept="video/mp4,video/quicktime,video/*" data-up="video" hidden></label><button class="btn btn--danger btn--s" type="button" data-a="video-del">Retirer la vidéo</button></div>`
-        : `<label class="drop" data-drop="video"><input type="file" accept="video/mp4,video/quicktime,video/*" data-up="video"><b>Ajouter une vidéo</b><span class="hint">MP4 (H.264) conseillé · 25 Mo max conseillé, 95 Mo maximum · l'aperçu et la durée sont faits automatiquement</span><div class="progress" hidden><i></i></div></label>`}
-        <p class="hint" style="margin-top:14px">Les .MOV de l'iPhone ne se lisent pas partout (Chrome, Android). Exporte en MP4 si possible.</p>
+          ${e ? '' : `<label class="btn btn--ghost btn--s" style="margin-top:14px">Remplacer le fichier<input type="file" accept="video/mp4,video/quicktime,video/*" data-up="video" data-i="${i}" hidden></label>`}
+        </article>`;
+      };
+      return `<div class="section"><h3>Vidéos <span class="muted" style="text-transform:none;letter-spacing:0">${vs.length > 1 ? 'la première est mise en avant · flèches pour l\'ordre' : 'fichier ou lien YouTube / Vimeo'}</span></h3>
+        <div class="vid-list">${vs.map(card).join('')}</div>
+        <div class="vid-add">
+          <label class="drop" data-drop="video"><input type="file" accept="video/mp4,video/quicktime,video/*" data-up="video"><b>Ajouter un fichier vidéo</b><span class="hint">MP4 (H.264) conseillé · 25 Mo max conseillé, 95 Mo maximum · aperçu et durée automatiques</span><div class="progress" hidden><i></i></div></label>
+          <div class="link-add"><b>Ou ajouter un lien</b><span class="hint">YouTube, Vimeo (lecteur intégré) ou tout autre site (lien)</span>
+            <div class="out"><input class="input mono" id="video-url" type="url" inputmode="url" placeholder="https://youtu.be/…" autocomplete="off"><button class="btn btn--s" type="button" data-a="video-link">Ajouter</button></div></div>
+        </div>
+        <p class="hint" style="margin-top:14px">Les .MOV de l'iPhone ne se lisent pas partout (Chrome, Android). Exporte en MP4 si possible, ou mets la vidéo sur YouTube en « non répertoriée » et colle le lien.</p>
       </div>`;
     }
     if (ui.pane === 'stats') {
@@ -442,7 +467,7 @@
       <div class="section"><h3>Blocs affichés sur la fiche</h3><div class="switches">
         ${sw('Polas', `${(t.polas || []).length} photos`, 'sections.polas', !t.sections || t.sections.polas !== false)}
         ${sw('Book', `${(t.book || []).length} photos`, 'sections.book', !t.sections || t.sections.book !== false)}
-        ${sw('Vidéo', t.video && t.video.src ? 'vidéo ajoutée' : 'aucune vidéo', 'sections.video', !t.sections || t.sections.video !== false)}
+        ${sw('Vidéos', (t.videos || []).length ? `${t.videos.length} vidéo${t.videos.length > 1 ? 's' : ''}` : 'aucune vidéo', 'sections.video', !t.sections || t.sections.video !== false)}
         ${sw('Stats & engagement', t.social ? 'stats renseignées' : 'aucune stat', 'sections.stats', !t.sections || t.sections.stats !== false)}
       </div><p class="hint" style="margin-top:10px">Un bloc vide est masqué automatiquement.</p></div>
       <div class="section"><h3>Ordre des blocs sur la fiche</h3>
@@ -597,6 +622,7 @@
   function refreshPane() { const t = T(); const b = $('#ed-body'); if (!t || !b) return; const sy = $('#editor').scrollTop; b.innerHTML = pane(t, talentWarnings(t)); bindThumbs(); $('#editor').scrollTop = sy; }
   function refreshSelCard(k) { const c = $(`[data-sel="${CSS.escape(k)}"]`); if (!c) return; const s = Object.assign({ key: k }, db.selections[k]); c.querySelector('.pitch').innerHTML = esc(pitchFor(s)) || '<span class="muted">Choisis au moins un profil.</span>'; c.querySelector('.card-head h3').innerHTML = `${esc(s.client || 'Sans nom')} <em>${esc(s.project || '')}</em>`; }
 
+  document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'video-url') { e.preventDefault(); $('[data-a="video-link"]')?.click(); } });
   // Étiquettes (spécialités, marques)
   document.addEventListener('keydown', e => {
     const el = e.target; if (!el.dataset || !el.dataset.tagIn) return;
@@ -633,7 +659,7 @@
       db.talents.push(t); ui.slug = t.slug; ui.pane = 'profil'; ui.screen = 'list'; persist(); render(); openScreen('edit'); toast('Fiche créée');
     },
     pick(b) { ui.slug = b.dataset.slug; ui.screen = 'list'; render(); openScreen('edit'); },
-    back() { if (history.state && history.state.screen === 'edit') history.back(); else { ui.screen = 'list'; $('#studio').dataset.screen = 'list'; } },
+    back() { if (history.state && history.state.screen === 'edit') history.back(); else { ui.screen = 'list'; const st = $('#studio'); st.dataset.screen = 'list'; animate(st, 'anim-pop'); } },
     more(b) { const box = b.closest('.ed-title'); const on = !box.classList.contains('is-more'); box.classList.toggle('is-more', on); b.setAttribute('aria-expanded', on); },
     'go-live'(b, t) { if (!t.consent) return; t.visible = true; persist(); render(); toast('Prête : clique Publier pour la mettre en ligne'); },
     'to-draft'(b, t) { t.visible = false; persist(); render(); toast('Repassée en brouillon : clique Publier pour la retirer du site'); },
@@ -663,16 +689,32 @@
       persist(); refreshPane(); refreshListThumb(t); updateCounts(t);
     },
     async poster(b, t) {
-      const v = $('#ed-video'); if (!v || !t.video) return;
+      const i = +b.dataset.i, v = (t.videos || [])[i], el = $(`video[data-vid="${i}"]`); if (!v || !el) return;
       b.textContent = 'Capture…';
       try {
-        const { blob } = await grabPoster(srcFor(t.video.src), v.currentTime || 1);
-        const old = t.video.poster, path = `img/${t.slug}/web/poster-${uid()}.jpg`;
-        await addPending(path, blob); t.video.poster = path; if (old && !refsOf(t).includes(old)) dropPath(old, t);
+        const { blob } = await grabPoster(srcFor(v.src), el.currentTime || 1);
+        const old = v.poster, path = `img/${t.slug}/web/poster-${uid()}.jpg`;
+        await addPending(path, blob); v.poster = path; if (old && !refsOf(t).includes(old)) dropPath(old, t);
         persist(); refreshPane(); toast("Image d'aperçu mise à jour");
       } catch (err) { toast("Capture impossible avec ce format de vidéo", true); b.textContent = "Prendre l'image affichée"; }
     },
-    'video-del'(b, t) { if (!t.video) return; const { src, poster } = t.video; t.video = null; [src, poster].forEach(p => p && !refsOf(t).includes(p) && dropPath(p, t)); persist(); refreshPane(); },
+    'video-del'(b, t) {
+      const i = +b.dataset.i, v = (t.videos || [])[i]; if (!v) return;
+      t.videos.splice(i, 1); [v.src, v.poster].forEach(p => p && !refsOf(t).includes(p) && dropPath(p, t));
+      persist(); refreshPane(); updateCounts(t); toast('Vidéo retirée');
+    },
+    'video-move'(b, t) {
+      const i = +b.dataset.i, j = i + +b.dataset.d; if (!t.videos || j < 0 || j >= t.videos.length) return;
+      [t.videos[i], t.videos[j]] = [t.videos[j], t.videos[i]]; persist(); refreshPane();
+    },
+    'video-link'(b, t) {
+      const inp = $('#video-url'), url = (inp.value || '').trim(), e = videoEmbed(url);
+      if (!e) { toast('Colle un lien complet (https://…)', true); inp.focus(); return; }
+      t.videos = t.videos || [];
+      t.videos.push({ url, title: '', credit: '', len: '' });
+      if (t.sections) t.sections.video = true;
+      persist(); refreshPane(); updateCounts(t); toast(e.kind === 'link' ? 'Lien ajouté (affiché comme lien)' : `Vidéo ${e.name} ajoutée`);
+    },
     'stats-on'(b, t) { t.social = blankSocial(); if (!t.cats.includes('influence')) t.cats.push('influence'); persist(); refreshPane(); },
     async 'stats-off'(b, t) { if (!await confirmBox('Retirer les stats ?', 'Les chiffres Instagram / TikTok de ce talent seront effacés.', 'Retirer', true)) return; t.social = null; persist(); refreshPane(); },
     'spark-gen'(b, t) {
@@ -717,7 +759,7 @@
     async reset() { if (!await confirmBox('Repartir de la version en ligne ?', 'Toutes les modifications non publiées, les fichiers en attente et les brouillons gardés dans ce navigateur seront perdus.', 'Tout annuler', true)) return; await resetTo(published); toast('Brouillon effacé'); }
   };
   function refreshListThumb(t) { const li = $(`.li[data-slug="${CSS.escape(t.slug)}"]`); if (!li) return; const old = li.querySelector('img,.ph'); old.outerHTML = t.cover ? `<img src="${esc(srcFor(t.cover))}" alt="">` : '<span class="ph"></span>'; }
-  function updateCounts(t) { $$('.subtabs button').forEach(b => { const k = b.dataset.pane, c = b.querySelector('.count'); if (c && (k === 'polas' || k === 'book')) c.textContent = (t[k] || []).length; }); }
+  function updateCounts(t) { $$('.subtabs button').forEach(b => { const k = b.dataset.pane, c = b.querySelector('.count'); if (c && (k === 'polas' || k === 'book' || k === 'video')) c.textContent = (t[k === 'video' ? 'videos' : k] || []).length; }); }
   async function copyText(s) { try { await navigator.clipboard.writeText(s); return true; } catch (e) { const ta = document.createElement('textarea'); ta.value = s; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (_) {} ta.remove(); return ok; } }
   async function sha256(s) {
     if (crypto.subtle) { const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, '0')).join(''); }
@@ -729,9 +771,9 @@
     const el = e.target; if (!el.dataset || !el.dataset.up || !el.files || !el.files.length) return;
     const kind = el.dataset.up, files = [...el.files]; el.value = '';
     if (kind === 'import') return importJson(files[0]);
-    await handleFiles(kind, files, el.closest('.drop'));
+    await handleFiles(kind, files, el.closest('.drop'), el.dataset.i);
   });
-  async function handleFiles(kind, files, dropEl) {
+  async function handleFiles(kind, files, dropEl, idx) {
     const t = T(); if (!t) return;
     const prog = dropEl && dropEl.querySelector('.progress'), bar = prog && prog.querySelector('i');
     const step = (i, n) => { if (prog) { prog.hidden = false; bar.style.width = (i / n * 100) + '%'; } };
@@ -743,7 +785,7 @@
       if (paths.length) toast(`${paths.length} photo${paths.length > 1 ? 's' : ''} ajoutée${paths.length > 1 ? 's' : ''}`);
     }
     if (kind === 'cover') { const [p] = await uploadImages(files.slice(0, 1), 'cover', step); if (p) { t.cover = p; persist(); refreshPane(); refreshListThumb(t); updateCounts(t); } }
-    if (kind === 'poster') { const [p] = await uploadImages(files.slice(0, 1), 'poster'); if (p && t.video) { const old = t.video.poster; t.video.poster = p; if (old && !refsOf(t).includes(old)) dropPath(old, t); persist(); refreshPane(); } }
+    if (kind === 'poster') { const v = (t.videos || [])[+idx]; const [p] = await uploadImages(files.slice(0, 1), 'poster'); if (p && v) { const old = v.poster; v.poster = p; if (old && !refsOf(t).includes(old)) dropPath(old, t); persist(); refreshPane(); } }
     if (kind === 'video') {
       const f = files[0];
       if (f.size > VIDEO_MAX) return toast(`Vidéo trop lourde (${fmtSize(f.size)}) : 95 Mo maximum. Exporte-la en MP4 plus léger.`, true);
@@ -751,15 +793,20 @@
       const ext = (f.name.match(/\.(\w+)$/) || [, 'mp4'])[1].toLowerCase();
       const path = `img/${t.slug}/web/film-${uid()}.${ext === 'mov' ? 'mov' : 'mp4'}`;
       step(1, 3); await addPending(path, f);
-      const old = t.video ? [t.video.src, t.video.poster] : [];
-      t.video = Object.assign({ title: '', credit: 'Réalisée par Daké', len: '' }, t.video || {}, { src: path, poster: '' });
+      // idx défini : on remplace le fichier de cette vidéo ; sinon on en ajoute une
+      t.videos = t.videos || [];
+      const prev = idx !== undefined ? t.videos[+idx] : null;
+      const old = prev ? [prev.src, prev.poster] : [];
+      const v = Object.assign({ title: '', credit: 'Réalisée par Daké', len: '' }, prev || {}, { src: path, poster: '' });
+      delete v.url;
+      if (prev) t.videos[+idx] = v; else t.videos.push(v);
       try {
         step(2, 3); const { blob, duration } = await grabPoster(pending.get(path).url, 1.2);
-        const pp = `img/${t.slug}/web/poster-${uid()}.jpg`; await addPending(pp, blob); t.video.poster = pp; t.video.len = fmtLen(duration);
+        const pp = `img/${t.slug}/web/poster-${uid()}.jpg`; await addPending(pp, blob); v.poster = pp; v.len = fmtLen(duration);
       } catch (err) { toast('Vidéo ajoutée, mais ce format ne se lit pas dans ce navigateur (aperçu impossible). Préfère le MP4.', true); }
       old.forEach(p => p && !refsOf(t).includes(p) && dropPath(p, t));
       if (t.sections) t.sections.video = true;
-      step(3, 3); persist(); refreshPane(); toast('Vidéo ajoutée');
+      step(3, 3); persist(); refreshPane(); updateCounts(t); toast(prev ? 'Vidéo remplacée' : 'Vidéo ajoutée');
     }
   }
   async function importJson(file) {

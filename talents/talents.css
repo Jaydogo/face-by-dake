@@ -915,3 +915,26 @@ html.is-leaving main,html.is-leaving .dock{opacity:0;transform:translateY(-10px)
 .units button{padding:6px 12px;border-radius:999px;opacity:.55;transition:opacity .3s var(--ease),background-color .3s var(--ease),color .3s var(--ease)}
 .units button:hover,.units button:focus-visible{opacity:1}
 .units button[aria-pressed="true"]{opacity:1;background:var(--ink);color:var(--cream)}
+
+/* Vidéos : une ou plusieurs (fichiers, YouTube, Vimeo, liens) */
+.v1-videos{display:grid;gap:clamp(28px,4vw,48px)}
+.v1-video{margin:0}
+@media (min-width:861px){ .v1-videos.is-multi{grid-template-columns:1fr 1fr;gap:28px} .v1-videos.is-multi .v1-video:first-child{grid-column:1 / -1} }
+.player img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player.is-embed img{opacity:0;transition:opacity .4s}
+a.player--link{display:block;color:#fff;text-decoration:none}
+a.player--link .play span{transition:background-color .3s var(--ease)}
+a.player--link:hover .play span{background:rgba(0,0,0,.4)}
+
+/* Aperçu de la carte composite (téléphone) : plein écran, monte du bas */
+.cc-preview{position:fixed;inset:0;z-index:300;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:rgba(26,20,18,.94);color:var(--cream);
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);opacity:0;transition:opacity .35s var(--ease)}
+.cc-preview.on{opacity:1}
+.cc-preview-top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px}
+.cc-preview-top button{color:var(--cream);font:inherit;letter-spacing:inherit;text-transform:inherit;padding:8px 0}
+.cc-preview-img{display:grid;place-items:center;padding:6px 18px;overflow:auto;transform:translateY(24px) scale(.97);transition:transform .55s var(--ease)}
+.cc-preview.on .cc-preview-img{transform:none}
+.cc-preview-img img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.45);background:#fff}
+.cc-preview-foot{padding:14px 18px 18px}
+.cc-preview-foot .btn{width:100%;background:var(--cream);border-color:var(--cream);color:var(--ink)}

@@ -48,8 +48,18 @@
   window.initPlayer = function (root) {
     root.querySelectorAll('.player').forEach(p => {
       const v = p.querySelector('video'), b = p.querySelector('.play');
-      b.addEventListener('click', () => { v.muted = false; v.controls = true; v.play(); p.classList.add('is-playing'); });
-      v.addEventListener('pause', () => { if (v.ended) p.classList.remove('is-playing'); });
+      if (!b) return;
+      b.addEventListener('click', () => {
+        // Une seule vidéo joue à la fois
+        root.querySelectorAll('.player video').forEach(o => { if (o !== v) o.pause(); });
+        if (p.dataset.embed) {   // YouTube / Vimeo : iframe créée au clic (rien de chargé avant, pas de cookies)
+          const f = document.createElement('iframe');
+          f.src = p.dataset.embed; f.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media'; f.allowFullscreen = true; f.title = p.dataset.title || 'Vidéo';
+          p.appendChild(f); p.classList.add('is-playing', 'is-embed'); return;
+        }
+        v.muted = false; v.controls = true; v.play(); p.classList.add('is-playing');
+      });
+      if (v) v.addEventListener('pause', () => { if (v.ended) p.classList.remove('is-playing'); });
     });
   };
 

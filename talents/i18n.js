@@ -123,4 +123,14 @@
       return genre === 'h' ? m : genre === 'f' ? w : `${num(half(eu - 30.5))} ${window.T('F', 'W')} · ${num(half(eu - 33))} ${window.T('H', 'M')} (US)`;
     }
   };
+
+  /* Lien de plateforme → lecteur intégré. YouTube (watch, youtu.be, shorts), Vimeo ; sinon simple lien. */
+  window.videoEmbed = function (url) {
+    const u = String(url || '').trim();
+    let m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/);
+    if (m) return { kind: 'youtube', id: m[1], embed: `https://www.youtube-nocookie.com/embed/${m[1]}?autoplay=1&rel=0&modestbranding=1&playsinline=1`, thumb: `https://i.ytimg.com/vi/${m[1]}/hqdefault.jpg`, name: 'YouTube' };
+    m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (m) return { kind: 'vimeo', id: m[1], embed: `https://player.vimeo.com/video/${m[1]}?autoplay=1&dnt=1`, thumb: '', name: 'Vimeo' };
+    return /^https?:\/\//.test(u) ? { kind: 'link', embed: '', thumb: '', name: (u.match(/^https?:\/\/(?:www\.)?([^/]+)/) || [, 'Lien'])[1] } : null;
+  };
 })();

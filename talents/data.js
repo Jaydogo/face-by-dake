@@ -12,6 +12,12 @@
   if (window.TALENTS_PREVIEW) {
     try { const d = JSON.parse(localStorage.getItem('dake-admin-preview') || 'null'); if (d) data = d; } catch (e) {}
   }
+  // Vidéos : liste (fichiers ou liens YouTube / Vimeo). Les anciennes fiches n'avaient qu'un champ « video ».
+  (data.talents || []).forEach(t => {
+    if (!Array.isArray(t.videos)) t.videos = t.video && (t.video.src || t.video.url) ? [t.video] : [];
+    t.videos = t.videos.filter(v => v && (v.src || v.url));
+    t.video = t.videos[0] || null;   // compatibilité (maquette V2)
+  });
   window.TALENTS_DATA = data;
 
   // Public : seulement les fiches visibles ET avec accord droit à l'image. En aperçu : tout.
@@ -53,11 +59,13 @@ window.TU = {
     const on = !t.sections || t.sections[k] !== false;
     if (k === 'polas') return on && (t.polas || []).length > 0;
     if (k === 'book') return on && (t.book || []).length > 0;
-    if (k === 'video') return on && !!(t.video && t.video.src);
+    if (k === 'video') return on && (t.videos || []).length > 0;
     if (k === 'stats') return on && !!(t.social && t.social.ig && t.social.tt);
     return on;
   }
 };
+
+TU.embed = window.videoEmbed;   // défini dans i18n.js (partagé avec le back office)
 
 /* =========================================================
    SEO : adresse canonique, partage, données structurées
