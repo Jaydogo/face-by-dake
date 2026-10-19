@@ -1,6 +1,5 @@
 # DAKĒ STUDIO · FACE BY DAKĒ
 User-agent: *
-Disallow: /talents/admin/
 Disallow: /propositions
 Disallow: /video/*.MOV
 Disallow: /video/*.mov
