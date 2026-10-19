@@ -89,7 +89,7 @@ if (sel) {
 // Nav reprise de DAKĒ STUDIO
 renderShell({
   root: '../../', home: sel ? './?' + sel.qs : './',
-  sections: sel ? [['#list', 'Casting'], ['#contact', T('Projet', 'Project')]] : [['#list', 'Talents'], ['#contact', T('Projet', 'Project')]],
+  sections: sel ? [['#list', 'Casting'], ['#contact', 'Contact']] : [['#list', 'Talents'], ['#contact', 'Contact']],
   book: sel ? { label: T('Parlons du projet', "Let's talk"), href: TU.mailFor(sel, shown), ids: sel.ids.join(',') } : { label: T('Proposer un projet', 'Start a project'), href: 'mailto:' + ECO.mail, ids: '' },
   dock: sel ? `Casting <strong>${esc(sel.client || T('privée', 'private'))}</strong>` : `<strong>${shown.length}</strong> talents`
 });

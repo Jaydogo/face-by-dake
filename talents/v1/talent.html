@@ -239,7 +239,7 @@ document.addEventListener('units', () => {
 
 renderFooter(document.getElementById('contact'), {
   root: '../../',
-  folio: sel ? T('Casting ', 'Casting ') + esc(sel.client || T('privé', 'private')) : T('Projet', 'Project'),
+  folio: sel ? T('Casting ', 'Casting ') + esc(sel.client || T('privé', 'private')) : 'Contact',
   title: T(`Créer avec <em>${esc(t.first)} ?</em>`, `Create with <em>${esc(t.first)}?</em>`),
   actions: [{ label: T('Proposer un projet', 'Start a project'), href: mail, book: t.slug }, { label: sel ? T('Revoir le casting', 'Back to the casting') : T('Tous les talents', 'All talents'), href: sel ? './?' + sel.qs : './', ghost: true }]
 });
@@ -248,7 +248,7 @@ initReveal();
 renderShell({
   root: '../../', home: sel ? './?' + sel.qs : './',
   // Même nav que la home : les ancres du profil sont dans la barre sous la photo
-  sections: sel ? [['./?' + sel.qs, 'Casting'], ['#contact', T('Projet', 'Project')]] : [['./', 'Talents'], ['#contact', T('Projet', 'Project')]],
+  sections: sel ? [['./?' + sel.qs, 'Casting'], ['#contact', 'Contact']] : [['./', 'Talents'], ['#contact', 'Contact']],
   book: { label: T('Créer avec ', 'Create with ') + t.first, href: mail, ids: t.slug },
   dock: `${esc(t.first)} <strong>${esc(t.last)}</strong>`
 });
