@@ -333,7 +333,7 @@ em{font-style:italic}
 .b2b{background:var(--ink);color:var(--on-dark);padding:clamp(56px,5vw,72px) var(--gut);align-items:center}
 .b2b .caps{grid-column:1 / span 3;opacity:.6}
 .b2b p{grid-column:4 / span 6;font-family:var(--serif);font-weight:300;font-size:var(--fs-h3);line-height:1.04;letter-spacing:-.03em;max-width:19em}
-.b2b .btn{grid-column:10 / -1;justify-self:end}
+.b2b-acts{grid-column:10 / -1;justify-self:end;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
 
 /* ---------- Réservation ---------- */
 /* Effet volet : la page glisse et découvre le footer fixe en dessous */
@@ -426,8 +426,8 @@ main{position:relative;z-index:1;background:var(--cream);margin-bottom:100vh;mar
   .faq{columns:1}
 
   .b2b{row-gap:16px}
-  .b2b .caps,.b2b p,.b2b .btn{grid-column:1 / -1;justify-self:start}
-  .b2b .btn{margin-top:8px}
+  .b2b .caps,.b2b p,.b2b-acts{grid-column:1 / -1;justify-self:start}
+  .b2b-acts{justify-content:flex-start;margin-top:8px}
 
   .final-top .h2,.final-top p{grid-column:1 / -1}
   .final-top p{padding-top:24px}
