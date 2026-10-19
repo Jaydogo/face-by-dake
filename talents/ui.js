@@ -128,6 +128,17 @@
       </div>`;
 
 
+    // Pied de page fixé sous la page (effet de volet) seulement s'il tient dans l'écran ;
+    // sinon (téléphone) il redevient une section normale, pour voir tout son contenu
+    const fit = () => {
+      const top = el.getBoundingClientRect().top, last = el.lastElementChild;
+      const h = last.getBoundingClientRect().bottom - top + parseFloat(getComputedStyle(el).paddingBottom);
+      document.body.classList.toggle('final-flow', h > innerHeight + 2);
+    };
+    requestAnimationFrame(fit);
+    addEventListener('resize', () => requestAnimationFrame(fit), { passive: true });
+    if (document.fonts) document.fonts.ready.then(fit);
+
     const c = el.querySelector('[data-clock]');
     const tick = () => { c.textContent = new Intl.DateTimeFormat(T('fr-FR', 'en-GB'), { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).format(new Date()); };
     tick(); setInterval(tick, 15000);

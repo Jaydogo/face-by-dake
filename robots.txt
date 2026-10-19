@@ -2,7 +2,6 @@
 User-agent: *
 Disallow: /talents/admin/
 Disallow: /propositions
-Disallow: /maquettes/
 Disallow: /video/*.MOV
 Disallow: /video/*.mov
 

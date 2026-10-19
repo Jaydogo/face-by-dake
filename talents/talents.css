@@ -374,6 +374,9 @@ html.locked body > *:not(.gate){display:none !important}
 .shell main{position:relative;z-index:1;background:var(--cream);padding-top:var(--header);margin-bottom:100vh;margin-bottom:100lvh}
 .shell .reveal-end{height:1px;margin-top:-1px}
 .shell .final{position:fixed;inset:0;z-index:0;min-height:0;padding-top:calc(var(--header) + clamp(24px,7vh,96px))}
+/* Pied de page plus haut que l'écran : section normale à la suite de la page */
+.shell.final-flow main{margin-bottom:0}
+.shell.final-flow .final{position:relative;inset:auto;min-height:100svh;overflow:visible}
 html:has(.shell){scroll-padding-top:calc(var(--header) + 12px)}
 
 .shell .header{
