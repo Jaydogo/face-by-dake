@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scène de jeu et bande démo comédien à Paris — DAKĒ STUDIO</title>
+<meta name="description" content="Scène de jeu filmée en studio pour la bande démo des comédiens, à Paris : 1 h de tournage, 45 s à 1 min livrées, 250 €.">
+<meta name="robots" content="noindex, nofollow"> <!-- maquette -->
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../b.css">
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="../">DAKĒ STUDIO<span>©</span></a>
+  <nav class="nav" aria-label="Pages"><a href="../polas/"><sup>01</sup>Polas</a><a href="../book/"><sup>02</sup>Book</a><a href="../scene-de-jeu/" aria-current="page"><sup>03</sup>Scène de jeu</a><a href="../studio/"><sup>04</sup>Le studio</a><a href="../infos/"><sup>05</sup>Infos</a></nav>
+  <a class="btn" href="../../../#reserver">Réserver</a>
+  <button class="burger" type="button" aria-expanded="false" aria-controls="sheet">Menu</button>
+</header>
+<div class="sheet" id="sheet"><nav aria-label="Pages"><a href="../polas/"><sup>01</sup>Polas</a><a href="../book/"><sup>02</sup>Book</a><a href="../scene-de-jeu/" aria-current="page"><sup>03</sup>Scène de jeu</a><a href="../studio/"><sup>04</sup>Le studio</a><a href="../infos/"><sup>05</sup>Infos</a></nav><a class="btn" href="../../../#reserver">Réserver une séance</a></div>
+<main>
+<section class="split">
+  <div class="split-info">
+    <p class="crumb mono"><a href="../">Index</a> / Scène de jeu</p>
+    <h1>Scène <em>de jeu</em></h1>
+    <p class="lede">Face caméra, simplement. Un extrait monté, prêt pour ton profil ou ta bande démo.</p>
+    <div class="card"><div class="card-top mono"><span>df.05</span><span>250 €</span></div>
+      <h3>Scène de jeu</h3><p class="mono dim">1 h de tournage · 45 s à 1 min livrées</p><p>Une scène courte tournée en studio pour mettre en valeur ton jeu, ta présence à l’image et ton interprétation.</p><ul><li>Tournage en studio</li><li>Lumière et prise de son incluses</li><li>1 scène simple et naturelle</li><li>1 version montée, 1 série de retours</li><li>Texte fourni par le studio en option : + 100 €</li></ul>
+      <a class="btn" href="../../../?formule=demo">Réserver</a></div><figure class="film"><video src="../../../video/bandedemo/apercu.mp4" poster="../../../video/bandedemo/apercu.jpg" muted loop playsinline autoplay></video></figure>
+  </div>
+  <div class="split-media"></div>
+</section>
+</main>
+<footer class="ft">
+  <div class="ft-row"><span class="mono">Paris Sud · RER B · Métro 4</span><a class="mono" href="mailto:face@dake.studio">face@dake.studio</a><a class="mono" href="https://instagram.com/dake.face">@dake.face</a><a class="mono" href="https://dake.studio">Daké© <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a><a class="mono" href="../../../talents/v1/">Face by Daké© <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></a></div>
+  <p class="ft-word" aria-hidden="true">DAKĒ<br>STUDIO</p>
+  <p class="ft-legal mono"><span>© 2026 Daké Creative Studio</span><a href="../../../mentions.html">Mentions légales</a></p>
+</footer>
+<div class="dock"><span class="mono">Dès 150&nbsp;€</span><a class="btn" href="../../../#reserver">Réserver</a></div>
+<script>
+const b=document.querySelector('.burger');
+b.addEventListener('click',()=>{const o=document.body.classList.toggle('menu-open');b.setAttribute('aria-expanded',o);b.textContent=o?'Fermer':'Menu';});
+// Accueil : la photo suit le curseur sur la liste (ordinateur)
+const list=document.querySelector('.idx'),cur=document.querySelector('.cursor');
+if(list&&cur&&matchMedia('(hover:hover)').matches){const im=cur.querySelector('img');
+  list.addEventListener('mousemove',e=>{cur.style.transform=`translate(${e.clientX}px,${e.clientY}px) translate(-50%,-50%)`;});
+  list.addEventListener('mouseover',e=>{const a=e.target.closest('a[data-img]');if(!a)return;im.src=a.dataset.img;cur.classList.add('on');});
+  list.addEventListener('mouseleave',()=>cur.classList.remove('on'));}
+</script>
+</body>
+</html>
