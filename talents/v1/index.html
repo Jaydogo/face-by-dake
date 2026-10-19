@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FACE BY DAKĒ © — Talents des productions Daké, Paris</title>
-<meta name="description" content="Talent roster by Daké Studio. Des visages, des voix, des audiences, intégrés aux productions Daké.">
+<meta name="description" content="Talent roster by DAKĒ STUDIO. Des visages, des voix, des audiences, intégrés aux productions Daké.">
 <meta name="robots" content="noindex, nofollow"> <!-- SEO-LANCEMENT : à retirer au lancement (voir SEO.md) -->
 <link rel="icon" href="../icon-48.png" sizes="48x48">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
@@ -70,7 +70,7 @@ list.innerHTML = shown.map((t, n) => `
 // SEO : titre, description, liste des talents pour Google
 TU.seo({
   title: T('FACE BY DAKĒ © — Talents des productions Daké, Paris', 'FACE BY DAKĒ © — Talent roster of Daké productions, Paris'),
-  description: T('Talent roster by Daké Studio. Mannequins, comédiens et créateurs de contenu réunis par Daké pour ses campagnes, contenus et films produits à Paris.', 'Faces, voices, audiences. Models, actors and content creators photographed and selected by Daké in Paris. Polas, book, video and stats on every profile.'),
+  description: T('Talent roster by DAKĒ STUDIO. Mannequins, comédiens et créateurs de contenu réunis par Daké pour ses campagnes, contenus et films produits à Paris.', 'Faces, voices, audiences. Models, actors and content creators photographed and selected by Daké in Paris. Polas, book, video and stats on every profile.'),
   ld: { '@graph': [FACE_ORG, { '@type': 'CollectionPage', name: 'Talents', url: SITE_URL + '/talents/v1/', inLanguage: EN ? 'en-GB' : 'fr-FR', about: { '@id': FACE_ORG['@id'] },
     mainEntity: { '@type': 'ItemList', itemListElement: TALENTS.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + '/talents/v1/talent.html?t=' + t.slug, name: t.first + ' ' + t.last })) } }] }
 });

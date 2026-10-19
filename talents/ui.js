@@ -112,19 +112,19 @@
       <div class="coords">
         <div><span class="caps">Contact</span><a href="mailto:${ECO.mail}">${ECO.mail}</a>${SETTINGS.phone ? `<a href="tel:${esc(SETTINGS.phone.replace(/\s/g, ''))}">${esc(SETTINGS.phone)}</a>` : ''}<a href="https://instagram.com/${ECO.instagram}" target="_blank" rel="noopener">@${ECO.instagram}</a></div>
         <div><span class="caps">${T('Écosystème', 'Ecosystem')}</span>
-          <a href="${ECO.studio}" target="_blank" rel="noopener">Daké© ${arr}</a>
-          <a href="${o.root}${EN ? 'en.html' : ''}">Daké Studio© ${arr}</a>
-          <span class="is-here">Face by Daké©<small> · ${T('ici', 'here')}</small></span>
+          <a href="${ECO.studio}" target="_blank" rel="noopener">DAKĒ© ${arr}</a>
+          <a href="${o.root}${EN ? 'en.html' : ''}">DAKĒ STUDIO© ${arr}</a>
+          <span class="is-here">FACE BY DAKĒ©<small> · ${T('ici', 'here')}</small></span>
           ${ECO.studioSoon ? `<span class="soon">${T('Bientôt', 'Soon')} ${ECO.studioSoon}</span>` : ''}
         </div>
         <div><span class="caps">${T('Basé à', 'Based in')}</span><span>${esc(TR(SETTINGS.city))}</span><span>${esc(TX(SETTINGS, 'reach'))}</span></div>
         <div><span class="caps">${T('Heure à Paris', 'Paris time')}</span><span class="num" data-clock>--:--</span></div>
       </div>
       <p class="spread" aria-hidden="true">${letters}</p>
-      <div class="face-note"><span class="caps">Talent roster by Daké Studio</span><p>${esc(faceNote())}</p></div>
+      <div class="face-note"><span class="caps">Talent roster by DAKĒ STUDIO</span><p>${esc(faceNote())}</p></div>
       <div class="final-foot">
         <span>© 2026 <a href="${ECO.studio}" target="_blank" rel="noopener">Daké Creative Studio</a></span>
-        <span class="links"><a href="${o.root}${EN ? 'en.html' : ''}">Daké Studio</a><a href="${o.legal || 'mentions.html'}">${T('Mentions légales', 'Legal notice')}</a></span>
+        <span class="links"><a href="${o.root}${EN ? 'en.html' : ''}">DAKĒ STUDIO</a><a href="${o.legal || 'mentions.html'}">${T('Mentions légales', 'Legal notice')}</a></span>
       </div>`;
 
 
@@ -150,7 +150,7 @@
     const arr = '<svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>';
     const b = document.body;
     b.classList.add('shell');
-    const ext = [[ECO.studio, 'Daké©', true], [o.root + (EN ? 'en.html' : ''), 'Daké Studio©', false]];
+    const ext = [[ECO.studio, 'DAKĒ©', true], [o.root + (EN ? 'en.html' : ''), 'DAKĒ STUDIO©', false]];
     // Sélecteur FR / EN, comme sur Daké Studio
     const LANG_LINKS = ['fr', 'en'].map(l => LANG === l ? `<span class="is-current" aria-current="true">${l.toUpperCase()}</span>` : `<a href="#" data-lang="${l}" lang="${l}" aria-label="${l === 'en' ? 'English version' : 'Version française'}">${l.toUpperCase()}</a>`).join('');
     const langSw = mod => `<span class="lang-switch${mod ? ' lang-switch--menu' : ''}" role="group" aria-label="${T('Langue', 'Language')}">${LANG_LINKS}</span>`;

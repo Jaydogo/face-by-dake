@@ -562,8 +562,8 @@
       <div class="cards">
         <section class="card"><div class="card-head"><h3>Coordonnées</h3></div><div class="grid2">
           ${set('Email de contact', 'mail', { ph: 'contact@dake.studio', hint: 'reçoit les propositions de projet' })}${set('Téléphone', 'phone', { ph: '+33 6 …', hint: 'facultatif' })}
-          ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien Daké©', 'studio', { ph: 'https://dake.studio', mono: 1 })}
-          ${set('Mention sous Daké©', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
+          ${set('Instagram', 'instagram', { ph: 'dake.face' })}${set('Lien DAKĒ©', 'studio', { ph: 'https://dake.studio', mono: 1 })}
+          ${set('Mention sous DAKĒ©', 'studioSoon', { ph: 'ex. dake.global', hint: 'affiche « Bientôt … »' })}${set('Ville (footer)', 'city', { ph: 'Paris, France' })}
           ${set('Zone (footer)', 'reach', { ph: "Productions en France et à l'international", cls: 'span-all' })}
           ${set('Mention de positionnement (footer)', 'note', { ph: FACE_NOTE.fr, cls: 'span-all', hint: 'vide = texte par défaut · à faire valider avant de la changer' })}
           ${set('Mention de positionnement · anglais', 'note_en', { ph: FACE_NOTE.en, cls: 'span-all', hint: 'facultatif' })}

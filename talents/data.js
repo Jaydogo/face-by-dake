@@ -95,7 +95,7 @@ TU.seo = function (o) {
   if (o.ld) { const sc = document.createElement('script'); sc.type = 'application/ld+json'; sc.textContent = JSON.stringify(Object.assign({ '@context': 'https://schema.org' }, o.ld)); h.appendChild(sc); }
 };
 TU.abs = x => !x ? '' : /^https?:/.test(x) ? x : SITE_URL + '/talents/' + x;
-window.FACE_ORG = { '@type': 'Organization', '@id': SITE_URL + '/talents/v1/#face', name: 'FACE BY DAKĒ', alternateName: ['Face by Daké', 'Face by Dake'], description: T('Talent roster by Daké Studio : talents intégrés aux productions photo et vidéo conçues et réalisées par Daké.', 'Talent roster by Daké Studio: talent featured in photo and video productions designed and made by Daké.'), url: SITE_URL + '/talents/v1/', logo: SITE_URL + '/talents/icon-512.png', parentOrganization: { '@id': SITE_URL + '/#studio', '@type': 'Organization', name: 'DAKĒ STUDIO', url: SITE_URL + '/' } };
+window.FACE_ORG = { '@type': 'Organization', '@id': SITE_URL + '/talents/v1/#face', name: 'FACE BY DAKĒ', alternateName: ['Face by Daké', 'Face by Dake'], description: T('Talent roster by DAKĒ STUDIO : talents intégrés aux productions photo et vidéo conçues et réalisées par Daké.', 'Talent roster by DAKĒ STUDIO: talent featured in photo and video productions designed and made by Daké.'), url: SITE_URL + '/talents/v1/', logo: SITE_URL + '/talents/icon-512.png', parentOrganization: { '@id': SITE_URL + '/#studio', '@type': 'Organization', name: 'DAKĒ STUDIO', url: SITE_URL + '/' } };
 
 /* =========================================================
    SÉLECTIONS PAR PROSPECT (gérées dans le back office, onglet Prospection)
