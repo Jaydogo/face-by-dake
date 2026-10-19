@@ -212,6 +212,9 @@
       const full = endTop <= 4 || scrollY >= max - 24;
       b.classList.toggle('is-scrolled', scrollY > 10 && !full);
       b.classList.toggle('at-end', endTop < innerHeight * .85);
+      // Barre d'état de Safari (heure, batterie) : même couleur que le pied de page quand il est à l'écran
+      const atEnd = b.classList.contains('at-end'), tc = document.querySelector('meta[name="theme-color"]');
+      if (tc && tc.content !== (atEnd ? '#24392F' : '#FFFFFF')) tc.content = atEnd ? '#24392F' : '#FFFFFF';
       if (b.classList.contains('menu-open')) { header.classList.remove('on-light'); return; }
       const hr = header.getBoundingClientRect(), y = hr.top + hr.height / 2;
       const dark = endTop <= y || darks().some(el => { const r = el.getBoundingClientRect(); return r.top <= y && r.bottom > y; });

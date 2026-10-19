@@ -967,3 +967,8 @@ a.player--link:hover .play span{background:rgba(0,0,0,.4)}
   .face-note + .final-foot{margin-top:10px}
   .final-foot{gap:6px 16px;font-size:.6875rem}
 }
+/* Pied de page à l'écran : le fond de la page passe au vert, pour que Safari colore aussi
+   la bande du haut (heure, batterie) et le rebond élastique, au lieu d'une ligne blanche */
+.theme-white body.shell{transition:background-color .3s var(--ease)}
+.theme-white body.shell.at-end{background:#24392F}
+

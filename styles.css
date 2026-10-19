@@ -848,3 +848,7 @@ body{transition:opacity .38s var(--ease)}
 
 /* Noms de marque (DAKĒ©, DAKĒ STUDIO©) dans le menu : en capitales sans empattements, comme le logo */
 .menu nav a.menu-ext{font-family:var(--sans);font-weight:400;font-size:clamp(1.375rem,6vw,1.75rem);letter-spacing:.01em;line-height:1.25;margin-top:4px}
+/* Pied de page à l'écran : fond de page bordeaux (bande du haut de Safari et rebond élastique) */
+body{transition:background-color .3s var(--ease),opacity .38s var(--ease)}
+html.at-end body{background:var(--bordeaux)}
+

@@ -240,6 +240,9 @@ function syncHeaderTone() {
   root.classList.toggle('is-scrolled', window.scrollY > 10 && !footerFull);
   root.classList.toggle('footer-full', footerFull);
   root.classList.toggle('at-end', endTop < innerHeight * 0.85);
+  // Barre d'état de Safari : même couleur que le pied de page quand il est à l'écran
+  const tc = document.querySelector('meta[name="theme-color"]'), want = root.classList.contains('at-end') ? '#77120D' : '#1A1412';
+  if (tc && tc.content !== want) tc.content = want;
   if (root.classList.contains('menu-open')) { header.classList.remove('on-light'); return; }
   const hr = header.getBoundingClientRect(); const y = hr.top + hr.height / 2;
   const s = toneSections.find(el => { const r = el.getBoundingClientRect(); return r.top <= y && r.bottom > y; });
