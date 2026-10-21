@@ -23,7 +23,7 @@ const CONFIG = {
   options: { photo: 20, pola: 15, hour: 80, express: 50, polas: 80, script: 100, maxPhotos: 30, maxHours: 4 },
   offers: [
     { id: 'polas',      name: 'Polas / Digitals', price: 150, duration: '30 min',  outfits: t('1 tenue', '1 outfit'), output: t('10 polas livrés', '10 polas delivered'),   photos: true, extraUnit: 'pola',  express: false,
-      images: ['bw-debardeur.jpg', 'bw-assise.jpg', 'bw-denim.jpg'] },
+      images: ['polas/prune-polas-1.jpg', 'polas/anna-polas-05.jpg', 'polas/ness-polas-16.jpg', 'polas/prune-polas-6.jpg'] },
     { id: 'decouverte', name: t('Book Découverte', 'Starter Book'), price: 300, duration: t('1 h 30', '1 h 30 min'), outfits: t('1 à 2 tenues', '1–2 outfits'), output: t('6 photos livrées', '6 photos delivered'),  photos: true, extraUnit: 'photo', express: true, polasOption: true,
       images: ['book/jaja-2-38.jpg', 'book/sofia-6.jpg', 'book/adri-6.jpg', 'book/sofia-11.jpg'] },
     { id: 'book',       name: 'Book',             price: 450, duration: t('2 à 3 h', '2–3 h'), outfits: t('1 à 3 tenues', '1–3 outfits'), output: t('15 photos livrées', '15 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
@@ -53,6 +53,7 @@ const CONFIG = {
    Jamais la même photo dans deux formules ; celles vues à la visite précédente passent en dernier. */
 const BOOK_PHOTOS = ['adri-14', 'adri-6', 'baba-3', 'baba-4', 'bleueno-14', 'bleueno-33', 'frame-49', 'jaja-2-38', 'jaja-38', 'keiishah-14', 'lindsay-11',
   'math-part-1-20', 'melancholia-1', 'muse-8', 'olivia2-3', 'omo-ita-4', 'pfw-10', 'pfw-6', 'sab-20', 'sofia-11', 'sofia-6', 'sterre-2-17'].map(n => 'book/' + n + '.jpg');
+const POLAS_PHOTOS = ['anna-polas-05', 'anna-polas-13', 'ness-polas-16', 'ness-polas-26', 'prune-polas-1', 'prune-polas-6', 'prune-polas-9'].map(n => 'polas/' + n + '.jpg');
 (function shuffleBooks() {
   let last = []; try { last = JSON.parse(localStorage.getItem('dake-book-last') || '[]'); } catch (e) {}
   const mix = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -60,17 +61,22 @@ const BOOK_PHOTOS = ['adri-14', 'adri-6', 'baba-3', 'baba-4', 'bleueno-14', 'ble
   const shown = [];
   CONFIG.offers.filter(o => ['decouverte', 'book', 'signature'].includes(o.id)).forEach(o => { o.images = pool.splice(0, o.images.length); shown.push(...o.images); });
   try { localStorage.setItem('dake-book-last', JSON.stringify(shown)); } catch (e) {}
+  // Polas : 4 tirés au hasard parmi les polas du studio
+  const po = CONFIG.offers.find(o => o.id === 'polas'); if (po) po.images = mix(POLAS_PHOTOS).slice(0, po.images.length);
 })();
 // Après les 4 premières photos d'une formule Book : 4 nouvelles au hasard, et ainsi de suite.
 // On épuise tout le book avant de revoir une photo, sans jamais reprendre celles qu'on vient de voir.
-const isBookOffer = o => o && ['decouverte', 'book', 'signature'].includes(o.id);
-let bookBag = [];
-function drawBook(n, avoid) {
-  const out = [];
+// Même principe pour les Polas, avec leur propre réserve de photos.
+const poolOf = o => o && (o.id === 'polas' ? POLAS_PHOTOS : ['decouverte', 'book', 'signature'].includes(o.id) ? BOOK_PHOTOS : null);
+const isBookOffer = o => !!poolOf(o);
+const bags = new Map();
+function drawBook(n, avoid, o) {
+  const pool = poolOf(o) || BOOK_PHOTOS, out = [];
   for (let guard = 0; out.length < n && guard < 200; guard++) {
-    if (!bookBag.length) bookBag = BOOK_PHOTOS.slice().sort(() => Math.random() - .5);
-    const f = bookBag.shift();
-    if (!avoid.includes(f) && !out.includes(f)) out.push(f); else if (guard > 100) out.push(f);
+    if (!(bags.get(pool) || []).length) bags.set(pool, pool.slice().sort(() => Math.random() - .5));
+    const f = bags.get(pool).shift();
+    // pas de doublon dans la série ; une photo de la série précédente seulement s'il n'en reste pas assez (polas : 7 photos)
+    if (!out.includes(f) && (!avoid.includes(f) || guard > 2 * pool.length)) out.push(f);
   }
   out.forEach(f => { const im = new Image(); im.src = 'img/' + f; });   // préchargées : pas de photo vide au changement
   return out;
@@ -337,7 +343,11 @@ const MOSAIC_POOL = [
   { f: 'book/adri-6.jpg', pos: '50% 20%' }, { f: 'book/adri-14.jpg' }, { f: 'book/baba-3.jpg' }, { f: 'book/bleueno-14.jpg' },
   { f: 'book/jaja-38.jpg' }, { f: 'book/jaja-2-38.jpg', pos: '50% 20%' }, { f: 'book/lindsay-11.jpg' }, { f: 'book/math-part-1-20.jpg', pos: '55% 50%' },
   { f: 'book/muse-8.jpg' }, { f: 'book/omo-ita-4.jpg', pos: '50% 20%' }, { f: 'book/pfw-6.jpg' },
-  { f: 'book/sab-20.jpg' }, { f: 'book/sterre-2-17.jpg' }, { f: 'book/sofia-6.jpg', pos: '50% 25%' }
+  { f: 'book/sab-20.jpg' }, { f: 'book/sterre-2-17.jpg' }, { f: 'book/sofia-6.jpg', pos: '50% 25%' },
+  // Polas du studio
+  { f: 'polas/prune-polas-1.jpg', pos: '50% 20%', cap: [t('Pola agence', 'Agency pola'), 'df.01'] }, { f: 'polas/anna-polas-05.jpg', pos: '50% 20%' },
+  { f: 'polas/ness-polas-16.jpg', pos: '50% 20%' }, { f: 'polas/anna-polas-13.jpg', pos: '50% 20%' }, { f: 'polas/ness-polas-26.jpg', pos: '50% 25%' },
+  { f: 'polas/prune-polas-6.jpg', pos: '50% 25%' }, { f: 'polas/prune-polas-9.jpg', pos: '50% 30%' }
 ];
 const MOSAIC_DELAY = 2000;   // toutes les ~2 s, deux cases changent (la 2e avec 0,65 s de décalage)
 (function mosaicFade() {
@@ -427,7 +437,7 @@ function showSlide(i) {
   if (i >= n) {
     // après la dernière : on glisse vers la copie de la 1re, puis on revient à 0 sans animation
     // (formule Book : la copie montre déjà la 1re photo de la nouvelle série tirée au hasard)
-    const fresh = isBookOffer(stageOffer) ? stageNext || drawBook(n, stageImgs) : null; stageNext = null;
+    const fresh = isBookOffer(stageOffer) ? stageNext || drawBook(n, stageImgs, stageOffer) : null; stageNext = null;
     const imgs = $$('img', track);
     if (fresh) imgs[n].src = CONFIG.imgPath + fresh[0];
     setX(n); loopTimer = setTimeout(() => {
@@ -440,7 +450,7 @@ function showSlide(i) {
     setX(n, false); requestAnimationFrame(() => setX(n - 1));
   } else setX(i);
   stageIndex = (i + n) % n;
-  if (stageIndex === n - 1 && isBookOffer(stageOffer) && !stageNext) stageNext = drawBook(n, stageImgs);   // préparée pendant la dernière photo
+  if (stageIndex === n - 1 && isBookOffer(stageOffer) && !stageNext) stageNext = drawBook(n, stageImgs, stageOffer);   // préparée pendant la dernière photo
   $('#stage-count').textContent = `${stageIndex + 1} / ${n}`;
   $$('span', bars).forEach((b, k) => {
     b.classList.toggle('cur', k === stageIndex);
@@ -489,7 +499,7 @@ $$('.offer-car').forEach(car => {
       if (idx !== shownIdx) setBar(idx);
       // Formule Book : à l'avant-dernière photo, la série copiée (à droite, encore hors champ) devient 4 nouvelles photos
       if (isBookOffer(o) && !fresh && idx === n - 2 && current() < n) {
-        fresh = drawBook(n, cur);
+        fresh = drawBook(n, cur, o);
         fresh.forEach((f, k) => { car.children[n + k].src = CONFIG.imgPath + f; });
       }
     });

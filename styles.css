@@ -398,6 +398,7 @@ main{position:relative;z-index:1;background:var(--cream);margin-bottom:100vh;mar
   .offer-car{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:10px;padding:0 16px}
   .offer-car::-webkit-scrollbar{display:none}
   .offer-car img{flex:0 0 74%;width:74%;min-width:0;height:auto;aspect-ratio:4/5;object-fit:cover;scroll-snap-align:start;border-radius:4px;background:#2A2624}
+  .offer-car img[src*="polas/"]{object-position:50% 12%}   /* polas en pied : la tête reste dans le cadre */
   .car-ind{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-inline:16px}
   .car-ind .dots{display:flex;gap:4px;width:100%}
   .car-ind .dots span{flex:1;height:2px;border-radius:1px;background:rgba(243,237,227,.22);overflow:hidden;transition:background-color .4s var(--ease)}
@@ -843,6 +844,9 @@ body{transition:opacity .38s var(--ease)}
 /* Footer : les trois sites Daké, celui où l'on est signalé */
 .coords .eco a,.coords .is-here{display:inline-flex;align-items:center;gap:2px;width:fit-content}
 .coords .is-here{opacity:.55}
+/* Site pas encore ouvert : grisé, non cliquable */
+.coords .is-soon{display:inline-flex;align-items:center;width:fit-content;opacity:.35;cursor:default}
+.coords .is-soon small{font-size:.75em;margin-left:4px}
 .coords .is-here small{font-size:.75em;margin-left:4px}
 .coords .dim{opacity:.6}
 
