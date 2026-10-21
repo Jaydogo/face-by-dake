@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://dake.studio/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://dake.studio/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://dake.studio/en.html"/>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://dake.studio/en.html</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://dake.studio/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://dake.studio/en.html"/>
@@ -18,14 +18,14 @@
   </url>
   <url>
     <loc>https://dake.studio/mentions.html</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.2</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://dake.studio/mentions.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://dake.studio/legal.html"/>
   </url>
   <url>
     <loc>https://dake.studio/legal.html</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.2</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://dake.studio/mentions.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://dake.studio/legal.html"/>
