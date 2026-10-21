@@ -25,7 +25,7 @@ const CONFIG = {
     { id: 'polas',      name: 'Polas / Digitals', price: 150, duration: '30 min',  outfits: t('1 tenue', '1 outfit'), output: t('10 polas livrés', '10 polas delivered'),   photos: true, extraUnit: 'pola',  express: false,
       images: ['bw-debardeur.jpg', 'bw-assise.jpg', 'bw-denim.jpg'] },
     { id: 'decouverte', name: t('Book Découverte', 'Starter Book'), price: 300, duration: t('1 h 30', '1 h 30 min'), outfits: t('1 à 2 tenues', '1–2 outfits'), output: t('6 photos livrées', '6 photos delivered'),  photos: true, extraUnit: 'photo', express: true, polasOption: true,
-      images: ['book/jaja-2-38.jpg', 'book/sofia-6.jpg', 'book/adri-6.jpg'] },
+      images: ['book/jaja-2-38.jpg', 'book/sofia-6.jpg', 'book/adri-6.jpg', 'book/sofia-11.jpg'] },
     { id: 'book',       name: 'Book',             price: 450, duration: t('2 à 3 h', '2–3 h'), outfits: t('1 à 3 tenues', '1–3 outfits'), output: t('15 photos livrées', '15 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
       images: ['book/olivia2-3.jpg', 'book/keiishah-14.jpg', 'book/jaja-38.jpg', 'book/bleueno-14.jpg'] },
     { id: 'signature',  name: t('Book Signature', 'Signature Book'), price: 650, duration: t('3 à 4 h', '3–4 h'), outfits: t('1 à 4 tenues', '1–4 outfits'), output: t('25 photos livrées', '25 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: t('polas inclus', 'polas included'),
@@ -61,6 +61,20 @@ const BOOK_PHOTOS = ['adri-14', 'adri-6', 'baba-3', 'baba-4', 'bleueno-14', 'ble
   CONFIG.offers.filter(o => ['decouverte', 'book', 'signature'].includes(o.id)).forEach(o => { o.images = pool.splice(0, o.images.length); shown.push(...o.images); });
   try { localStorage.setItem('dake-book-last', JSON.stringify(shown)); } catch (e) {}
 })();
+// Après les 4 premières photos d'une formule Book : 4 nouvelles au hasard, et ainsi de suite.
+// On épuise tout le book avant de revoir une photo, sans jamais reprendre celles qu'on vient de voir.
+const isBookOffer = o => o && ['decouverte', 'book', 'signature'].includes(o.id);
+let bookBag = [];
+function drawBook(n, avoid) {
+  const out = [];
+  for (let guard = 0; out.length < n && guard < 200; guard++) {
+    if (!bookBag.length) bookBag = BOOK_PHOTOS.slice().sort(() => Math.random() - .5);
+    const f = bookBag.shift();
+    if (!avoid.includes(f) && !out.includes(f)) out.push(f); else if (guard > 100) out.push(f);
+  }
+  out.forEach(f => { const im = new Image(); im.src = 'img/' + f; });   // préchargées : pas de photo vide au changement
+  return out;
+}
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -380,10 +394,10 @@ const img = (file, alt = '') => `<img src="${CONFIG.imgPath}${file}" alt="${alt}
 /* Desktop : visuel qui défile à droite de la liste */
 const stage = $('.stage');
 let track = $('#stage-track'); const bars = $('#stage-bars');
-let stageOffer = null, stageIndex = 0, stageTimer = null;
+let stageOffer = null, stageIndex = 0, stageTimer = null, stageNext = null, stageImgs = [];
 function renderStage(id) {
   const o = offerById(id); if (!o || !o.images) return;
-  stageOffer = o; stageIndex = 0;
+  stageOffer = o; stageIndex = 0; stageNext = null; stageImgs = o.images.slice();
   // + une copie de la 1re photo à la fin : permet de boucler à l'infini sans rembobiner
   const html = o.images.map((f, i) => img(f, `${t('Exemple', 'Example')} ${o.name}, photo ${i + 1}`)).join('') + img(o.images[0], '').replace('<img ', '<img aria-hidden="true" ');
   if (!track.children.length || reduced) { track.innerHTML = html; }
@@ -412,12 +426,21 @@ function showSlide(i) {
   if (loopTimer) { clearTimeout(loopTimer); loopTimer = null; setX(0, false); } // clic rapide pendant le bouclage
   if (i >= n) {
     // après la dernière : on glisse vers la copie de la 1re, puis on revient à 0 sans animation
-    setX(n); loopTimer = setTimeout(() => { loopTimer = null; setX(0, false); }, 950);
+    // (formule Book : la copie montre déjà la 1re photo de la nouvelle série tirée au hasard)
+    const fresh = isBookOffer(stageOffer) ? stageNext || drawBook(n, stageImgs) : null; stageNext = null;
+    const imgs = $$('img', track);
+    if (fresh) imgs[n].src = CONFIG.imgPath + fresh[0];
+    setX(n); loopTimer = setTimeout(() => {
+      loopTimer = null;
+      if (fresh) { stageImgs = fresh; fresh.forEach((f, k) => { imgs[k].src = CONFIG.imgPath + f; }); }
+      setX(0, false);
+    }, 950);
   } else if (i < 0) {
     // avant la 1re : on se place sur la copie (identique) puis on recule vers la dernière
     setX(n, false); requestAnimationFrame(() => setX(n - 1));
   } else setX(i);
   stageIndex = (i + n) % n;
+  if (stageIndex === n - 1 && isBookOffer(stageOffer) && !stageNext) stageNext = drawBook(n, stageImgs);   // préparée pendant la dernière photo
   $('#stage-count').textContent = `${stageIndex + 1} / ${n}`;
   $$('span', bars).forEach((b, k) => {
     b.classList.toggle('cur', k === stageIndex);
@@ -458,22 +481,29 @@ $$('.offer-car').forEach(car => {
   };
   const pos = i => car.children[i].offsetLeft - car.children[0].offsetLeft;
   const current = () => { let best = 0, d = Infinity; for (let i = 0; i < 2 * n; i++) { const dd = Math.abs(pos(i) - car.scrollLeft); if (dd < d) { d = dd; best = i; } } return best; };
-  let raf = 0, timer = null, touching = false, resumeT = null;
+  let raf = 0, timer = null, touching = false, resumeT = null, fresh = null, cur = o.images.slice();   // série affichée (propre à ce carrousel)
   car.addEventListener('scroll', () => {
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => {
       const idx = current() % n; // la copie = la même photo
       if (idx !== shownIdx) setBar(idx);
+      // Formule Book : à l'avant-dernière photo, la série copiée (à droite, encore hors champ) devient 4 nouvelles photos
+      if (isBookOffer(o) && !fresh && idx === n - 2 && current() < n) {
+        fresh = drawBook(n, cur);
+        fresh.forEach((f, k) => { car.children[n + k].src = CONFIG.imgPath + f; });
+      }
     });
   }, { passive: true });
   // arrivé sur la copie de la 1re photo : retour instantané au vrai début
-  const rewindIfCopy = () => { const i = current(); if (i >= n) { car.style.scrollSnapType = 'none'; car.scrollLeft = pos(i - n); requestAnimationFrame(() => car.style.scrollSnapType = ''); } };
+  const rewindIfCopy = () => { const i = current(); if (i >= n) { applyFresh(); car.style.scrollSnapType = 'none'; car.scrollLeft = pos(i - n); requestAnimationFrame(() => car.style.scrollSnapType = ''); } };
+  // Arrivé dans la série copiée : la nouvelle série prend la place de l'ancienne, sans que rien ne bouge à l'écran
+  function applyFresh() { if (!fresh) return; cur = fresh; fresh.forEach((f, k) => { car.children[k].src = CONFIG.imgPath + f; }); fresh = null; }
   car.addEventListener('scrollend', rewindIfCopy);
   const visible = () => article.classList.contains('is-open') && mqMobile.matches && !document.hidden;
   const next = () => {
     if (!touching && visible()) {
       let i = current();
-      if (i >= n) { car.style.scrollSnapType = 'none'; car.scrollLeft = pos(i - n); car.style.scrollSnapType = ''; i -= n; } // filet de sécurité
+      if (i >= n) { applyFresh(); car.style.scrollSnapType = 'none'; car.scrollLeft = pos(i - n); car.style.scrollSnapType = ''; i -= n; } // filet de sécurité
       car.scrollTo({ left: pos(i + 1), behavior: 'smooth' });
       if (!('onscrollend' in window)) setTimeout(rewindIfCopy, 800);
     }
