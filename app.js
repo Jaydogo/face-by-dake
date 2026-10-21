@@ -49,6 +49,19 @@ const CONFIG = {
   }
 };
 
+/* Formules Book : photos tirées au hasard à chaque visite parmi tout le book du studio.
+   Jamais la même photo dans deux formules ; celles vues à la visite précédente passent en dernier. */
+const BOOK_PHOTOS = ['adri-14', 'adri-6', 'baba-3', 'baba-4', 'bleueno-14', 'bleueno-33', 'frame-49', 'jaja-2-38', 'jaja-38', 'keiishah-14', 'lindsay-11',
+  'math-part-1-20', 'melancholia-1', 'muse-8', 'olivia2-3', 'omo-ita-4', 'pfw-10', 'pfw-6', 'pfw-7', 'sab-20', 'sofia-11', 'sofia-6', 'sterre-2-17'].map(n => 'book/' + n + '.jpg');
+(function shuffleBooks() {
+  let last = []; try { last = JSON.parse(localStorage.getItem('dake-book-last') || '[]'); } catch (e) {}
+  const mix = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const pool = [...mix(BOOK_PHOTOS.filter(f => !last.includes(f))), ...mix(BOOK_PHOTOS.filter(f => last.includes(f)))];
+  const shown = [];
+  CONFIG.offers.filter(o => ['decouverte', 'book', 'signature'].includes(o.id)).forEach(o => { o.images = pool.splice(0, o.images.length); shown.push(...o.images); });
+  try { localStorage.setItem('dake-book-last', JSON.stringify(shown)); } catch (e) {}
+})();
+
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const nf = new Intl.NumberFormat('fr-FR');
