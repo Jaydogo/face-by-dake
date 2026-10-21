@@ -576,17 +576,14 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 <!-- ============ COOKIES (s'affiche seulement si Clarity est configuré dans CONFIG.analytics) ============ -->
 <div class="cookie" id="cookie" role="dialog" aria-modal="false" aria-labelledby="ck-title" hidden>
   <div class="ck-main">
-    <div class="ck-k"><i>00</i>Cookies</div>
-    <h2 class="ck-title" id="ck-title">Un petit <em>réglage.</em></h2>
-    <p>Des cookies de mesure d’audience nous aident à comprendre ce qui t’intéresse. Rien n’est activé sans ton accord.</p>
-    <div class="ck-actions"><button class="btn btn--ink-ghost btn--s" type="button" data-ck="refuse">Refuser</button><button class="btn btn--s" type="button" data-ck="accept">Accepter</button></div>
-    <button class="ck-link" type="button" data-ck="prefs">Personnaliser</button>
+    <p class="ck-text" id="ck-title"><b>Mesure d’audience.</b> On aimerait voir comment le site est utilisé (clics, défilement), avec ton accord. <button class="ck-link" type="button" data-ck="prefs">Réglages</button></p>
+    <div class="ck-actions"><button class="btn btn--ghost btn--s" type="button" data-ck="refuse">Refuser</button><button class="btn btn--light btn--s" type="button" data-ck="accept">Accepter</button></div>
   </div>
   <div class="ck-prefs" hidden>
-    <div class="ck-k"><i>00</i>Cookies</div>
+    <h3>Cookies</h3>
     <div class="opt"><span class="opt-label">Nécessaires<span class="opt-sub">Brouillon de réservation, langue. Toujours actifs.</span></span><span class="switch"><input type="checkbox" checked disabled aria-label="Cookies nécessaires"><span></span></span></div>
-    <div class="opt"><label class="opt-label" for="ck-audience">Mesure d’audience<span class="opt-sub">Clics et parcours sur le site (Microsoft Clarity).</span></label><span class="switch"><input type="checkbox" id="ck-audience"><span></span></span></div>
-    <div class="ck-actions"><button class="btn btn--s" type="button" data-ck="save">Enregistrer</button></div>
+    <div class="opt"><label class="opt-label" for="ck-audience">Mesure d’audience<span class="opt-sub">Clics, défilement et parcours (Microsoft Clarity). 13 mois max.</span></label><span class="switch"><input type="checkbox" id="ck-audience"><span></span></span></div>
+    <div class="ck-actions"><button class="btn btn--light btn--s" type="button" data-ck="save">Enregistrer</button></div>
   </div>
 </div>
 

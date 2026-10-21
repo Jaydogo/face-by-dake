@@ -45,7 +45,7 @@ const CONFIG = {
   analytics: {
     umamiId: '43c6a0d1-7215-4343-97ba-a557706783a0',                                   // « Website ID » dans Umami
     umamiSrc: 'https://cloud.umami.is/script.js',  // à changer si Umami est auto-hébergé
-    clarityId: ''                                  // « Project ID » dans Microsoft Clarity
+    clarityId: 'z1az3bjc9a'                                  // « Project ID » dans Microsoft Clarity
   }
 };
 

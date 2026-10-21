@@ -807,20 +807,34 @@ body{transition:opacity .38s var(--ease)}
 .menu-open .lang-switch--menu{opacity:1;transform:none;transition:opacity .6s var(--ease) .3s,transform .9s var(--ease) .3s}
 
 /* ===== Bandeau cookies (carte éditoriale) ===== */
-.cookie{position:fixed;z-index:55;left:var(--gut);bottom:var(--gut);width:min(380px,calc(100% - 2 * var(--gut)));padding:22px;border-radius:18px;background:var(--cream);color:var(--ink);box-shadow:0 20px 60px rgba(26,20,18,.28);opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
-.cookie.is-in{opacity:1;transform:none}
-.ck-k{display:flex;gap:12px;align-items:baseline;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.ck-k i{font-family:var(--serif);font-style:italic;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--bordeaux)}
-.ck-title{font-family:var(--serif);font-weight:300;font-size:1.9rem;letter-spacing:-.03em;line-height:1;margin:12px 0 10px}
-.ck-title em{font-style:italic}
-.cookie p{font-size:.875rem;color:var(--muted);margin-bottom:16px}
+/* Bandeau cookies en verre : même matière que la barre « Réserver » (une ligne sur ordinateur) */
+.cookie{position:fixed;z-index:55;left:50%;bottom:22px;width:min(700px,calc(100% - 2 * var(--gut)));padding:10px 10px 10px 24px;border-radius:999px;color:var(--cream);
+  background:rgba(26,20,18,.42);-webkit-backdrop-filter:blur(28px) saturate(1.6);backdrop-filter:blur(28px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 18px 50px rgba(0,0,0,.25);
+  opacity:0;transform:translate(-50%,16px);transition:opacity .5s var(--ease),transform .6s var(--ease),border-radius .4s var(--ease)}
+.cookie.is-in{opacity:1;transform:translate(-50%,0)}
+.ck-main{display:flex;align-items:center;gap:20px}
+.ck-main[hidden],.ck-prefs[hidden]{display:none}
+.ck-text{flex:1;font-size:.875rem;line-height:1.4;color:rgba(243,237,227,.88)}
+.ck-text b{font-weight:500;color:var(--cream)}
 .ck-actions{display:flex;flex-wrap:wrap;gap:8px}
+.cookie .btn--ghost{border-color:rgba(243,237,227,.45)}
 .ck-link,.foot-btn{background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:.2em}
-.ck-link{margin-top:12px;font-size:.875rem;color:var(--muted)}
-.ck-prefs .ck-k{margin-bottom:14px}
-.ck-prefs .opt{padding:12px 14px;margin-bottom:6px;border-radius:14px;background:var(--paper)}
+.ck-link{font-size:.8125rem;opacity:.7}
+/* Réglages : la pilule devient un panneau de verre */
+.cookie:has(.ck-prefs:not([hidden])){width:min(420px,calc(100% - 2 * var(--gut)));padding:22px;border-radius:24px}
+.ck-prefs h3{font-family:var(--serif);font-weight:300;font-size:1.6rem;letter-spacing:-.03em;margin-bottom:14px}
+.ck-prefs .opt{padding:12px 14px;margin-bottom:6px;border-radius:14px;background:rgba(255,255,255,.08)}
+.ck-prefs .opt-sub{color:rgba(243,237,227,.65)}
 .ck-prefs .ck-actions{margin-top:12px}
-@media (max-width:860px){.cookie{left:10px;right:10px;width:auto;bottom:calc(10px + env(safe-area-inset-bottom))}}
+/* Téléphone : carte de verre posée au-dessus de la barre « Réserver » */
+@media (max-width:860px){
+  .cookie{left:12px;right:12px;width:auto;bottom:calc(74px + env(safe-area-inset-bottom));padding:16px;border-radius:24px;transform:translateY(16px)}
+  .cookie.is-in{transform:none}
+  .cookie:has(.ck-prefs:not([hidden])){width:auto}
+  .ck-main{flex-direction:column;align-items:stretch;gap:12px}
+  .ck-main .ck-actions .btn{flex:1}
+}
 .foot .foot-btn{font-size:inherit}
 
 /* Avant de réserver, mobile : chaque chapitre dans sa carte, lignes alternées */
