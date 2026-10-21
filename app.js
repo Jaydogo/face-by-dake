@@ -849,15 +849,14 @@ async function copyRecap() {
     ta.remove(); toast(ok ? t('Récapitulatif copié', 'Summary copied') : t('Copie impossible, sélectionne le texte manuellement', 'Couldn’t copy, please select the text manually')); return ok;
   }
 }
-// Demande envoyée : on passe sur la page de confirmation (merci.html / thanks.html),
-// une vraie adresse que Google Ads peut compter comme « conversion ». Le récapitulatif y reste copiable.
-const THANKS = EN ? 'thanks.html' : 'merci.html';
-const toThanks = delay => { try { sessionStorage.setItem('dake-recap', recapText()); } catch (_) {} setTimeout(() => { location.href = THANKS; }, delay); };
+// Demande envoyée : on garde la confirmation dans la fenêtre de réservation,
+// et l'adresse passe à « ?demande=envoyee » (repère pour Google Ads), sans quitter la page.
+const markSent = () => { try { history.replaceState(history.state, '', location.pathname + '?demande=envoyee' + location.hash); } catch (_) {} };
 $('#send-mail').addEventListener('click', e => {
-  toThanks(900);   // laisse le temps à l'app Mail de s'ouvrir
+  markSent(); setTimeout(() => go(6), 250);
 });
 $('#send-ig').addEventListener('click', e => {
-  copyRecap(); toThanks(600);
+  copyRecap(); markSent(); setTimeout(() => go(6), 250);
 });
 $('#copy-recap').addEventListener('click', copyRecap);
 
@@ -917,6 +916,7 @@ function closeBooking() {
   booking.setAttribute('aria-hidden', 'true');
   root.classList.remove('booking-open');
   lockScroll(false);
+  if (/[?&]demande=envoyee/.test(location.search)) { try { history.replaceState(history.state, '', location.pathname + location.hash); } catch (_) {} }
   if (state.step >= 6) {
     const keep = { ...state };
     state = Object.assign(defaults(), { firstName: keep.firstName, lastName: keep.lastName, email: keep.email, phone: keep.phone, instagram: keep.instagram, profile: keep.profile });
