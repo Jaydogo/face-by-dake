@@ -43,7 +43,7 @@ const CONFIG = {
   storageKey: 'dakeface-booking-v2',
   // Statistiques. Umami : sans cookie, toujours actif. Clarity : seulement après accord (bandeau).
   analytics: {
-    umamiId: '',                                   // « Website ID » dans Umami
+    umamiId: '43c6a0d1-7215-4343-97ba-a557706783a0',                                   // « Website ID » dans Umami
     umamiSrc: 'https://cloud.umami.is/script.js',  // à changer si Umami est auto-hébergé
     clarityId: ''                                  // « Project ID » dans Microsoft Clarity
   }
@@ -174,7 +174,7 @@ const stat = (name, data) => { try { if (window.umami) window.umami.track(name, 
 if (A.umamiId) {
   const sc = document.createElement('script');
   sc.defer = true; sc.src = A.umamiSrc; sc.dataset.websiteId = A.umamiId;
-  sc.dataset.domains = location.hostname; // ignore les visites en local
+  sc.dataset.domains = 'dake.studio'; // ne compte que le vrai site (ni les tests en local, ni l'ancienne adresse github.io)
   document.head.appendChild(sc);
 }
 // Événements suivis : boutons de réservation, formules, envoi de la demande, liens sortants
