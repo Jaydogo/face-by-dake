@@ -1,0 +1,33 @@
+# DAKĒ STUDIO · dake.studio (hébergement OVH, Apache)
+Options -Indexes
+RewriteEngine On
+# Toujours en HTTPS, sans www
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Fichiers du dépôt jamais servis (.git, notes, dossiers locaux)
+RewriteRule (^|/)\.git(/|$) - [F,L]
+RewriteRule ^(README|DEPLOIEMENT)\.md$ - [F,L]
+RewriteRule ^talents(/|$) - [R=404,L]
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
+</IfModule>
+# Pages, styles et scripts : le navigateur revérifie à chaque visite (304 si rien n'a changé)
+<FilesMatch "\.(html|css|js|xml|txt)$">
+  <IfModule mod_expires.c>
+    ExpiresActive Off
+  </IfModule>
+  <IfModule mod_headers.c>
+    Header always unset Expires
+    Header always set Cache-Control "no-cache"
+  </IfModule>
+</FilesMatch>
