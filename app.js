@@ -849,11 +849,15 @@ async function copyRecap() {
     ta.remove(); toast(ok ? t('Récapitulatif copié', 'Summary copied') : t('Copie impossible, sélectionne le texte manuellement', 'Couldn’t copy, please select the text manually')); return ok;
   }
 }
+// Demande envoyée : on passe sur la page de confirmation (merci.html / thanks.html),
+// une vraie adresse que Google Ads peut compter comme « conversion ». Le récapitulatif y reste copiable.
+const THANKS = EN ? 'thanks.html' : 'merci.html';
+const toThanks = delay => { try { sessionStorage.setItem('dake-recap', recapText()); } catch (_) {} setTimeout(() => { location.href = THANKS; }, delay); };
 $('#send-mail').addEventListener('click', e => {
-  setTimeout(() => go(6), 250);
+  toThanks(900);   // laisse le temps à l'app Mail de s'ouvrir
 });
 $('#send-ig').addEventListener('click', e => {
-  copyRecap(); setTimeout(() => go(6), 250);
+  copyRecap(); toThanks(600);
 });
 $('#copy-recap').addEventListener('click', copyRecap);
 

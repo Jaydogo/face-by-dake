@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demande envoyée · DAKĒ STUDIO ©</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F3EDE3">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<!-- Page de confirmation après l'envoi d'une demande (adresse donnée à Google Ads comme « conversion ») -->
+<style>
+  body{background:var(--cream)}
+  .ty{min-height:100svh;display:grid;align-content:center;justify-items:start;gap:18px;padding:calc(var(--gut) * 2) var(--gut) calc(var(--gut) * 2 + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+  .ty .logo{position:absolute;top:var(--gut);left:var(--gut);font-weight:500;letter-spacing:-.01em}
+  .ty .mark{width:56px;height:56px;border-radius:50%;background:var(--sauge,#A9C2AE);display:grid;place-items:center}
+  .ty .mark::after{content:"";width:18px;height:9px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) translate(1px,-2px)}
+  .ty h1{font-family:var(--serif);font-weight:300;font-size:clamp(2.4rem,7vw,4rem);line-height:.95;letter-spacing:-.04em}
+  .ty h1 em{font-style:italic}
+  .ty p{color:var(--muted);max-width:44ch}
+  .ty .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .ty .note{font-size:.875rem}
+  .ty .note a{text-decoration:underline;text-underline-offset:.2em}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main class="ty">
+  <a class="logo" href="./">DAKĒ STUDIO©</a>
+  <div class="mark" aria-hidden="true"></div>
+  <h1>Demande <em>envoyée.</em></h1>
+  <p>Merci ! On revient vers toi sous 24 h avec la confirmation du créneau et le lien de paiement de l’acompte.</p>
+  <div class="acts">
+    <a class="btn" href="./">Retour au site</a>
+    <button class="btn btn--ink-ghost" type="button" id="copy" hidden>Copier le récapitulatif</button>
+  </div>
+  <p class="note">Le message ne s’est pas ouvert ? Copie le récapitulatif et envoie-le à <a href="mailto:face@dake.studio">face@dake.studio</a> ou sur Instagram <a href="https://ig.me/m/dake.face" target="_blank" rel="noopener">@dake.face</a>.</p>
+</main>
+<script>
+// Récapitulatif gardé par le site au moment de l'envoi (pour le renvoyer si le message ne s'est pas ouvert)
+let recap = ''; try { recap = sessionStorage.getItem('dake-recap') || ''; } catch (e) {}
+const b = document.getElementById('copy');
+if (recap) { b.hidden = false; b.addEventListener('click', async () => { try { await navigator.clipboard.writeText(recap); b.textContent = 'Récapitulatif copié'; } catch (e) { prompt('', recap); } }); }
+// Demande envoyée : le formulaire repart à zéro (on garde nom et contact)
+try {
+  const K = 'dakeface-booking-v2', s = JSON.parse(localStorage.getItem(K) || 'null');
+  if (s) localStorage.setItem(K, JSON.stringify({ firstName: s.firstName, lastName: s.lastName, email: s.email, phone: s.phone, instagram: s.instagram, profile: s.profile }));
+} catch (e) {}
+</script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="43c6a0d1-7215-4343-97ba-a557706783a0" data-domains="dake.studio"></script>
+</body>
+</html>
