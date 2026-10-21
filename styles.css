@@ -877,4 +877,6 @@ body{transition:opacity .38s var(--ease)}
 body{transition:background-color .3s var(--ease),opacity .38s var(--ease)}
 html.at-end body{background:var(--bordeaux)}
 /* Petits téléphones (iPhone SE…) : l'horloge laisse sa place pour que le pied de page tienne à l'écran */
-@media (max-width:860px) and (max-height:700px){.coords .clock-cell{display:none}}
+@media (max-width:860px) and (max-height:700px){.coords .clock-cell{display:none}.coords{row-gap:8px}.coords div{gap:2px}}
+/* Très petits écrans (≤ 660 px de haut) : « Réponse sous 24 h » laisse aussi sa place */
+@media (max-width:860px) and (max-height:660px){.coords div > .dim{display:none}}
