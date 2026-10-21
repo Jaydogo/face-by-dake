@@ -14,79 +14,106 @@
   .pg{max-width:1280px;margin:0 auto;padding:40px var(--gut) 120px}
   .pg h1{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3.25rem);letter-spacing:-.03em}
   .pg > p{color:var(--muted);margin-top:12px;max-width:66ch}
-  .tag{display:inline-flex;align-items:center;gap:10px;margin:56px 0 12px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+  .tag{display:inline-flex;align-items:center;gap:10px;margin:56px 0 14px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
   .tag b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--cream);font-weight:500;letter-spacing:0}
   .tag span{color:var(--muted)}
-  .note{margin-top:10px;font-size:.875rem;color:var(--muted);max-width:70ch}
+  .note{margin-top:12px;font-size:.875rem;color:var(--muted);max-width:72ch}
+  .row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+  .col{flex:1 1 520px;display:grid;gap:20px}
+  /* Décors : le haut du site (vidéo) et une section claire (mosaïque) */
   .scene{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#2A2624 url(video/hero-desktop.jpg) center/cover}
-  .scene.m{aspect-ratio:9/16;width:min(300px,80%);border-radius:18px;background-image:url(video/hero-mobile.jpg)}
-  .row{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
-  .row .scene:first-child{flex:1 1 560px}
-  .cb-actions{display:flex;flex-wrap:wrap;gap:8px}
-  .cb-actions .btn{min-height:40px;padding:0 18px;font-size:.875rem}
-  .link-s{font-size:.875rem;text-decoration:underline;text-underline-offset:.2em;opacity:.75;background:none;border:0;color:inherit;cursor:pointer;padding:0}
+  .scene.light{background:#F3EDE3}
+  .scene.light .mos{position:absolute;inset:8% 6% 0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .scene.light .mos i{background:center/cover;aspect-ratio:3/4}
+  .scene.m{flex:0 0 auto;aspect-ratio:9/19.5;width:min(300px,86%);border-radius:28px;background-image:url(video/hero-mobile.jpg)}
+  .lbl{position:absolute;left:12px;top:10px;z-index:2;font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(243,237,227,.75)}
+  .light .lbl{color:var(--muted)}
+  /* Barre « Réserver » du site, sur mobile */
+  .dockx{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:center;padding:5px 5px 5px 16px;border-radius:999px;background:rgba(26,20,18,.55);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18);color:var(--cream);font-size:.8125rem}
+  .dockx .btn{min-height:36px;padding:0 16px;font-size:.8125rem}
+  .acts{display:flex;gap:8px}
+  .acts .btn{min-height:40px;padding:0 18px;font-size:.875rem}
+  .lnk{background:none;border:0;padding:0;color:inherit;font:inherit;font-size:.8125rem;cursor:pointer;text-decoration:underline;text-underline-offset:.2em;opacity:.7}
 
-  /* A : pilule verre, en bas au centre */
-  .cbA{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(720px,calc(100% - 24px));display:flex;align-items:center;gap:18px;padding:10px 10px 10px 22px;border-radius:999px;color:var(--cream);background:rgba(26,20,18,.5);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.18)}
-  .cbA p{flex:1;font-size:.875rem;line-height:1.4}
-  .cbA .btn--ghost{border-color:rgba(243,237,227,.5)}
-  .m .cbA{border-radius:22px;flex-direction:column;align-items:stretch;padding:16px;bottom:12px;gap:12px}
-  .m .cbA .cb-actions{justify-content:space-between}
+  /* ===== A · Verre : même matière que la barre « Réserver » et le menu ===== */
+  .glass{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:min(680px,calc(100% - 32px));display:flex;align-items:center;gap:20px;padding:10px 10px 10px 24px;border-radius:999px;color:var(--cream);
+    background:rgba(26,20,18,.42);-webkit-backdrop-filter:blur(28px) saturate(1.6);backdrop-filter:blur(28px) saturate(1.6);
+    border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 18px 50px rgba(0,0,0,.25)}
+  .glass p{flex:1;font-size:.875rem;line-height:1.4;color:rgba(243,237,227,.88)}
+  .glass p b{font-weight:500;color:var(--cream)}
+  .glass .btn--ghost{border-color:rgba(243,237,227,.45)}
+  .m .glass{left:10px;right:10px;width:auto;transform:none;bottom:68px;flex-direction:column;align-items:stretch;gap:12px;padding:16px;border-radius:24px}
+  .m .glass .acts .btn{flex:1}
+  .m .glass .row2{display:flex;justify-content:space-between;align-items:center}
 
-  /* B : carte éditoriale crème, en bas à gauche */
-  .cbB{position:absolute;left:20px;bottom:20px;width:min(360px,calc(100% - 40px));padding:22px;border-radius:18px;background:var(--cream);color:var(--ink);box-shadow:0 20px 60px rgba(26,20,18,.3)}
-  .cbB .k{display:flex;gap:12px;align-items:baseline;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .cbB .k i{font-family:var(--serif);font-style:italic;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--bordeaux)}
-  .cbB h3{font-family:var(--serif);font-weight:300;font-size:1.9rem;letter-spacing:-.03em;line-height:1;margin:12px 0 10px}
-  .cbB h3 em{font-style:italic}
-  .cbB p{font-size:.875rem;color:var(--muted);margin-bottom:16px}
-  .m .cbB{left:10px;right:10px;width:auto;bottom:10px}
+  /* ===== B · Carte éditoriale crème : titre serif, chapitre numéroté ===== */
+  .card{position:absolute;left:22px;bottom:22px;width:min(360px,calc(100% - 44px));padding:22px;border-radius:18px;background:var(--cream);color:var(--ink);box-shadow:0 20px 60px rgba(26,20,18,.3)}
+  .card .k{display:flex;gap:12px;align-items:baseline;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .card .k i{font-family:var(--serif);font-style:italic;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--bordeaux)}
+  .card h3{font-family:var(--serif);font-weight:300;font-size:1.9rem;letter-spacing:-.03em;line-height:1;margin:12px 0 10px}
+  .card h3 em{font-style:italic}
+  .card p{font-size:.875rem;color:var(--muted);margin-bottom:16px}
+  .card .acts .btn{flex:1}
+  .card .lnk{display:inline-block;margin-top:12px}
+  .light .card{box-shadow:0 0 0 1px rgba(26,20,18,.08),0 20px 60px rgba(26,20,18,.18)}
+  .m .card{left:10px;right:10px;width:auto;bottom:68px;padding:18px}
+  .m .card h3{font-size:1.6rem}
 
-  /* C : fiche mono, comme la carte de visite */
-  .cbC{position:absolute;right:20px;bottom:20px;width:min(380px,calc(100% - 40px));padding:20px;border-radius:4px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:.75rem;line-height:1.6;text-transform:uppercase;letter-spacing:.02em;box-shadow:0 20px 60px rgba(26,20,18,.3)}
-  .cbC dl{display:grid;grid-template-columns:7em 1fr;gap:10px 14px;margin:0 0 16px}
-  .cbC dt{opacity:.55}.cbC dd{margin:0}
-  .cbC .cb-actions .btn{font-family:var(--sans);text-transform:none;letter-spacing:0;border-radius:4px}
-  .m .cbC{left:10px;right:10px;width:auto;bottom:10px}
-
-  /* Panneau de réglages (commun) */
-  .prefs{margin-top:16px;width:min(440px,100%);padding:24px;border-radius:26px;background:rgba(243,237,227,.9);border:1px solid rgba(255,255,255,.55)}
-  .prefs h3{font-family:var(--serif);font-weight:300;font-size:1.75rem;letter-spacing:-.03em;margin-bottom:14px}
+  /* Réglages (communs aux deux, version verre ou crème) */
+  .prefs{width:min(420px,100%);padding:22px;border-radius:24px}
+  .prefs h3{font-family:var(--serif);font-weight:300;font-size:1.6rem;letter-spacing:-.03em;margin-bottom:14px}
   .prefs .opt{margin-bottom:6px}
+  .prefs.g{color:var(--cream);background:rgba(26,20,18,.42);-webkit-backdrop-filter:blur(28px) saturate(1.6);backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+  .prefs.g .opt{background:rgba(255,255,255,.08)}
+  .prefs.g .opt-sub{color:rgba(243,237,227,.65)}
+  .prefs.c{background:var(--cream);color:var(--ink)}
+  .prefs.c .opt{background:var(--paper)}
+  .pv{padding:28px;border-radius:6px;background:#2A2624 url(video/hero-desktop.jpg) center/cover;display:flex;gap:20px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 <div class="pg">
   <h1>Bandeau cookies</h1>
-  <p>Trois propositions dans la DA du site, sur le hero (desktop à gauche, mobile à droite). Le refus est toujours aussi visible que l’acceptation, comme l’exige la CNIL.</p>
+  <p>Deux propositions pour Microsoft Clarity (heatmaps, clics, enregistrements). Chacune est montrée sur le haut du site, sur une section claire et sur téléphone, au-dessus de la barre « Réserver ». « Refuser » a toujours le même poids qu’« Accepter », comme l’exige la CNIL.</p>
 
-  <div class="tag"><b>A</b> Pilule en verre <span>· comme la barre « Réserver »</span></div>
+  <div class="tag"><b>A</b> Verre <span>· même matière que la barre « Réserver »</span></div>
   <div class="row">
-    <div class="scene"><div class="cbA"><p>On utilise des cookies de mesure d’audience pour améliorer le site. <button class="link-s">Réglages</button></p><div class="cb-actions"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div></div></div>
-    <div class="scene m"><div class="cbA"><p>On utilise des cookies de mesure d’audience pour améliorer le site. <button class="link-s">Réglages</button></p><div class="cb-actions"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div></div></div>
+    <div class="col">
+      <div class="scene"><span class="lbl">Ordinateur · haut du site</span>
+        <div class="glass"><p><b>Mesure d’audience.</b> On aimerait voir comment le site est utilisé (clics, défilement), avec ton accord. <button class="lnk">Réglages</button></p><div class="acts"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div></div></div>
+      <div class="scene light"><span class="lbl">Ordinateur · section claire</span><div class="mos"><i style="background-image:url(img/book/olivia2-3.jpg)"></i><i style="background-image:url(img/book/frame-49.jpg)"></i><i style="background-image:url(img/book/keiishah-14.jpg)"></i><i style="background-image:url(img/book/pfw-10.jpg)"></i></div>
+        <div class="glass"><p><b>Mesure d’audience.</b> On aimerait voir comment le site est utilisé (clics, défilement), avec ton accord. <button class="lnk">Réglages</button></p><div class="acts"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div></div></div>
+    </div>
+    <div class="scene m"><span class="lbl">Téléphone</span>
+      <div class="glass"><p><b>Mesure d’audience.</b> On aimerait voir comment le site est utilisé, avec ton accord.</p><div class="acts"><button class="btn btn--ghost btn--s">Refuser</button><button class="btn btn--light btn--s">Accepter</button></div><div class="row2"><button class="lnk">Réglages</button></div></div>
+      <div class="dockx"><span>Dès <b>150 €</b></span><button class="btn btn--light">Réserver</button></div></div>
   </div>
-  <p class="note">Le plus discret : même langage que la barre « Réserver » et la nav. Ne cache presque pas la vidéo.</p>
+  <p class="note">Le plus discret et le plus « app » : flou de verre, une ligne sur ordinateur, posé au-dessus de la barre « Réserver » sur téléphone. Ne cache presque rien du site.</p>
 
-  <div class="tag"><b>B</b> Carte éditoriale <span>· titre serif, comme les sections</span></div>
+  <div class="tag"><b>B</b> Carte éditoriale <span>· titre serif, comme les chapitres du site</span></div>
   <div class="row">
-    <div class="scene"><div class="cbB"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>Des cookies de mesure d’audience nous aident à comprendre ce qui t’intéresse. Rien n’est activé sans ton accord.</p><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div><p style="margin:12px 0 0"><button class="link-s">Personnaliser</button></p></div></div>
-    <div class="scene m"><div class="cbB"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>Des cookies de mesure d’audience nous aident à améliorer le site.</p><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div></div></div>
+    <div class="col">
+      <div class="scene"><span class="lbl">Ordinateur · haut du site</span>
+        <div class="card"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>On aimerait voir comment le site est utilisé (clics, défilement). Rien n’est activé sans ton accord.</p><div class="acts"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div><button class="lnk">Réglages</button></div></div>
+      <div class="scene light"><span class="lbl">Ordinateur · section claire</span><div class="mos"><i style="background-image:url(img/book/olivia2-3.jpg)"></i><i style="background-image:url(img/book/frame-49.jpg)"></i><i style="background-image:url(img/book/keiishah-14.jpg)"></i><i style="background-image:url(img/book/pfw-10.jpg)"></i></div>
+        <div class="card"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>On aimerait voir comment le site est utilisé (clics, défilement). Rien n’est activé sans ton accord.</p><div class="acts"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div><button class="lnk">Réglages</button></div></div>
+    </div>
+    <div class="scene m"><span class="lbl">Téléphone</span>
+      <div class="card"><div class="k"><i>00</i>Cookies</div><h3>Un petit <em>réglage.</em></h3><p>On aimerait voir comment le site est utilisé. Rien n’est activé sans ton accord.</p><div class="acts"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div><button class="lnk">Réglages</button></div>
+      <div class="dockx"><span>Dès <b>150 €</b></span><button class="btn btn--light">Réserver</button></div></div>
   </div>
-  <p class="note">Le plus « marque » : reprend les chapitres numérotés et le titre serif de la section Infos.</p>
+  <p class="note">Le plus « marque » : reprend les chapitres numérotés et le titre serif des sections. Plus présent, se lit comme un petit encart du site.</p>
 
-  <div class="tag"><b>C</b> Fiche mono <span>· comme ta carte de visite</span></div>
-  <div class="row">
-    <div class="scene"><div class="cbC"><dl><dt>Cookies</dt><dd>Mesure d’audience</dd><dt>Usage</dt><dd>Améliorer le site</dd><dt>Durée</dt><dd>13 mois max.</dd></dl><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button><button class="link-s" style="margin-left:6px">Réglages</button></div></div></div>
-    <div class="scene m"><div class="cbC"><dl><dt>Cookies</dt><dd>Mesure d’audience</dd><dt>Usage</dt><dd>Améliorer le site</dd></dl><div class="cb-actions"><button class="btn btn--ink-ghost btn--s">Refuser</button><button class="btn btn--s">Accepter</button></div></div></div>
-  </div>
-  <p class="note">Le plus brut / édito : raccord avec la fiche « Jay Dogo ». Transparent par nature (on dit quoi, pourquoi, combien de temps).</p>
-
-  <div class="tag"><b>+</b> Réglages <span>· commun aux trois, s’ouvre au clic sur « Réglages »</span></div>
-  <div class="prefs">
-    <h3>Cookies</h3>
-    <div class="opt"><label class="opt-label">Nécessaires<span class="opt-sub">Brouillon de réservation, préférence de langue. Toujours actifs.</span></label><span class="switch"><input type="checkbox" checked disabled><span></span></span></div>
-    <div class="opt"><label class="opt-label">Mesure d’audience<span class="opt-sub">Pages vues, clics, parcours. Anonymisé.</span></label><span class="switch"><input type="checkbox"><span></span></span></div>
-    <div class="cb-actions" style="margin-top:14px"><button class="btn btn--s">Enregistrer</button></div>
+  <div class="tag"><b>+</b> Réglages <span>· s’ouvrent au clic sur « Réglages », dans la matière choisie</span></div>
+  <div class="pv">
+    <div class="prefs g"><h3>Cookies</h3>
+      <div class="opt"><span class="opt-label">Nécessaires<span class="opt-sub">Brouillon de réservation, langue. Toujours actifs.</span></span><span class="switch"><input type="checkbox" checked disabled><span></span></span></div>
+      <div class="opt"><span class="opt-label">Mesure d’audience<span class="opt-sub">Clics, défilement, parcours (Microsoft Clarity). 13 mois max.</span></span><span class="switch"><input type="checkbox"><span></span></span></div>
+      <div class="acts" style="margin-top:14px"><button class="btn btn--light btn--s">Enregistrer</button></div></div>
+    <div class="prefs c"><h3>Cookies</h3>
+      <div class="opt"><span class="opt-label">Nécessaires<span class="opt-sub">Brouillon de réservation, langue. Toujours actifs.</span></span><span class="switch"><input type="checkbox" checked disabled><span></span></span></div>
+      <div class="opt"><span class="opt-label">Mesure d’audience<span class="opt-sub">Clics, défilement, parcours (Microsoft Clarity). 13 mois max.</span></span><span class="switch"><input type="checkbox"><span></span></span></div>
+      <div class="acts" style="margin-top:14px"><button class="btn btn--s">Enregistrer</button></div></div>
   </div>
 </div>
 </body>
