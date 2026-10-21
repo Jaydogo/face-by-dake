@@ -10,7 +10,7 @@ const LOC = EN ? 'en-GB' : 'fr-FR';
    CONFIG : source unique des prix, des règles et des photos
    ========================================================= */
 const CONFIG = {
-  email: 'face@dake.studio',
+  email: 'contact@dake.studio',
   instagram: 'dake.face',
   deposit: 50,             // acompte fixe en €, déduit du total
   minNoticeDays: 2,
