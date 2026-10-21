@@ -26,10 +26,10 @@ const CONFIG = {
       images: ['bw-debardeur.jpg', 'bw-assise.jpg', 'bw-denim.jpg'] },
     { id: 'decouverte', name: t('Book Découverte', 'Starter Book'), price: 300, duration: t('1 h 30', '1 h 30 min'), outfits: t('1 à 2 tenues', '1–2 outfits'), output: t('6 photos livrées', '6 photos delivered'),  photos: true, extraUnit: 'photo', express: true, polasOption: true,
       images: ['book/jaja-2-38.jpg', 'book/sofia-6.jpg', 'book/adri-6.jpg'] },
-    { id: 'book',       name: 'Book',             price: 400, duration: t('2 à 3 h', '2–3 h'), outfits: t('1 à 3 tenues', '1–3 outfits'), output: t('15 photos livrées', '15 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
+    { id: 'book',       name: 'Book',             price: 450, duration: t('2 à 3 h', '2–3 h'), outfits: t('1 à 3 tenues', '1–3 outfits'), output: t('15 photos livrées', '15 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
       images: ['book/olivia2-3.jpg', 'book/keiishah-14.jpg', 'book/jaja-38.jpg', 'book/bleueno-14.jpg'] },
-    { id: 'signature',  name: t('Book Signature', 'Signature Book'), price: 600, duration: t('3 à 4 h', '3–4 h'), outfits: t('1 à 4 tenues', '1–4 outfits'), output: t('25 photos livrées', '25 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: t('polas inclus', 'polas included'),
-      images: ['book/melancholia-1.jpg', 'book/omo-ita-4.jpg', 'book/pfw-7.jpg', 'book/bleueno-33.jpg'] },
+    { id: 'signature',  name: t('Book Signature', 'Signature Book'), price: 650, duration: t('3 à 4 h', '3–4 h'), outfits: t('1 à 4 tenues', '1–4 outfits'), output: t('25 photos livrées', '25 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: t('polas inclus', 'polas included'),
+      images: ['book/melancholia-1.jpg', 'book/omo-ita-4.jpg', 'book/pfw-10.jpg', 'book/bleueno-33.jpg'] },
     { id: 'demo',       name: t('Scène de jeu', 'Acting scene'), price: 250, duration: '1 h',     outfits: '',             output: t('vidéo de 45 s à 1 min livrée', '45 s to 1 min video delivered'), photos: false, express: false, scriptOption: true }
   ],
   imgPath: 'img/',
@@ -52,7 +52,7 @@ const CONFIG = {
 /* Formules Book : photos tirées au hasard à chaque visite parmi tout le book du studio.
    Jamais la même photo dans deux formules ; celles vues à la visite précédente passent en dernier. */
 const BOOK_PHOTOS = ['adri-14', 'adri-6', 'baba-3', 'baba-4', 'bleueno-14', 'bleueno-33', 'frame-49', 'jaja-2-38', 'jaja-38', 'keiishah-14', 'lindsay-11',
-  'math-part-1-20', 'melancholia-1', 'muse-8', 'olivia2-3', 'omo-ita-4', 'pfw-10', 'pfw-6', 'pfw-7', 'sab-20', 'sofia-11', 'sofia-6', 'sterre-2-17'].map(n => 'book/' + n + '.jpg');
+  'math-part-1-20', 'melancholia-1', 'muse-8', 'olivia2-3', 'omo-ita-4', 'pfw-10', 'pfw-6', 'sab-20', 'sofia-11', 'sofia-6', 'sterre-2-17'].map(n => 'book/' + n + '.jpg');
 (function shuffleBooks() {
   let last = []; try { last = JSON.parse(localStorage.getItem('dake-book-last') || '[]'); } catch (e) {}
   const mix = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -322,7 +322,7 @@ const MOSAIC_POOL = [
   { f: 'book/pfw-10.jpg' }, { f: 'book/melancholia-1.jpg', cap: [t('Éditorial', 'Editorial'), 'df.04'] }, { f: 'book/bleueno-33.jpg' }, { f: 'book/sofia-11.jpg', pos: '50% 30%' },
   { f: 'book/adri-6.jpg', pos: '50% 20%' }, { f: 'book/adri-14.jpg' }, { f: 'book/baba-3.jpg' }, { f: 'book/bleueno-14.jpg' },
   { f: 'book/jaja-38.jpg' }, { f: 'book/jaja-2-38.jpg', pos: '50% 20%' }, { f: 'book/lindsay-11.jpg' }, { f: 'book/math-part-1-20.jpg', pos: '55% 50%' },
-  { f: 'book/muse-8.jpg' }, { f: 'book/omo-ita-4.jpg', pos: '50% 20%' }, { f: 'book/pfw-6.jpg' }, { f: 'book/pfw-7.jpg' },
+  { f: 'book/muse-8.jpg' }, { f: 'book/omo-ita-4.jpg', pos: '50% 20%' }, { f: 'book/pfw-6.jpg' },
   { f: 'book/sab-20.jpg' }, { f: 'book/sterre-2-17.jpg' }, { f: 'book/sofia-6.jpg', pos: '50% 25%' }
 ];
 const MOSAIC_DELAY = 2000;   // toutes les ~2 s, deux cases changent (la 2e avec 0,65 s de décalage)
