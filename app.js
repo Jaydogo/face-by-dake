@@ -25,11 +25,11 @@ const CONFIG = {
     { id: 'polas',      name: 'Polas / Digitals', price: 150, duration: '30 min',  outfits: t('1 tenue', '1 outfit'), output: t('10 polas livrés', '10 polas delivered'),   photos: true, extraUnit: 'pola',  express: false,
       images: ['bw-debardeur.jpg', 'bw-assise.jpg', 'bw-denim.jpg'] },
     { id: 'decouverte', name: t('Book Découverte', 'Starter Book'), price: 300, duration: t('1 h 30', '1 h 30 min'), outfits: t('1 à 2 tenues', '1–2 outfits'), output: t('6 photos livrées', '6 photos delivered'),  photos: true, extraUnit: 'photo', express: true, polasOption: true,
-      images: ['film-pied.jpg', 'debardeur-chaud.jpg', 'rouge.jpg'] },
+      images: ['book/jaja-2-38.jpg', 'book/sofia-6.jpg', 'book/adri-6.jpg'] },
     { id: 'book',       name: 'Book',             price: 400, duration: t('2 à 3 h', '2–3 h'), outfits: t('1 à 3 tenues', '1–3 outfits'), output: t('15 photos livrées', '15 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasOption: true, reco: true,
-      images: ['jean-pied.jpg', 'denim-brun.jpg', 'rideau-bleu.jpg', 'hoodie.jpg'] },
+      images: ['book/olivia2-3.jpg', 'book/keiishah-14.jpg', 'book/jaja-38.jpg', 'book/bleueno-14.jpg'] },
     { id: 'signature',  name: t('Book Signature', 'Signature Book'), price: 600, duration: t('3 à 4 h', '3–4 h'), outfits: t('1 à 4 tenues', '1–4 outfits'), output: t('25 photos livrées', '25 photos delivered'), photos: true, extraUnit: 'photo', express: true, polasIncluded: true, extra: t('polas inclus', 'polas included'),
-      images: ['rouge.jpg', 'bw-lampe.jpg', 'debardeur-chaud.jpg', 'bw-sol.jpg'] },
+      images: ['book/melancholia-1.jpg', 'book/omo-ita-4.jpg', 'book/pfw-7.jpg', 'book/bleueno-33.jpg'] },
     { id: 'demo',       name: t('Scène de jeu', 'Acting scene'), price: 250, duration: '1 h',     outfits: '',             output: t('vidéo de 45 s à 1 min livrée', '45 s to 1 min video delivered'), photos: false, express: false, scriptOption: true }
   ],
   imgPath: 'img/',
@@ -304,18 +304,19 @@ mqMobile.addEventListener ? mqMobile.addEventListener('change', onMq) : mqMobile
    Grille photo : les images s'alternent en fondu
    ========================================================= */
 const MOSAIC_POOL = [
-  { f: 'bw-debardeur.jpg', pos: '50% 20%', cap: [t('Pola agence', 'Agency pola'), 'df.01'] },
-  { f: 'rideau-bleu.jpg', cap: [t('Portrait comédien', 'Actor portrait'), 'df.03'] },
-  { f: 'bw-assise.jpg' }, { f: 'rouge.jpg', pos: '50% 0' }, { f: 'film-pied.jpg' }, { f: 'debardeur-chaud.jpg' },
-  { f: 'denim-brun.jpg', cap: [t('Éditorial', 'Editorial'), 'df.04'] }, { f: 'hoodie.jpg', pos: '50% 10%' },
-  { f: 'jean-pied.jpg' }, { f: 'bw-denim.jpg' }, { f: 'bw-lampe.jpg' }, { f: 'sol-bleu.jpg', pos: '60% 40%' },
-  { f: 'bw-sol.jpg' }, { f: 'pola-tresses.jpg', pos: '50% 25%' }
+  // Book : photos du studio (dossier img/book)
+  { f: 'book/olivia2-3.jpg', cap: ['Book', 'df.03'] }, { f: 'book/frame-49.jpg' }, { f: 'book/baba-4.jpg' }, { f: 'book/keiishah-14.jpg', pos: '50% 20%' },
+  { f: 'book/pfw-10.jpg' }, { f: 'book/melancholia-1.jpg', cap: [t('Éditorial', 'Editorial'), 'df.04'] }, { f: 'book/bleueno-33.jpg' }, { f: 'book/sofia-11.jpg', pos: '50% 30%' },
+  { f: 'book/adri-6.jpg', pos: '50% 20%' }, { f: 'book/adri-14.jpg' }, { f: 'book/baba-3.jpg' }, { f: 'book/bleueno-14.jpg' },
+  { f: 'book/jaja-38.jpg' }, { f: 'book/jaja-2-38.jpg', pos: '50% 20%' }, { f: 'book/lindsay-11.jpg' }, { f: 'book/math-part-1-20.jpg', pos: '55% 50%' },
+  { f: 'book/muse-8.jpg' }, { f: 'book/omo-ita-4.jpg', pos: '50% 20%' }, { f: 'book/pfw-6.jpg' }, { f: 'book/pfw-7.jpg' },
+  { f: 'book/sab-20.jpg' }, { f: 'book/sterre-2-17.jpg' }, { f: 'book/sofia-6.jpg', pos: '50% 25%' }
 ];
 const MOSAIC_DELAY = 2000;   // toutes les ~2 s, deux cases changent (la 2e avec 0,65 s de décalage)
 (function mosaicFade() {
   const grid = $('.mosaic'); if (!grid || reduced) return;
   const tiles = $$('.media', grid);
-  const fileOf = t => (t.querySelector('img:last-of-type').getAttribute('src') || '').split('/').pop();
+  const fileOf = t => (t.querySelector('img:last-of-type').getAttribute('src') || '').replace(/^.*?img\//, '');   // ex. book/olivia2-3.jpg
   let visible = false, timer = null, recent = [];
   const pendingFiles = new Set(), pendingTiles = new Set();
   function swap() {
