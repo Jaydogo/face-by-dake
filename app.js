@@ -346,8 +346,8 @@ const MOSAIC_POOL = [
   { f: 'book/sab-20.jpg' }, { f: 'book/sterre-2-17.jpg' }, { f: 'book/sofia-6.jpg', pos: '50% 25%' },
   // Polas du studio
   { f: 'polas/prune-polas-1.jpg', pos: '50% 20%', cap: [t('Pola agence', 'Agency pola'), 'df.01'] }, { f: 'polas/anna-polas-05.jpg', pos: '50% 20%' },
-  { f: 'polas/ness-polas-16.jpg', pos: '50% 20%' }, { f: 'polas/anna-polas-13.jpg', pos: '50% 20%' }, { f: 'polas/ness-polas-26.jpg', pos: '50% 25%' },
-  { f: 'polas/prune-polas-6.jpg', pos: '50% 25%' }, { f: 'polas/prune-polas-9.jpg', pos: '50% 30%' }
+  { f: 'polas/ness-polas-16.jpg', pos: '50% 20%' }, { f: 'polas/anna-polas-13.jpg', pos: '50% 20%' }, { f: 'polas/ness-polas-26.jpg', pos: '50% 65%' },
+  { f: 'polas/prune-polas-6.jpg', pos: '50% 65%' }, { f: 'polas/prune-polas-9.jpg', pos: '50% 65%' }
 ];
 const MOSAIC_DELAY = 2000;   // toutes les ~2 s, deux cases changent (la 2e avec 0,65 s de décalage)
 (function mosaicFade() {

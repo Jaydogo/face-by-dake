@@ -263,6 +263,9 @@ em{font-style:italic}
 .stage-frame{position:relative;aspect-ratio:4/5;overflow:hidden;background:#2A2624}
 .stage-track{display:flex;height:100%;transition:transform .9s var(--ease)}
 .stage-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover}
+/* Polas en pied : cadrage qui garde la tête ET les pieds (sujet entre ~12 % et ~93 % de la hauteur) */
+.offer-car img:is([src$="ness-polas-26.jpg"],[src$="prune-polas-6.jpg"],[src$="prune-polas-9.jpg"]),
+.stage-track img:is([src$="ness-polas-26.jpg"],[src$="prune-polas-6.jpg"],[src$="prune-polas-9.jpg"]){object-position:50% 65% !important}
 .stage-track.wipe{position:absolute;inset:0;z-index:0;clip-path:inset(100% 0 0 0);transition:clip-path .95s cubic-bezier(.76,0,.24,1),transform .9s var(--ease)}
 .stage-track.wipe img{transform:scale(1.08);transition:transform 1.2s var(--ease)}
 .stage-track.wipe.in{clip-path:inset(0 0 0 0)}
@@ -398,7 +401,7 @@ main{position:relative;z-index:1;background:var(--cream);margin-bottom:100vh;mar
   .offer-car{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:10px;padding:0 16px}
   .offer-car::-webkit-scrollbar{display:none}
   .offer-car img{flex:0 0 74%;width:74%;min-width:0;height:auto;aspect-ratio:4/5;object-fit:cover;scroll-snap-align:start;border-radius:4px;background:#2A2624}
-  .offer-car img[src*="polas/"]{object-position:50% 12%}   /* polas en pied : la tête reste dans le cadre */
+  .offer-car img[src*="polas/"]{object-position:50% 12%}   /* polas : la tête reste dans le cadre */
   .car-ind{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-inline:16px}
   .car-ind .dots{display:flex;gap:4px;width:100%}
   .car-ind .dots span{flex:1;height:2px;border-radius:1px;background:rgba(243,237,227,.22);overflow:hidden;transition:background-color .4s var(--ease)}
