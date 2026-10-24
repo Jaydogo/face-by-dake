@@ -852,11 +852,28 @@ async function copyRecap() {
 // Demande envoyée : on garde la confirmation dans la fenêtre de réservation,
 // et l'adresse passe à « ?demande=envoyee » (repère pour Google Ads), sans quitter la page.
 const markSent = () => { try { history.replaceState(history.state, '', location.pathname + '?demande=envoyee' + location.hash); } catch (_) {} };
+// La demande est aussi enregistrée sur le site : elle arrive dans le back office (onglet Demandes)
+function recordRequest(canal) {
+  const o = offerById(state.offer);
+  const data = {
+    formule: o ? `${o.name} (${eur(o.price)})` : '',
+    options: lines().slice(1).map(l => `${l.label} (${l.amount ? eur(l.amount) : t('inclus', 'included')})`),
+    demandes: extrasList(),
+    date: state.date || '', moment: slotLabel(), flexible: !!state.flexible,
+    total: eur(total()), acompte: eur(deposit()),
+    prenom: state.firstName, nom: state.lastName, email: state.email, telephone: state.phone,
+    instagram: state.instagram, profil: state.profile, objectif: state.goal, message: state.message
+  };
+  try {
+    fetch('/api/demande.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'seance', canal, page: location.pathname, langue: EN ? 'en' : 'fr', data }) }).catch(() => {});
+  } catch (_) {}
+}
 $('#send-mail').addEventListener('click', e => {
-  markSent(); setTimeout(() => go(6), 250);
+  recordRequest('email'); markSent(); setTimeout(() => go(6), 250);
 });
 $('#send-ig').addEventListener('click', e => {
-  copyRecap(); markSent(); setTimeout(() => go(6), 250);
+  recordRequest('instagram'); copyRecap(); markSent(); setTimeout(() => go(6), 250);
 });
 $('#copy-recap').addEventListener('click', copyRecap);
 
