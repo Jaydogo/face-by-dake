@@ -6,11 +6,11 @@
    ========================================================= */
 if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) { http_response_code(404); exit; }
 
-function dake_mail($to, $subject, $label, $blocks, $extraHeaders = []) {
+function dake_mail($to, $subject, $label, $blocks, $extraHeaders = [], $test = null) {
   // Blocs : un texte = un paragraphe ; ['titre' => …] ; ['details' => [[libellé, valeur, lien?], …]] ; ['cta' => …, 'url' => …, 'note' => …]
   // Typographie française : espace insécable avant ? ! : ; (le signe ne part pas seul à la ligne)
   $h = fn($s) => htmlspecialchars(preg_replace('/ ([?!:;])/u', "\u{00A0}$1", (string)$s), ENT_QUOTES, 'UTF-8');
-  if (str_starts_with($_SERVER['HTTP_HOST'] ?? '', 'staging.')) $subject = '[TEST] ' . $subject;
+  if ($test ?? str_starts_with($_SERVER['HTTP_HOST'] ?? '', 'staging.')) $subject = '[TEST] ' . $subject;
   $ink = '#1A1412'; $mute = '#8A7F78'; $line = '#E8E2DA';
   $sans = "font-family:'Instrument Sans','Helvetica Neue',Helvetica,Arial,sans-serif";
   $mono = "font-family:'IBM Plex Mono','SF Mono',Menlo,Consolas,'Courier New',monospace";
