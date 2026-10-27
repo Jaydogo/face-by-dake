@@ -856,6 +856,7 @@ function recordRequest(canal) {
   const o = offerById(state.offer);
   const data = {
     formule: o ? `${o.name} (${eur(o.price)})` : '',
+    offre: state.offer || '',
     options: lines().slice(1).map(l => `${l.label} (${l.amount ? eur(l.amount) : t('inclus', 'included')})`),
     demandes: extrasList(),
     date: state.date || '', moment: slotLabel(), flexible: !!state.flexible,
