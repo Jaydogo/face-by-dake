@@ -35,7 +35,7 @@ const CONFIG = {
   imgPath: 'img/',
   stageDelay: 3600,        // durée d'une photo dans le visuel qui défile (ms)
   slots: [
-    { id: 'matin', label: t('Matin', 'Morning'), hours: t('9\u00a0h\u00a0–\u00a012\u00a0h', '9\u00a0am\u00a0–\u00a012\u00a0pm') },
+    { id: 'matin', label: t('Matin', 'Morning'), hours: t('9\u00a0h\u00a0–\u00a013\u00a0h', '9\u00a0am\u00a0–\u00a01\u00a0pm') },
     { id: 'aprem', label: t('Après-midi', 'Afternoon'), hours: t('13\u00a0h\u00a0–\u00a017\u00a0h', '1\u00a0pm\u00a0–\u00a05\u00a0pm') },
     { id: 'soir',  label: t('Soirée', 'Evening'), hours: t('18\u00a0h\u00a0–\u00a021\u00a0h', '6\u00a0pm\u00a0–\u00a09\u00a0pm') }
   ],
@@ -856,7 +856,7 @@ function recordRequest(canal) {
   const o = offerById(state.offer);
   const data = {
     formule: o ? `${o.name} (${eur(o.price)})` : '',
-    offre: state.offer || '',
+    offre: state.offer || '', heures_sup: state.hours || 0,
     options: lines().slice(1).map(l => `${l.label} (${l.amount ? eur(l.amount) : t('inclus', 'included')})`),
     demandes: extrasList(),
     date: state.date || '', moment: slotLabel(), flexible: !!state.flexible,
