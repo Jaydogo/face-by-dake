@@ -98,7 +98,7 @@ if (!empty($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL))
     . '<td width="226" height="151" bgcolor="#efefed" valign="bottom" style="width:226px;height:151px;padding:0 13px 12px;background:#efefed;vertical-align:bottom"><a href="https://dake.studio" style="text-decoration:none"><img src="https://dake.studio/dake-logo.png" width="226" height="60" alt="DAKÉ®" style="display:block;width:226px;height:60px;border:0"></a></td>'
     . '<td width="10" style="width:10px;min-width:10px;font-size:1px;line-height:1px">&nbsp;</td>'
     . '<td width="226" height="151" bgcolor="#efefed" valign="top" style="width:226px;height:151px;padding:12px 13px 0;background:#efefed;vertical-align:top"><table cellpadding="0" cellspacing="0" border="0" width="226" style="border-collapse:collapse;width:226px">'
-    . "<tr><td width=\"76\" style=\"width:76px;padding:0;vertical-align:top;$mono\">DAKÉ®</td><td style=\"padding:0;vertical-align:top;$mono\">JEAN-YVES DOGO<br>CREATIVE DIRECTOR<br>+ PHOTOGRAPHER</td></tr>"
+    . "<tr><td width=\"76\" style=\"width:76px;padding:0;vertical-align:top;$mono\">DAKÉ®</td><td style=\"padding:0;vertical-align:top;$mono\">JAY DOGO<br>CREATIVE DIRECTOR<br>+ PHOTOGRAPHER</td></tr>"
     . "<tr><td style=\"padding:22px 0 0;vertical-align:top;$mono\">A.</td><td style=\"padding:22px 0 0;vertical-align:top;$mono\">PARIS, FRANCE</td></tr>"
     . "<tr><td style=\"padding:6px 0 0;vertical-align:top;$mono\">E:</td><td style=\"padding:6px 0 0;vertical-align:top;$mono\"><a href=\"mailto:contact@dake.studio\" style=\"$lien\">CONTACT@DAKE.STUDIO</a></td></tr>"
     . "<tr><td style=\"padding:0;vertical-align:top;$mono\">W:</td><td style=\"padding:0;vertical-align:top;$mono\"><a href=\"https://dake.studio\" style=\"$lien\">DAKE.STUDIO</a></td></tr>"
@@ -115,7 +115,7 @@ if (!empty($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL))
     . "<tr><td style=\"padding:0 0 36px;$serif\">" . $h($txt[4]) . '</td></tr>'
     . "<tr><td>$carte</td></tr>"
     . '</table></td></tr></table></body></html>';
-  $plain = implode("\n\n", array_slice($txt, 1, 4)) . "\n\n--\nDAKÉ® · JEAN-YVES DOGO\nCREATIVE DIRECTOR + PHOTOGRAPHER\nPARIS, FRANCE\ncontact@dake.studio · https://dake.studio\n@dake.creatives · @dake.face · @ledockernoir";
+  $plain = implode("\n\n", array_slice($txt, 1, 4)) . "\n\n--\nDAKÉ® · JAY DOGO\nCREATIVE DIRECTOR + PHOTOGRAPHER\nPARIS, FRANCE\ncontact@dake.studio · https://dake.studio\n@dake.creatives · @dake.face · @ledockernoir";
 
   $b = 'dake-' . bin2hex(random_bytes(8));
   $corps = "--$b\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($plain))
