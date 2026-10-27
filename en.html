@@ -541,7 +541,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
         <dl class="recap" id="recap"></dl>
         <ul class="bill" id="bill"></ul>
         <div class="send">
-          <a class="btn btn--block" id="send-mail" href="#">Send my request by email</a>
+          <button class="btn btn--block" type="button" id="send-site">Send my request</button>
           <a class="btn btn--ink-ghost btn--block" id="send-ig" href="https://ig.me/m/dake.face" target="_blank" rel="noopener">Send on Instagram</a>
         </div>
         <p class="note">On Instagram, the summary is copied: just paste it into the chat.</p>
@@ -550,13 +550,14 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 
       <section class="bk-step done" data-step="6" aria-labelledby="s6t" hidden>
         <div class="mark" aria-hidden="true"></div>
-        <h3 id="s6t">Request ready to send</h3>
-        <p class="hint">Send the message that just opened. Within 24 h you’ll receive your slot confirmation and the deposit payment link.</p>
+        <h3 id="s6t">Request sent</h3>
+        <p class="hint" id="done-text"></p>
         <div class="send">
-          <button class="btn btn--ink-ghost btn--block" type="button" id="copy-recap">Copy the summary</button>
-          <button class="btn btn--block" type="button" data-close>Close</button>
+          <a class="btn btn--block" id="done-mail" href="#" hidden>Send by email</a>
+          <button class="btn btn--ink-ghost btn--block" type="button" id="copy-recap" hidden>Copy the summary</button>
+          <button class="btn btn--block" type="button" data-close id="done-close">Close</button>
         </div>
-        <p class="note">The message didn’t open? Copy the summary and send it to <a href="mailto:contact@dake.studio">contact@dake.studio</a>.</p>
+        <p class="note" id="done-note">Nothing else to do: no need to send the summary again.</p>
       </section>
     </div>
 

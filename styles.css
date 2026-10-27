@@ -880,3 +880,6 @@ html.at-end body{background:var(--bordeaux)}
 /* Petits écrans (≤ 700 px de haut) : « Réponse sous 24 h » laisse aussi sa place */
 @media (max-width:860px) and (max-height:700px){.coords div > .dim{display:none}}
 @media (max-width:860px) and (max-height:660px){.coords .eco{gap:0}.final .actions{margin-top:10px}}
+
+/* Fin de réservation : les boutons de secours (email, copie) ne s’affichent qu’en cas de besoin */
+.done [hidden]{display:none!important}

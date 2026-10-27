@@ -179,10 +179,10 @@ if (A.umamiId) {
 }
 // Événements suivis : boutons de réservation, formules, envoi de la demande, liens sortants
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-book], a[data-lang], a[href*="dake.studio"], a[href*="instagram.com"], a[href^="mailto:"], #send-mail, #send-ig, .offer-head, .ed-qi button');
+  const el = e.target.closest('[data-book], a[data-lang], a[href*="dake.studio"], a[href*="instagram.com"], a[href^="mailto:"], #send-site, #send-ig, .offer-head, .ed-qi button');
   if (!el) return;
   if (el.matches('[data-book]')) stat('reserver-clic', { formule: el.dataset.book || 'aucune', lang: EN ? 'en' : 'fr' });
-  else if (el.id === 'send-mail') stat('demande-envoyee', { canal: 'email', formule: state.offer, total: total() });
+  else if (el.id === 'send-site') stat('demande-envoyee', { canal: 'site', formule: state.offer, total: total() });
   else if (el.id === 'send-ig') stat('demande-envoyee', { canal: 'instagram', formule: state.offer, total: total() });
   else if (el.matches('.offer-head')) stat('formule-ouverte', { formule: el.closest('.offer').dataset.offer });
   else if (el.matches('.ed-qi button')) stat('faq-ouverte', { question: el.textContent.trim().slice(0, 60) });
@@ -837,7 +837,6 @@ function mailHref() {
   return `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(recapText())}`;
 }
 function syncSend() {
-  $('#send-mail').href = mailHref();
 }
 async function copyRecap() {
   const txt = recapText();
@@ -864,16 +863,36 @@ function recordRequest(canal) {
     prenom: state.firstName, nom: state.lastName, email: state.email, telephone: state.phone,
     instagram: state.instagram, profil: state.profile, objectif: state.goal, message: state.message
   };
-  try {
-    fetch('/api/demande.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'seance', canal, page: location.pathname, langue: EN ? 'en' : 'fr', data }) }).catch(() => {});
-  } catch (_) {}
+  return fetch('/api/demande.php', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'seance', canal, page: location.pathname, langue: EN ? 'en' : 'fr', data }) })
+    .then(r => r.json()).then(j => !!j.ok).catch(() => false);
 }
-$('#send-mail').addEventListener('click', e => {
-  recordRequest('email'); markSent(); setTimeout(() => go(6), 250);
+// Fin du formulaire : on dit clairement si la demande est arrivée (sinon, envoi par email en secours)
+function showDone(ok, canal) {
+  const name = state.firstName ? ' ' + state.firstName : '';
+  $('#s6t').textContent = ok ? t('Demande envoyée', 'Request sent') : t('L’envoi n’a pas abouti', 'Sending failed');
+  $('#done-text').textContent = !ok
+    ? t('Ta demande n’est pas partie. Envoie-la par email, tout est déjà rempli :', 'Your request wasn’t sent. Send it by email, everything is filled in:')
+    : canal === 'instagram'
+      ? t(`Merci${name} ! Ta demande est enregistrée et le récapitulatif est copié : colle-le dans la conversation Instagram qui vient de s’ouvrir.`, `Thank you${name}! Your request is saved and the summary is copied: paste it into the Instagram chat that just opened.`)
+      : t(`Merci${name} ! Ta demande est bien arrivée chez DAKĒ STUDIO. Un email de confirmation vient de partir vers ${state.email}. Tu reçois sous 24 h la confirmation du créneau et le lien de paiement de l’acompte.`, `Thank you${name}! Your request has reached DAKĒ STUDIO. A confirmation email is on its way to ${state.email}. Within 24 h you’ll receive your slot confirmation and the deposit payment link.`);
+  $('#done-mail').hidden = ok; if (!ok) $('#done-mail').href = mailHref();
+  $('#copy-recap').hidden = ok && canal !== 'instagram';
+  $('#done-close').classList.toggle('btn--ink-ghost', !ok);
+  $('#done-note').hidden = !ok || canal === 'instagram';
+  $('.done .mark').hidden = !ok;
+  if (ok) markSent();
+  go(6);
+}
+$('#send-site').addEventListener('click', async e => {
+  const b = e.currentTarget; if (b.disabled) return;
+  const label = b.textContent; b.disabled = true; b.textContent = t('Envoi…', 'Sending…');
+  const ok = await recordRequest('site');
+  b.disabled = false; b.textContent = label;
+  showDone(ok, 'site');
 });
-$('#send-ig').addEventListener('click', e => {
-  recordRequest('instagram'); copyRecap(); markSent(); setTimeout(() => go(6), 250);
+$('#send-ig').addEventListener('click', async e => {
+  copyRecap(); showDone(await recordRequest('instagram'), 'instagram');
 });
 $('#copy-recap').addEventListener('click', copyRecap);
 

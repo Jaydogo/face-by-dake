@@ -541,7 +541,7 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
         <dl class="recap" id="recap"></dl>
         <ul class="bill" id="bill"></ul>
         <div class="send">
-          <a class="btn btn--block" id="send-mail" href="#">Envoyer ma demande par email</a>
+          <button class="btn btn--block" type="button" id="send-site">Envoyer ma demande</button>
           <a class="btn btn--ink-ghost btn--block" id="send-ig" href="https://ig.me/m/dake.face" target="_blank" rel="noopener">Envoyer sur Instagram</a>
         </div>
         <p class="note">Sur Instagram, le récapitulatif est copié : colle-le dans la conversation.</p>
@@ -550,13 +550,14 @@ if(document.fonts&&document.fonts.load){Promise.race([Promise.all([document.font
 
       <section class="bk-step done" data-step="6" aria-labelledby="s6t" hidden>
         <div class="mark" aria-hidden="true"></div>
-        <h3 id="s6t">Demande prête à partir</h3>
-        <p class="hint">Envoie le message qui vient de s’ouvrir. Tu reçois sous 24 h la confirmation du créneau et le lien de paiement de l’acompte.</p>
+        <h3 id="s6t">Demande envoyée</h3>
+        <p class="hint" id="done-text"></p>
         <div class="send">
-          <button class="btn btn--ink-ghost btn--block" type="button" id="copy-recap">Copier le récapitulatif</button>
-          <button class="btn btn--block" type="button" data-close>Fermer</button>
+          <a class="btn btn--block" id="done-mail" href="#" hidden>Envoyer par email</a>
+          <button class="btn btn--ink-ghost btn--block" type="button" id="copy-recap" hidden>Copier le récapitulatif</button>
+          <button class="btn btn--block" type="button" data-close id="done-close">Fermer</button>
         </div>
-        <p class="note">Le message ne s’est pas ouvert ? Copie le récapitulatif et envoie-le à <a href="mailto:contact@dake.studio">contact@dake.studio</a>.</p>
+        <p class="note" id="done-note">Rien d’autre à faire : pas besoin de renvoyer le récapitulatif.</p>
       </section>
     </div>
 
