@@ -1,4 +1,4 @@
-# DAKĒ STUDIO · FACE BY DAKĒ
+# DAKÉ© Studio · FACE BY DAKÉ©
 User-agent: *
 Disallow: /propositions
 Disallow: /video/*.MOV

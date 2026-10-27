@@ -798,7 +798,7 @@ function renderRecap() {
     [t('Formule', 'Session'), o ? o.name : '', 1],
     ['Date', state.date ? `${longDate(fromIso(state.date))}, ${slotLabel()}${state.flexible ? t('. Flexible', '. Flexible') : ''}` : '', 3],
     ['Contact', [`${state.firstName} ${state.lastName}`.trim(), state.email, state.phone, state.instagram].filter(Boolean), 4],
-    [t('Profil', 'Profile'), [state.profile, state.goal].filter(Boolean).join(', ') || '—', 4]
+    [t('Profil', 'Profile'), [state.profile, state.goal].filter(Boolean).join(', ') || t('non précisé', 'not specified'), 4]
   ];
   const extras = extrasList();
   if (extras.length) rows.splice(1, 0, [t('Demandes', 'Requests'), extras.join(', '), 2]);
@@ -814,7 +814,7 @@ function recapText() {
   const o = offerById(state.offer);
   const L = [
     t('Salut Jay, j’espère que tu vas bien !', 'Hi Jay, hope you’re well!'), '',
-    t('Voici ma demande de réservation pour une séance DAKĒ STUDIO :', 'Here is my booking request for a DAKĒ STUDIO session:'), '',
+    t('Voici ma demande de réservation pour une séance DAKÉ© Studio :', 'Here is my booking request for a DAKÉ© Studio session:'), '',
     `${t('Formule', 'Session')} : ${o ? `${o.name} (${eur(o.price)})` : ''}`,
     ...lines().slice(1).map(l => `Option : ${l.label} (${l.amount ? eur(l.amount) : t('inclus', 'included')})`),
     ...extrasList().map(x => `${t('Demande', 'Request')} : ${x}`),
@@ -875,7 +875,7 @@ function showDone(ok, canal) {
     ? t('Ta demande n’est pas partie. Envoie-la par email, tout est déjà rempli :', 'Your request wasn’t sent. Send it by email, everything is filled in:')
     : canal === 'instagram'
       ? t(`Merci${name} ! Ta demande est enregistrée et le récapitulatif est copié : colle-le dans la conversation Instagram qui vient de s’ouvrir.`, `Thank you${name}! Your request is saved and the summary is copied: paste it into the Instagram chat that just opened.`)
-      : t(`Merci${name} ! Ta demande est bien arrivée chez DAKĒ STUDIO. Un email de confirmation vient de partir vers ${state.email}. Tu reçois sous 24 h la confirmation du créneau et le lien de paiement de l’acompte.`, `Thank you${name}! Your request has reached DAKĒ STUDIO. A confirmation email is on its way to ${state.email}. Within 24 h you’ll receive your slot confirmation and the deposit payment link.`);
+      : t(`Merci${name} ! Ta demande est bien arrivée chez DAKÉ© Studio. Un email de confirmation vient de partir vers ${state.email}. Tu reçois sous 24 h la confirmation du créneau et le lien de paiement de l’acompte.`, `Thank you${name}! Your request has reached DAKÉ© Studio. A confirmation email is on its way to ${state.email}. Within 24 h you’ll receive your slot confirmation and the deposit payment link.`);
   $('#done-mail').hidden = ok; if (!ok) $('#done-mail').href = mailHref();
   $('#copy-recap').hidden = ok && canal !== 'instagram';
   $('#done-close').classList.toggle('btn--ink-ghost', !ok);
