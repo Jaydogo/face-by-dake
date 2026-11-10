@@ -11,6 +11,10 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteRule (^|/)\.git(/|$) - [F,L]
 RewriteRule ^(README|DEPLOIEMENT)\.md$ - [F,L]
 RewriteRule ^talents(/|$) - [R=404,L]
+# Les e-mails du back office (annulation de séance) pointent vers /seances/, l'adresse de la refonte.
+# Tant que la refonte n'est pas en ligne, les séances sont sur l'accueil : redirection temporaire (302).
+RewriteRule ^seances/?$ /#seances [R=302,NE,L]
+RewriteRule ^seances/en\.html$ /en.html#seances [R=302,NE,L]
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
