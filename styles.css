@@ -885,3 +885,9 @@ html.at-end body{background:var(--bordeaux)}
 
 /* Fin de réservation : les boutons de secours (email, copie) ne s’affichent qu’en cas de besoin */
 .done [hidden]{display:none!important}
+
+/* « Marques & agences » au-dessus des tarifs, pas en dessous */
+.b2b-note{grid-row:1;margin-top:0;margin-bottom:20px}
+.offer-list{grid-row:2}
+.stage{grid-row:1 / span 2}
+@media (max-width:860px){ .b2b-note{margin-top:0;margin-bottom:24px} }
