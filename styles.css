@@ -151,7 +151,7 @@ em{font-style:italic}
 .header .header-cta .btn{transition:color .45s var(--ease),background-color .45s var(--ease),border-color .45s var(--ease)}
 .logo{font-weight:500;font-size:1.0625rem;letter-spacing:-.01em;white-space:nowrap;justify-self:start}
 .logo .c{font-weight:400;margin-left:.08em}
-.logo svg{display:block;height:1.15em;width:auto;overflow:visible} /* logotype DAKÉ©, le même que la refonte */
+.logo svg{display:block;height:1.15em;width:auto;overflow:visible;transform:translateY(-13%)} /* logotype DAKÉ©, le même que la refonte ; remonté de la moitié de l'accent pour que les lettres soient centrées sur la barre */
 .nav{display:flex;gap:28px}
 /* Survol discret : les autres liens s'estompent, celui survolé reste net */
 .nav a{position:relative;transition:opacity .4s var(--ease)}
