@@ -81,6 +81,10 @@ if (!empty($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL))
 @mail('contact@dake.studio', '=?UTF-8?B?' . base64_encode($sujet) . '?=', implode("\n", $lignes), $headers);
 
 // Accusé de réception au visiteur (voir dake_accuse dans dake-mail.php)
-if (!empty($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) dake_accuse($data['email'], $type, '', $rec['langue'], $data['prenom'] ?? '');
+// Le résultat est gardé dans la demande : le back office peut dire si le mail est parti
+if (!empty($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+  $rec['accuse'] = dake_accuse($data['email'], $type, '', $rec['langue'], $data['prenom'] ?? '') ? 'envoye' : 'echec';
+  @file_put_contents("$base/$id.json", json_encode($rec, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), LOCK_EX);
+} else $rec['accuse'] = 'sans-email';
 
 reply(200, ['ok' => true, 'id' => $id]);

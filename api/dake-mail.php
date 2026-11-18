@@ -24,7 +24,7 @@ function dake_mail($to, $subject, $label, $blocks, $extraHeaders = [], $test = n
     . "<tr><td style=\"padding:22px 0 0;vertical-align:top;$cm\">A.</td><td style=\"padding:22px 0 0;vertical-align:top;$cm\">PARIS, FRANCE</td></tr>"
     . "<tr><td style=\"padding:6px 0 0;vertical-align:top;$cm\">E:</td><td style=\"padding:6px 0 0;vertical-align:top;$cm\"><a href=\"mailto:contact@dake.studio\" style=\"$lien\">CONTACT@DAKE.STUDIO</a></td></tr>"
     . "<tr><td style=\"padding:0;vertical-align:top;$cm\">W:</td><td style=\"padding:0;vertical-align:top;$cm\"><a href=\"https://dake.studio\" style=\"$lien\">DAKE.STUDIO</a></td></tr>"
-    . "<tr><td style=\"padding:0 0 12px;vertical-align:top;$cm\">I:</td><td style=\"padding:0 0 12px;vertical-align:top;$cm\"><a href=\"https://instagram.com/dake.creatives\" style=\"$lien\">@DAKE.CREATIVES</a><br><a href=\"https://instagram.com/dake.face\" style=\"$lien\">@DAKE.FACE</a><br><a href=\"https://instagram.com/ledockernoir\" style=\"$lien\">@LEDOCKERNOIR</a></td></tr>"
+    . "<tr><td style=\"padding:0 0 12px;vertical-align:top;$cm\">I:</td><td style=\"padding:0 0 12px;vertical-align:top;$cm\"><a href=\"https://instagram.com/dake.creatives\" style=\"$lien\">@DAKE.CREATIVES</a></td></tr>"
     . '</table></td></tr></table>';
   $rows = ''; $plain = [];
   foreach ($blocks as $b) {
@@ -45,7 +45,7 @@ function dake_mail($to, $subject, $label, $blocks, $extraHeaders = [], $test = n
       $rows .= '<tr><td style="padding:6px 0 26px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid ' . $line . "\">$t</table></td></tr>";
     } elseif (isset($b['cta'])) {
       $rows .= '<tr><td style="padding:4px 0 8px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate"><tr>'
-        . "<td align=\"center\" bgcolor=\"$ink\" style=\"border-radius:12px;background:$ink\"><a href=\"" . $h($b['url']) . "\" style=\"display:block;padding:17px 24px;$sans;font-size:16px;line-height:20px;font-weight:500;letter-spacing:0.1px;color:#F3EDE3;text-decoration:none;border-radius:12px\">" . $h($b['cta']) . ' &nbsp;&rarr;</a></td></tr></table></td></tr>'
+        . "<td align=\"center\" bgcolor=\"$ink\" style=\"border-radius:12px;background:$ink\"><a href=\"" . $h($b['url']) . "\" style=\"display:block;padding:17px 24px;$sans;font-size:16px;line-height:20px;font-weight:500;letter-spacing:0.1px;color:#FFFFFF;text-decoration:none;border-radius:12px\">" . $h($b['cta']) . ' &nbsp;&rarr;</a></td></tr></table></td></tr>'
         . (!empty($b['note']) ? "<tr><td align=\"center\" style=\"padding:4px 0 26px;$mono;font-size:10px;line-height:16px;letter-spacing:0.5px;color:$mute\">" . $h($b['note']) . '</td></tr>' : '<tr><td style="padding:0 0 18px"></td></tr>');
       $plain[] = $b['cta'] . ' : ' . $b['url'];
     }
@@ -54,8 +54,8 @@ function dake_mail($to, $subject, $label, $blocks, $extraHeaders = [], $test = n
     . '<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">'
     // Téléphone : marges réduites, la carte de visite passe sur deux lignes (Gmail, Apple Mail lisent ce bloc)
     . '<style>@media only screen and (max-width:520px){.dk-card{padding:28px 20px 24px!important}.dk-c{display:block!important;width:auto!important;height:auto!important}.dk-c2{padding:12px 13px 4px!important}.dk-gap{display:block!important;height:8px!important;width:auto!important}.dk-title{font-size:27px!important;line-height:31px!important}}</style></head>'
-    . '<body style="margin:0;padding:0;background:#F3EDE3;-webkit-text-size-adjust:100%;text-size-adjust:100%">'
-    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F3EDE3" style="border-collapse:collapse;background:#F3EDE3"><tr><td align="center" style="padding:32px 14px">'
+    . '<body style="margin:0;padding:0;background:#FFFFFF;-webkit-text-size-adjust:100%;text-size-adjust:100%">'
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="border-collapse:collapse;background:#FFFFFF"><tr><td align="center" style="padding:32px 14px">'
     . '<table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:100%;max-width:560px">'
     // En-tête : la marque, la nature de l'e-mail
     . "<tr><td style=\"padding:0 4px 16px\"><table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"$sans;font-size:19px;line-height:20px;font-weight:600;letter-spacing:-0.3px;color:$ink\">DAKÉ©</td>"
@@ -66,7 +66,7 @@ function dake_mail($to, $subject, $label, $blocks, $extraHeaders = [], $test = n
     // Pied
     . "<tr><td align=\"center\" style=\"padding:18px 8px 0;$mono;font-size:10px;line-height:16px;letter-spacing:0.5px;color:$mute\">DAKÉ© Studio · Paris · <a href=\"https://dake.studio\" style=\"color:$mute;text-decoration:none\">dake.studio</a></td></tr>"
     . '</table></td></tr></table></body></html>';
-  $plain = implode("\n\n", $plain) . "\n\n--\nDAKÉ© · JAY DOGO\nCREATIVE DIRECTOR + PHOTOGRAPHER\nPARIS, FRANCE\ncontact@dake.studio · https://dake.studio\n@dake.creatives · @dake.face · @ledockernoir";
+  $plain = implode("\n\n", $plain) . "\n\n--\nDAKÉ© · JAY DOGO\nCREATIVE DIRECTOR + PHOTOGRAPHER\nPARIS, FRANCE\ncontact@dake.studio · https://dake.studio\n@dake.creatives";
   $b = 'dake-' . bin2hex(random_bytes(8));
   $corps = "--$b\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($plain))
     . "--$b\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($html))
@@ -99,7 +99,7 @@ function dake_accuse($to, $type, $origine, $langue, $prenom) {
   $hi = $en ? 'Hello' . ($p ? " $p" : '') : 'Bonjour' . ($p ? " $p" : '');
   $fin = $en ? "Speak soon,\nJay" : "À très vite,\nJay";
   if ($type === 'seance') {
-    $sujet = $en ? 'DAKÉ© Studio · Your request has been received' : 'DAKÉ© Studio · Nous avons bien reçu votre demande';
+    $sujet = $en ? 'DAKÉ© Studio · Your request has been received' : 'DAKÉ© Studio · Nous avons bien reçu ta demande';
     $blocs = $en ? [
       ['titre' => 'Thank you, your request has arrived.'],
       "$hi, thank you for choosing DAKÉ© Studio for your session. I am checking the schedule and will get back to you very soon to confirm the exact time.",
@@ -108,14 +108,14 @@ function dake_accuse($to, $type, $origine, $langue, $prenom) {
       'Want to share references, a mood or the agency you are aiming for? Simply reply to this email.',
       $fin,
     ] : [
-      ['titre' => 'Merci, votre demande est bien arrivée.'],
-      "$hi, merci d’avoir pensé à DAKÉ© Studio pour votre séance. Je regarde le planning et je reviens vers vous très vite pour confirmer l’heure exacte.",
+      ['titre' => 'Merci, ta demande est bien arrivée.'],
+      "$hi, merci d’avoir pensé à DAKÉ© Studio pour ta séance. Je regarde le planning et je reviens vers toi très vite pour confirmer l’heure exacte.",
       'Voici la suite :',
-      ['details' => [['01', 'Je confirme votre créneau et l’heure exacte par e-mail'], ['02', 'Vous réglez l’acompte en ligne pour le bloquer'], ['03', 'On se retrouve au studio pour votre séance']]],
-      'Envie de partager des références, une ambiance ou l’agence que vous visez ? Répondez simplement à cet e-mail.',
+      ['details' => [['01', 'Je confirme ton créneau et l’heure exacte par e-mail'], ['02', 'Tu règles l’acompte en ligne pour le bloquer'], ['03', 'On se retrouve au studio pour ta séance']]],
+      'Envie de partager des références, une ambiance ou l’agence que tu vises ? Réponds simplement à cet e-mail.',
       $fin,
     ];
-    return dake_mail($to, $sujet, $en ? 'Request received' : 'Demande reçue', $blocs, ['Auto-Submitted' => 'auto-replied']);
+    return dake_mail($to, $sujet, $en ? 'Request received' : 'Demande reçue', $blocs, ['Auto-Submitted' => 'auto-replied', 'Bcc' => 'contact@dake.studio']);
   }
   $intro = $en ? [
     'talents' => "$hi, thank you for your interest in our talents. Your project request has arrived and I am reading it carefully.",
@@ -141,5 +141,5 @@ function dake_accuse($to, $type, $origine, $langue, $prenom) {
     'Des références, un moodboard, une présentation ? Répondez simplement à cet e-mail pour les partager.',
     $fin,
   ];
-  return dake_mail($to, $sujet, $en ? 'Project request received' : 'Demande de projet reçue', $blocs, ['Auto-Submitted' => 'auto-replied']);
+  return dake_mail($to, $sujet, $en ? 'Project request received' : 'Demande de projet reçue', $blocs, ['Auto-Submitted' => 'auto-replied', 'Bcc' => 'contact@dake.studio']);
 }
