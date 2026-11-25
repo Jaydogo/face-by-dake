@@ -113,6 +113,8 @@ em{font-style:italic}
 .list{list-style:none;margin:0;padding:0;display:grid;row-gap:10px}
 .list li{position:relative;padding-left:20px}
 .list li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:currentColor}
+/* Formules : une étoile à la place de la puce (✳ en texte, jamais en emoji) */
+.offer-content .list li::before,.demo-copy .list li::before{content:"\2733\FE0E";top:0;width:auto;height:auto;border-radius:0;background:none;font-size:1em;line-height:inherit;opacity:.8}
 
 /* Plus / moins */
 .tog{position:relative;width:16px;height:16px;flex:none}
