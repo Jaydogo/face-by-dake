@@ -11,7 +11,7 @@ const LOC = EN ? 'en-GB' : 'fr-FR';
    ========================================================= */
 const CONFIG = {
   email: 'contact@dake.studio',
-  instagram: 'dake.face',
+  instagram: 'dake.studio',
   deposit: 50,             // acompte fixe en €, déduit du total
   minNoticeDays: 2,
   closedDays: [],          // jours fermés : 0 = dimanche, 1 = lundi… ex. [0]
