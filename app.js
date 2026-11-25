@@ -338,8 +338,8 @@ mqMobile.addEventListener ? mqMobile.addEventListener('change', onMq) : mqMobile
    ========================================================= */
 const MOSAIC_POOL = [
   // Book : photos du studio (dossier img/book)
-  { f: 'book/olivia2-3.jpg', cap: ['Book', 'df.03'] }, { f: 'book/frame-49.jpg' }, { f: 'book/baba-4.jpg' }, { f: 'book/keiishah-14.jpg', pos: '50% 20%' },
-  { f: 'book/pfw-10.jpg' }, { f: 'book/melancholia-1.jpg', cap: [t('Éditorial', 'Editorial'), 'df.04'] }, { f: 'book/bleueno-33.jpg' }, { f: 'book/sofia-11.jpg', pos: '50% 30%' },
+  { f: 'book/olivia2-3.jpg', cap: ['Book', 'ds.03'] }, { f: 'book/frame-49.jpg' }, { f: 'book/baba-4.jpg' }, { f: 'book/keiishah-14.jpg', pos: '50% 20%' },
+  { f: 'book/pfw-10.jpg' }, { f: 'book/melancholia-1.jpg', cap: [t('Éditorial', 'Editorial'), 'ds.04'] }, { f: 'book/bleueno-33.jpg' }, { f: 'book/sofia-11.jpg', pos: '50% 30%' },
   { f: 'book/adri-6.jpg', pos: '50% 20%' }, { f: 'book/adri-14.jpg' }, { f: 'book/baba-3.jpg' }, { f: 'book/bleueno-14.jpg' },
   { f: 'book/jaja-38.jpg' }, { f: 'book/jaja-2-38.jpg', pos: '50% 20%' }, { f: 'book/lindsay-11.jpg' }, { f: 'book/math-part-1-20.jpg', pos: '55% 50%' },
   { f: 'book/muse-8.jpg' }, { f: 'book/omo-ita-4.jpg', pos: '50% 20%' }, { f: 'book/pfw-6.jpg' },
